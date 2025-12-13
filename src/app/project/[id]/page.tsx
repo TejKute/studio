@@ -60,7 +60,7 @@ const Preview = ({ screen, isGenerating, generatedCode }: { screen: string, isGe
       </div>
     ),
     login: (
-       <div className="p-4 h-full flex flex-col justify-center bg-black text-white">
+       <div className="p-4 h-full flex flex-col justify-center bg-black text-black">
           <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
           <div className="space-y-4">
             <Input type="email" placeholder="Email" className="bg-gray-900 border-gray-800 text-white" />
@@ -70,7 +70,7 @@ const Preview = ({ screen, isGenerating, generatedCode }: { screen: string, isGe
       </div>
     ),
     dashboard: (
-      <div className="p-4 h-full bg-black text-white">
+      <div className="p-4 h-full bg-black text-black">
           <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
           <div className="grid grid-cols-2 gap-4">
             <Card className="p-4 bg-gray-900 border-gray-800"><CardContent><p>Card 1</p></CardContent></Card>
