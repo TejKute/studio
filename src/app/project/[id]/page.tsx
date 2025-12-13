@@ -1,9 +1,18 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Download, Bot, Loader2, RefreshCw, CornerDownLeft, Settings, Home, LogIn, LayoutDashboard } from 'lucide-react';
+import {
+  Download,
+  Bot,
+  Loader2,
+  RefreshCw,
+  CornerDownLeft,
+  Settings,
+  Home,
+  LogIn,
+  LayoutDashboard,
+} from 'lucide-react';
 import { PhonePreview } from '@/components/phone-preview';
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -13,6 +22,7 @@ import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { generateAppFromDescription } from '@/ai/flows/generate-app-from-description';
+import Link from 'next/link';
 import GeneratedComponentRenderer from '@/components/GeneratedComponentRenderer';
 
 interface Message {
@@ -139,8 +149,7 @@ const ChatMessage = ({ message }: { message: Message }) => {
   );
 };
 
-export default function ProjectPage({ params }: { params: { id: string } }) {
-  const projectId = params.id;
+function AIBuilder({ projectId }: { projectId: string }) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -407,4 +416,8 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
       </main>
     </div>
   );
+}
+
+export default function ProjectPage({ params }: { params: { id: string } }) {
+  return <AIBuilder projectId={params.id} />;
 }
