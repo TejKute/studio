@@ -22,15 +22,15 @@ interface Message {
 
 function LoadingPreview() {
   return (
-    <div className="p-4 bg-background h-full">
+    <div className="p-4 bg-black h-full">
       <div className="space-y-4">
-        <Skeleton className="h-12 w-full bg-gray-800" />
+        <Skeleton className="h-12 w-full bg-gray-900" />
         <div className="flex gap-4">
-          <Skeleton className="h-10 w-1/2 bg-gray-800" />
-          <Skeleton className="h-10 w-1/2 bg-gray-800" />
+          <Skeleton className="h-10 w-1/2 bg-gray-900" />
+          <Skeleton className="h-10 w-1/2 bg-gray-900" />
         </div>
-        <Skeleton className="h-24 w-full bg-gray-800" />
-        <Skeleton className="h-40 w-full bg-gray-800" />
+        <Skeleton className="h-24 w-full bg-gray-900" />
+        <Skeleton className="h-40 w-full bg-gray-900" />
       </div>
     </div>
   );
@@ -43,7 +43,7 @@ function Preview({ screen, isDarkMode, isGenerating }: { screen: string, isDarkM
 
   const screens: { [key: string]: React.ReactNode } = {
     home: (
-      <div className={cn("p-4 h-full", "bg-gray-950 text-white")}>
+      <div className={cn("p-4 h-full", "bg-black text-white")}>
         <div className="text-center">
           <h1 className="text-2xl font-bold">Welcome Home</h1>
           <p className={cn("mt-2", "text-gray-400")}>This is your home screen.</p>
@@ -51,22 +51,22 @@ function Preview({ screen, isDarkMode, isGenerating }: { screen: string, isDarkM
       </div>
     ),
     login: (
-       <div className={cn("p-4 h-full flex flex-col justify-center", "bg-gray-950 text-white")}>
+       <div className={cn("p-4 h-full flex flex-col justify-center", "bg-black text-white")}>
           <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
           <div className="space-y-4">
-            <Input type="email" placeholder="Email" className={cn("bg-gray-800 border-gray-700 text-white")} />
-            <Input type="password" placeholder="Password" className={cn("bg-gray-800 border-gray-700 text-white")} />
-            <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">Sign In</Button>
+            <Input type="email" placeholder="Email" className={cn("bg-gray-900 border-gray-800 text-white")} />
+            <Input type="password" placeholder="Password" className={cn("bg-gray-900 border-gray-800 text-white")} />
+            <Button className="w-full bg-accent hover:bg-accent/80 text-accent-foreground">Sign In</Button>
           </div>
       </div>
     ),
     dashboard: (
-      <div className={cn("p-4 h-full", "bg-gray-950 text-white")}>
+      <div className={cn("p-4 h-full", "bg-black text-white")}>
           <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
           <div className="grid grid-cols-2 gap-4">
-            <Card className={cn("p-4", "bg-gray-800/50 border-gray-700")}><CardContent><p>Card 1</p></CardContent></Card>
-            <Card className={cn("p-4", "bg-gray-800/50 border-gray-700")}><CardContent><p>Card 2</p></CardContent></Card>
-            <Card className={cn("p-4 col-span-2", "bg-gray-800/50 border-gray-700")}><CardContent><p>Full-width Card</p></CardContent></Card>
+            <Card className={cn("p-4", "bg-gray-900 border-gray-800")}><CardContent><p>Card 1</p></CardContent></Card>
+            <Card className={cn("p-4", "bg-gray-900 border-gray-800")}><CardContent><p>Card 2</p></CardContent></Card>
+            <Card className={cn("p-4 col-span-2", "bg-gray-900 border-gray-800")}><CardContent><p>Full-width Card</p></CardContent></Card>
           </div>
       </div>
     ),
@@ -81,16 +81,16 @@ const ChatMessage = ({ message }: { message: Message }) => {
   return (
     <div className={cn('flex items-start gap-3', isUser ? 'justify-end' : '')}>
       {!isUser && (
-        <Avatar className="h-8 w-8 bg-gray-800 border border-gray-700">
-          <AvatarFallback className="bg-transparent"><Bot size={18} className="text-accent" /></AvatarFallback>
+        <Avatar className="h-8 w-8 bg-background border">
+          <AvatarFallback className="bg-transparent"><Bot size={18} className="text-foreground/80" /></AvatarFallback>
         </Avatar>
       )}
       <div
         className={cn(
           'max-w-[80%] rounded-2xl p-3 text-sm shadow-md',
           isUser
-            ? 'bg-accent text-accent-foreground rounded-br-none'
-            : 'bg-gray-800 text-gray-200 rounded-bl-none'
+            ? 'bg-primary text-primary-foreground rounded-br-none'
+            : 'bg-secondary text-secondary-foreground rounded-bl-none'
         )}
       >
         {message.text}
@@ -160,8 +160,8 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
   };
 
   return (
-    <div className="h-screen w-full flex flex-col bg-background text-foreground">
-      <header className="flex h-14 items-center justify-between border-b border-gray-800 bg-background px-4 lg:px-6 flex-shrink-0">
+    <div className="h-screen w-full flex flex-col bg-black text-foreground">
+      <header className="flex h-14 items-center justify-between border-b px-4 lg:px-6 flex-shrink-0">
         <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
           <ArrowLeft className="h-5 w-5" />
           <span className="font-headline">AI Builder</span>
@@ -177,8 +177,8 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
       <main className="flex-1 min-h-0">
         <PanelGroup direction="horizontal" className="h-full">
           <Panel defaultSize={50} minSize={30}>
-            <div className="relative flex flex-col items-center justify-center p-4 md:p-8 bg-background h-full overflow-hidden">
-              <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[radial-gradient(#2d3748_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            <div className="relative flex flex-col items-center justify-center p-4 md:p-8 bg-black h-full overflow-hidden">
+              <div className="absolute inset-0 -z-10 h-full w-full bg-black bg-[radial-gradient(#1a1a1a_1px,transparent_1px)] [background-size:16px_16px]"></div>
               
               <Card className="w-full h-full max-w-4xl mx-auto shadow-2xl rounded-2xl flex flex-col overflow-hidden bg-transparent border-none">
                 <CardContent className="p-0 flex-1 min-h-0">
@@ -186,7 +186,7 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
                     <Preview screen={currentScreen} isDarkMode={isDarkMode} isGenerating={isGenerating} />
                   </PhonePreview>
                 </CardContent>
-                <div className="flex items-center justify-between border-t border-gray-800 p-2 bg-gray-900/50 backdrop-blur-sm mt-auto flex-shrink-0">
+                <div className="flex items-center justify-between border-t p-2 bg-black/50 backdrop-blur-sm mt-auto flex-shrink-0">
                   <div className="flex items-center gap-1">
                     <Button variant={currentScreen === 'home' ? 'secondary' : 'ghost'} size="sm" onClick={() => setCurrentScreen('home')}>
                       <Home className="h-4 w-4" />
@@ -205,11 +205,11 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
               </Card>
             </div>
           </Panel>
-          <PanelResizeHandle className="w-2 flex items-center justify-center bg-gray-800/50 hover:bg-accent transition-colors group">
-             <div className="w-1 h-8 rounded-full bg-gray-600 group-hover:bg-accent-foreground transition-colors" />
+          <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent hover:bg-muted/50 transition-colors group">
+             <div className="w-1 h-8 rounded-full bg-border group-hover:bg-primary transition-colors" />
           </PanelResizeHandle>
           <Panel defaultSize={50} minSize={30}>
-            <div className="flex flex-col bg-background h-full">
+            <div className="flex flex-col bg-black h-full">
                 <ScrollArea className="flex-1 p-4 md:p-6" ref={scrollAreaRef}>
                     <div className="space-y-6">
                     {messages.map((msg) => (
@@ -217,18 +217,18 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
                     ))}
                     {isGenerating && (
                         <div className="flex items-start gap-3">
-                            <Avatar className="h-8 w-8 bg-gray-800 border border-gray-700">
-                                <AvatarFallback className="bg-transparent"><Bot size={18} className="text-accent" /></AvatarFallback>
+                            <Avatar className="h-8 w-8 bg-background border">
+                                <AvatarFallback className="bg-transparent"><Bot size={18} className="text-foreground/80" /></AvatarFallback>
                             </Avatar>
-                            <div className="max-w-[75%] rounded-2xl p-3 text-sm bg-gray-800 text-gray-200 rounded-bl-none flex items-center gap-2 shadow-md">
-                              <Loader2 className="h-4 w-4 animate-spin text-accent"/>
+                            <div className="max-w-[75%] rounded-2xl p-3 text-sm bg-secondary text-secondary-foreground rounded-bl-none flex items-center gap-2 shadow-md">
+                              <Loader2 className="h-4 w-4 animate-spin text-foreground/80"/>
                               <span>Generating...</span>
                             </div>
                         </div>
                     )}
                     </div>
                 </ScrollArea>
-                <div className="border-t border-gray-800 bg-background p-4 md:p-6">
+                <div className="border-t bg-black p-4 md:p-6">
                     <div className="flex items-center gap-2 mb-2">
                         <Button variant="outline" size="sm" onClick={handleRegenerate} disabled={isGenerating}>
                             <RefreshCw className="mr-2 h-4 w-4" />
@@ -240,13 +240,14 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             placeholder="Describe a change you want to see..."
-                            className="pr-12 h-12 bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 focus:ring-accent"
+                            className="pr-12 h-12 bg-secondary border-secondary text-foreground placeholder:text-muted-foreground focus:ring-ring"
                             disabled={isGenerating}
                         />
                         <Button
                             type="submit"
                             size="icon"
-                            className="absolute right-2.5 top-1/2 -translate-y-1/2 h-8 w-8 bg-accent hover:bg-accent/90 text-accent-foreground"
+                            variant="outline"
+                            className="absolute right-2.5 top-1/2 -translate-y-1/2 h-8 w-8 bg-secondary hover:bg-muted"
                             disabled={isGenerating || !input.trim()}
                         >
                             <CornerDownLeft className="h-4 w-4" />
