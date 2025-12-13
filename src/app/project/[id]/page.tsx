@@ -19,8 +19,6 @@ import {
   Settings
 } from 'lucide-react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
-
 
 interface Message {
   id: string;
@@ -60,7 +58,7 @@ const Preview = ({ screen, isGenerating, generatedCode }: { screen: string, isGe
       </div>
     ),
     login: (
-       <div className="p-4 h-full flex flex-col justify-center bg-black text-black">
+       <div className="p-4 h-full flex flex-col justify-center bg-black text-white">
           <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
           <div className="space-y-4">
             <Input type="email" placeholder="Email" className="bg-gray-900 border-gray-800 text-white" />
@@ -70,7 +68,7 @@ const Preview = ({ screen, isGenerating, generatedCode }: { screen: string, isGe
       </div>
     ),
     dashboard: (
-      <div className="p-4 h-full bg-black text-black">
+      <div className="p-4 h-full bg-black text-white">
           <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
           <div className="grid grid-cols-2 gap-4">
             <Card className="p-4 bg-gray-900 border-gray-800"><CardContent><p>Card 1</p></CardContent></Card>
@@ -111,7 +109,7 @@ const ChatMessage = ({ message }: { message: Message }) => {
   );
 };
 
-function ProjectClientPage({ resolvedParams }: { resolvedParams: { id: string } }) {
+export default function ProjectPage({ params }: { params: { id: string } }) {
   const [messages, setMessages] = useState<Message[]>([
     { id: '1', text: "Hello! How can I help you design your app today?", sender: 'ai' },
   ]);
@@ -219,7 +217,7 @@ function ProjectClientPage({ resolvedParams }: { resolvedParams: { id: string } 
             <span className="font-headline text-white">Craftify AI</span>
           </Link>
           <span className="text-sm text-gray-500">/</span>
-          <span className="text-sm text-white font-medium">Project: {resolvedParams.id}</span>
+          <span className="text-sm text-white font-medium">Project: {params.id}</span>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={handleRegenerate} disabled={isGenerating} className="border-white/20 hover:bg-white/5">
@@ -312,9 +310,4 @@ function ProjectClientPage({ resolvedParams }: { resolvedParams: { id: string } 
       </main>
     </div>
   );
-}
-
-export default function ProjectPage({ params }: { params: { id: string } }) {
-    const resolvedParams = use(params);
-    return <ProjectClientPage resolvedParams={resolvedParams} />;
 }
