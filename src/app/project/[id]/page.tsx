@@ -1,6 +1,5 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Download, Bot, Loader2, Wand2, Sun, Moon, CornerDownLeft, RefreshCw, ArrowLeft, Home, LogIn, LayoutDashboard, GripVertical } from 'lucide-react';
@@ -13,6 +12,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import Link from 'next/link';
 
 interface Message {
   id: string;
@@ -43,30 +43,30 @@ function Preview({ screen, isDarkMode, isGenerating }: { screen: string, isDarkM
 
   const screens: { [key: string]: React.ReactNode } = {
     home: (
-      <div className={cn("p-4 h-full", isDarkMode ? 'bg-gray-950 text-black' : 'bg-white text-black')}>
+      <div className={cn("p-4 h-full", "bg-gray-950 text-white")}>
         <div className="text-center">
           <h1 className="text-2xl font-bold">Welcome Home</h1>
-          <p className={cn("mt-2", isDarkMode ? 'text-gray-400' : 'text-gray-600')}>This is your home screen.</p>
+          <p className={cn("mt-2", "text-gray-400")}>This is your home screen.</p>
         </div>
       </div>
     ),
     login: (
-       <div className={cn("p-4 h-full flex flex-col justify-center", isDarkMode ? 'bg-gray-950 text-black' : 'bg-white text-black')}>
+       <div className={cn("p-4 h-full flex flex-col justify-center", "bg-gray-950 text-white")}>
           <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
           <div className="space-y-4">
-            <Input type="email" placeholder="Email" className={cn(isDarkMode ? 'bg-gray-800 border-gray-700 text-black' : 'bg-gray-100')} />
-            <Input type="password" placeholder="Password" className={cn(isDarkMode ? 'bg-gray-800 border-gray-700 text-black' : 'bg-gray-100')} />
+            <Input type="email" placeholder="Email" className={cn("bg-gray-800 border-gray-700 text-white")} />
+            <Input type="password" placeholder="Password" className={cn("bg-gray-800 border-gray-700 text-white")} />
             <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground">Sign In</Button>
           </div>
       </div>
     ),
     dashboard: (
-      <div className={cn("p-4 h-full", isDarkMode ? 'bg-gray-950 text-black' : 'bg-white text-black')}>
+      <div className={cn("p-4 h-full", "bg-gray-950 text-white")}>
           <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
           <div className="grid grid-cols-2 gap-4">
-            <Card className={cn("p-4", isDarkMode ? 'bg-gray-800/50 border-gray-700' : 'bg-gray-100')}><CardContent><p>Card 1</p></CardContent></Card>
-            <Card className={cn("p-4", isDarkMode ? 'bg-gray-800/50 border-gray-700' : 'bg-gray-100')}><CardContent><p>Card 2</p></CardContent></Card>
-            <Card className={cn("p-4 col-span-2", isDarkMode ? 'bg-gray-800/50 border-gray-700' : 'bg-gray-100')}><CardContent><p>Full-width Card</p></CardContent></Card>
+            <Card className={cn("p-4", "bg-gray-800/50 border-gray-700")}><CardContent><p>Card 1</p></CardContent></Card>
+            <Card className={cn("p-4", "bg-gray-800/50 border-gray-700")}><CardContent><p>Card 2</p></CardContent></Card>
+            <Card className={cn("p-4 col-span-2", "bg-gray-800/50 border-gray-700")}><CardContent><p>Full-width Card</p></CardContent></Card>
           </div>
       </div>
     ),
