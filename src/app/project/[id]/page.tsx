@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect, use } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Download, Bot, Loader2, RefreshCw, CornerDownLeft, ArrowRight } from 'lucide-react';
+import { Download, Bot, Loader2, RefreshCw, CornerDownLeft } from 'lucide-react';
 import { PhonePreview } from '@/components/phone-preview';
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -19,6 +19,7 @@ import {
   Settings
 } from 'lucide-react';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 
 
 interface Message {
@@ -49,7 +50,7 @@ const Preview = ({ screen, isGenerating, generatedCode }: { screen: string, isGe
     return <LoadingPreview />;
   }
 
-  const screens: { [key: string]: React.ReactNode } = {
+  const screens: { [key:string]: React.ReactNode } = {
     home: generatedCode ? <div dangerouslySetInnerHTML={{ __html: generatedCode }} /> : (
       <div className="p-4 h-full bg-black text-white">
         <div className="text-center">
@@ -62,8 +63,8 @@ const Preview = ({ screen, isGenerating, generatedCode }: { screen: string, isGe
        <div className="p-4 h-full flex flex-col justify-center bg-black text-white">
           <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
           <div className="space-y-4">
-            <Input type="email" placeholder="Email" className="bg-gray-900 border-gray-800 text-black" />
-            <Input type="password" placeholder="Password" className="bg-gray-900 border-gray-800 text-black" />
+            <Input type="email" placeholder="Email" className="bg-gray-900 border-gray-800 text-white" />
+            <Input type="password" placeholder="Password" className="bg-gray-900 border-gray-800 text-white" />
             <Button className="w-full bg-gray-800 hover:bg-gray-700 text-white">Sign In</Button>
           </div>
       </div>
@@ -110,8 +111,7 @@ const ChatMessage = ({ message }: { message: Message }) => {
   );
 };
 
-export default function ProjectPage({ params }: { params: { id: string } }) {
-  const resolvedParams = use(Promise.resolve(params));
+function ProjectClientPage({ resolvedParams }: { resolvedParams: { id: string } }) {
   const [messages, setMessages] = useState<Message[]>([
     { id: '1', text: "Hello! How can I help you design your app today?", sender: 'ai' },
   ]);
@@ -141,8 +141,8 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
 
     try {
         const result = await generateAppFromDescription({ description: currentInput });
-        const aiResponse: Message = { 
-            id: (Date.now() + 1).toString(), 
+        const aiResponse: Message = {
+            id: (Date.now() + 1).toString(),
             text: `I have updated the preview based on your request.`,
             sender: 'ai',
             explanation: result.explanation
@@ -152,10 +152,10 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
         setCurrentScreen('home');
     } catch (error) {
         console.error(error);
-        const aiErrorResponse: Message = { 
-            id: (Date.now() + 1).toString(), 
-            text: "I'm sorry, I encountered an error while generating the component. Please try again.", 
-            sender: 'ai' 
+        const aiErrorResponse: Message = {
+            id: (Date.now() + 1).toString(),
+            text: "I'm sorry, I encountered an error while generating the component. Please try again.",
+            sender: 'ai'
         };
         setMessages(prev => [...prev, aiErrorResponse]);
         toast({
@@ -180,7 +180,7 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
         }
         return;
     }
-    
+
     setIsGenerating(true);
     try {
         const result = await generateAppFromDescription({ description: lastUserMessage.text });
@@ -195,10 +195,10 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
         setCurrentScreen('home');
     } catch (error) {
         console.error(error);
-        const aiErrorResponse: Message = { 
-            id: (Date.now() + 1).toString(), 
-            text: "I'm sorry, I encountered an error while regenerating the component. Please try again.", 
-            sender: 'ai' 
+        const aiErrorResponse: Message = {
+            id: (Date.now() + 1).toString(),
+            text: "I'm sorry, I encountered an error while regenerating the component. Please try again.",
+            sender: 'ai'
         };
         setMessages(prev => [...prev, aiErrorResponse]);
          toast({
@@ -312,4 +312,9 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
       </main>
     </div>
   );
+}
+
+export default function ProjectPage({ params }: { params: { id: string } }) {
+    const resolvedParams = use(params);
+    return <ProjectClientPage resolvedParams={resolvedParams} />;
 }
