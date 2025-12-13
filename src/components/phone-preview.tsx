@@ -2,12 +2,19 @@ import { cn } from "@/lib/utils";
 import { Signal, Wifi, BatteryFull } from "lucide-react";
 import React from "react";
 
-export function PhonePreview({ children, className }: { children: React.ReactNode; className?: string }) {
+export function PhonePreview({ children, className, isDarkMode }: { children: React.ReactNode; className?: string; isDarkMode?: boolean }) {
   return (
-    <div className={cn("w-full h-full mx-auto rounded-[40px] border-[10px] border-gray-800 bg-gray-800 shadow-2xl overflow-hidden", className)}>
-      <div className="w-full h-full bg-background flex flex-col">
+    <div className={cn(
+        "w-full h-full mx-auto rounded-[40px] border-[10px] shadow-2xl overflow-hidden",
+        isDarkMode ? "border-gray-900 bg-gray-900" : "border-gray-800 bg-gray-800",
+        className
+    )}>
+      <div className={cn("w-full h-full flex flex-col", isDarkMode ? "bg-gray-950" : "bg-background")}>
         {/* Status Bar */}
-        <div className="flex justify-between items-center px-4 py-1.5 bg-background text-foreground text-xs font-sans">
+        <div className={cn(
+            "flex justify-between items-center px-4 py-1.5 text-xs font-sans",
+             isDarkMode ? "bg-transparent text-white" : "bg-background text-foreground"
+        )}>
           <div>9:41</div>
           <div className="flex items-center gap-1">
             <Signal size={14} />
@@ -23,7 +30,7 @@ export function PhonePreview({ children, className }: { children: React.ReactNod
 
         {/* Home Indicator */}
         <div className="py-2.5 flex justify-center">
-            <div className="w-28 h-1 rounded-full bg-gray-400"></div>
+            <div className={cn("w-28 h-1 rounded-full", isDarkMode ? "bg-gray-700" : "bg-gray-400")}></div>
         </div>
       </div>
     </div>
