@@ -1,3 +1,46 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "project-1",
+      "description": "A social media app interface on a phone screen.",
+      "imageUrl": "https://images.unsplash.com/photo-1605108222700-0d605d9ebafe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhcHAlMjBpbnRlcmZhY2V8ZW58MHx8fHwxNzY1NTIxODY4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "app interface"
+    },
+    {
+      "id": "project-2",
+      "description": "A fitness tracking app dashboard on a tablet.",
+      "imageUrl": "https://images.unsplash.com/photo-1593640852822-a44850096f9d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxkYXNoYm9hcmQlMjBmaXRuZXNzfGVufDB8fHx8MTc2NTYxODA2NXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "dashboard fitness"
+    },
+    {
+      "id": "project-3",
+      "description": "An e-commerce app showing product listings.",
+      "imageUrl": "https://images.unsplash.com/photo-1691073121676-1ab3a6d3d743?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2UlMjBwcm9kdWN0c3xlbnwwfHx8fDE3NjU2MTgwNjV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "ecommerce products"
+    },
+    {
+      "id": "project-4",
+      "description": "A music player app with a vibrant interface.",
+      "imageUrl": "https://images.unsplash.com/photo-1683142567282-b5e4aeb5b15e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxtdXNpYyUyMHBsYXllcnxlbnwwfHx8fDE3NjU1OTUyMDJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "music player"
+    },
+    {
+      "id": "user-avatar-1",
+      "description": "A portrait of a person.",
+      "imageUrl": "https://images.unsplash.com/photo-1590086782792-42dd2350140d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjU1NzE4NDR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "project-5",
+      "description": "A travel booking app interface.",
+      "imageUrl": "https://images.unsplash.com/photo-1609409601885-e01c8ff48d06?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8dHJhdmVsJTIwYXBwfGVufDB8fHx8MTc2NTYxNjc2OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "travel app"
+    },
+    {
+      "id": "project-6",
+      "description": "A finance management app with charts.",
+      "imageUrl": "https://images.unsplash.com/photo-1591696205602-2f950c417cb9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxmaW5hbmNlJTIwY2hhcnR8ZW58MHx8fHwxNzY1NTc4NTg2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "finance chart"
+    }
+  ]
 }
