@@ -1,6 +1,6 @@
 'use client';
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarFooter, SidebarSeparator } from '@/components/ui/sidebar';
-import { LayoutDashboard, Settings, PlusCircle, LogOut } from 'lucide-react';
+import { LayoutDashboard, Settings, PlusCircle, LogOut, Code } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { UserNav } from '@/components/user-nav';
 import Link from 'next/link';
@@ -10,6 +10,10 @@ import { Button } from '../ui/button';
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+
+  if (pathname.startsWith('/project/')) {
+    return <>{children}</>;
+  }
 
   return (
     <SidebarProvider>
@@ -40,6 +44,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <Link href="/dashboard">
                   <LayoutDashboard />
                   <span>Dashboard</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname.startsWith('/project')}
+                tooltip="Builder"
+              >
+                <Link href="/project/new">
+                  <Code />
+                  <span>Builder</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

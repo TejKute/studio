@@ -4,7 +4,7 @@ import React from "react";
 
 export function PhonePreview({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn("w-full max-w-[360px] mx-auto rounded-[40px] border-[10px] border-gray-800 bg-gray-800 shadow-2xl overflow-hidden", className)}>
+    <div className={cn("w-full h-full mx-auto rounded-[40px] border-[10px] border-gray-800 bg-gray-800 shadow-2xl overflow-hidden", className)}>
       <div className="w-full h-full bg-background flex flex-col">
         {/* Status Bar */}
         <div className="flex justify-between items-center px-4 py-1.5 bg-background text-foreground text-xs font-sans">
