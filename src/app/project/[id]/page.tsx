@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { generateAppFromDescription } from '@/ai/flows/generate-app-from-description';
+import GeneratedComponentRenderer from '@/components/GeneratedComponentRenderer';
 
 interface Message {
   id: string;
@@ -52,7 +53,7 @@ const Preview = ({
 
   const screens: { [key: string]: React.ReactNode } = {
     home: generatedCode ? (
-      <div dangerouslySetInnerHTML={{ __html: generatedCode }} />
+      <GeneratedComponentRenderer code={generatedCode} />
     ) : (
       <div className="p-4 h-full bg-black text-white">
         <div className="text-center">
