@@ -1,8 +1,9 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Download, Bot, Loader2, RefreshCw, CornerDownLeft, Home, LogIn, LayoutDashboard, Settings } from 'lucide-react';
+import { Download, Bot, Loader2, RefreshCw, CornerDownLeft, ArrowRight } from 'lucide-react';
 import { PhonePreview } from '@/components/phone-preview';
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -11,12 +12,20 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import Link from 'next/link';
+import { generateAppFromDescription } from '@/ai/flows/generate-app-from-description';
+import {
+  Home,
+  LogIn,
+  LayoutDashboard,
+  Settings
+} from 'lucide-react';
+
 
 interface Message {
   id: string;
   text: string;
   sender: 'user' | 'ai';
+  explanation?: string;
 }
 
 function LoadingPreview() {
@@ -35,13 +44,13 @@ function LoadingPreview() {
   );
 }
 
-function Preview({ screen, isGenerating }: { screen: string, isGenerating: boolean }) {
-  if (isGenerating) {
+const Preview = ({ screen, isGenerating, generatedCode }: { screen: string, isGenerating: boolean, generatedCode: string | null }) => {
+  if (isGenerating && !generatedCode) {
     return <LoadingPreview />;
   }
 
   const screens: { [key: string]: React.ReactNode } = {
-    home: (
+    home: generatedCode ? <div dangerouslySetInnerHTML={{ __html: generatedCode }} /> : (
       <div className="p-4 h-full bg-black text-white">
         <div className="text-center">
           <h1 className="text-2xl font-bold">Welcome Home</h1>
@@ -71,8 +80,10 @@ function Preview({ screen, isGenerating }: { screen: string, isGenerating: boole
     ),
   };
 
-  return <>{screens[screen]}</>;
-}
+  const content = screens[screen];
+
+  return <div className="p-4 bg-black h-full">{content}</div>;
+};
 
 
 const ChatMessage = ({ message }: { message: Message }) => {
@@ -88,11 +99,12 @@ const ChatMessage = ({ message }: { message: Message }) => {
         className={cn(
           'max-w-[80%] rounded-lg p-3 text-sm',
           isUser
-            ? 'bg-gray-900 text-gray-200'
+            ? 'bg-[#111111] text-gray-200'
             : 'bg-black text-gray-300'
         )}
       >
-        {message.text}
+        <p>{message.text}</p>
+        {message.explanation && <p className="mt-2 pt-2 border-t border-gray-700 text-xs text-gray-400">{message.explanation}</p>}
       </div>
     </div>
   );
@@ -105,6 +117,7 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
   const [input, setInput] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [currentScreen, setCurrentScreen] = useState('home');
+  const [generatedCode, setGeneratedCode] = useState<string | null>(null);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -117,56 +130,102 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
 
   const handleSendMessage = async (e?: React.FormEvent) => {
     e?.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || isGenerating) return;
 
     const userMessage: Message = { id: Date.now().toString(), text: input, sender: 'user' };
     setMessages(prev => [...prev, userMessage]);
+    const currentInput = input;
     setInput('');
     setIsGenerating(true);
 
-    // Mock AI response
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    const aiResponse: Message = { id: (Date.now() + 1).toString(), text: `Sure, I've updated the preview based on your request: "${input}".`, sender: 'ai' };
-    setMessages(prev => [...prev, aiResponse]);
-    setIsGenerating(false);
+    try {
+        const result = await generateAppFromDescription({ description: currentInput });
+        const aiResponse: Message = { 
+            id: (Date.now() + 1).toString(), 
+            text: `I have updated the preview based on your request.`,
+            sender: 'ai',
+            explanation: result.explanation
+        };
+        setMessages(prev => [...prev, aiResponse]);
+        setGeneratedCode(result.componentCode);
+        setCurrentScreen('home');
+    } catch (error) {
+        console.error(error);
+        const aiErrorResponse: Message = { 
+            id: (Date.now() + 1).toString(), 
+            text: "I'm sorry, I encountered an error while generating the component. Please try again.", 
+            sender: 'ai' 
+        };
+        setMessages(prev => [...prev, aiErrorResponse]);
+        toast({
+            variant: "destructive",
+            title: "Generation Failed",
+            description: "Could not generate the component. Please check the console for more details.",
+        });
+    } finally {
+        setIsGenerating(false);
+    }
   };
 
   const handleRegenerate = async () => {
     const lastUserMessage = messages.slice().reverse().find(m => m.sender === 'user');
-    if (!lastUserMessage) {
-        toast({
-            variant: "destructive",
-            title: "Nothing to regenerate",
-            description: "Please send a message first.",
-        });
+    if (!lastUserMessage || isGenerating) {
+        if(!isGenerating) {
+            toast({
+                variant: "destructive",
+                title: "Nothing to regenerate",
+                description: "Please send a message first.",
+            });
+        }
         return;
     }
     
     setIsGenerating(true);
-    // Mock AI call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    const aiResponse: Message = { id: (Date.now() + 1).toString(), text: `I've regenerated the design for: "${lastUserMessage.text}".`, sender: 'ai' };
-    setMessages(prev => [...prev, aiResponse]);
-    setIsGenerating(false);
+    try {
+        const result = await generateAppFromDescription({ description: lastUserMessage.text });
+        const aiResponse: Message = {
+            id: (Date.now() + 1).toString(),
+            text: `I've regenerated the design for: "${lastUserMessage.text}".`,
+            sender: 'ai',
+            explanation: result.explanation
+        };
+        setMessages(prev => [...prev, aiResponse]);
+        setGeneratedCode(result.componentCode);
+        setCurrentScreen('home');
+    } catch (error) {
+        console.error(error);
+        const aiErrorResponse: Message = { 
+            id: (Date.now() + 1).toString(), 
+            text: "I'm sorry, I encountered an error while regenerating the component. Please try again.", 
+            sender: 'ai' 
+        };
+        setMessages(prev => [...prev, aiErrorResponse]);
+         toast({
+            variant: "destructive",
+            title: "Regeneration Failed",
+            description: "Could not regenerate the component. Please check the console for more details.",
+        });
+    } finally {
+        setIsGenerating(false);
+    }
   };
 
   return (
-    <div className="h-screen w-full flex flex-col bg-black text-gray-200">
-      <header className="flex h-14 items-center justify-between border-b border-gray-800 px-4 lg:px-6 flex-shrink-0">
+    <div className="h-screen w-full flex flex-col bg-black">
+      <header className="flex h-14 items-center justify-between border-b border-[#111111] bg-black px-4 lg:px-6 flex-shrink-0">
         <div className="flex items-center gap-4">
-          <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-gray-200 hover:text-white">
-            <span className="font-headline">Craftify AI</span>
+           <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-gray-200 hover:text-white">
+            <span className="font-headline text-white">Craftify AI</span>
           </Link>
           <span className="text-sm text-gray-500">/</span>
           <span className="text-sm text-white font-medium">Project: {params.id}</span>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={handleRegenerate} disabled={isGenerating}>
+          <Button variant="outline" size="sm" onClick={handleRegenerate} disabled={isGenerating} className="border-white/20 hover:bg-white/5">
             <RefreshCw className="mr-2 h-4 w-4" />
             Regenerate
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="border-white/20 hover:bg-white/5">
             <Download className="mr-2 h-4 w-4" />
             Export Code
           </Button>
@@ -176,21 +235,21 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
         <PanelGroup direction="horizontal" className="h-full">
           <Panel defaultSize={50} minSize={30}>
             <div className="relative flex flex-col items-center justify-center p-4 md:p-8 bg-black h-full overflow-hidden">
-              <Card className="w-full h-full max-w-md mx-auto shadow-2xl rounded-2xl flex flex-col overflow-hidden bg-black border-gray-800">
+              <Card className="w-full h-full max-w-md mx-auto shadow-2xl rounded-2xl flex flex-col overflow-hidden bg-black border-[#111111]">
                 <CardContent className="p-0 flex-1 min-h-0">
                   <PhonePreview className="shadow-none border-none h-full max-w-full">
-                    <Preview screen={currentScreen} isGenerating={isGenerating} />
+                    <Preview screen={currentScreen} isGenerating={isGenerating} generatedCode={generatedCode} />
                   </PhonePreview>
                 </CardContent>
-                <div className="flex items-center justify-between border-t border-gray-800 p-2 bg-black flex-shrink-0">
+                <div className="flex items-center justify-between border-t border-[#111111] p-2 bg-black flex-shrink-0">
                   <div className="flex items-center gap-1">
-                    <Button variant={currentScreen === 'home' ? 'secondary' : 'ghost'} size="sm" onClick={() => setCurrentScreen('home')}>
+                    <Button variant={currentScreen === 'home' ? 'secondary' : 'ghost'} size="sm" onClick={() => setCurrentScreen('home')} className={currentScreen === 'home' ? 'bg-white/10' : ''}>
                       <Home className="h-4 w-4" />
                     </Button>
-                    <Button variant={currentScreen === 'login' ? 'secondary' : 'ghost'} size="sm" onClick={() => setCurrentScreen('login')}>
+                    <Button variant={currentScreen === 'login' ? 'secondary' : 'ghost'} size="sm" onClick={() => setCurrentScreen('login')} className={currentScreen === 'login' ? 'bg-white/10' : ''}>
                       <LogIn className="h-4 w-4" />
                     </Button>
-                    <Button variant={currentScreen === 'dashboard' ? 'secondary' : 'ghost'} size="sm" onClick={() => setCurrentScreen('dashboard')}>
+                    <Button variant={currentScreen === 'dashboard' ? 'secondary' : 'ghost'} size="sm" onClick={() => setCurrentScreen('dashboard')} className={currentScreen === 'dashboard' ? 'bg-white/10' : ''}>
                       <LayoutDashboard className="h-4 w-4" />
                     </Button>
                   </div>
@@ -204,10 +263,10 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
             </div>
           </Panel>
           <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">
-             <div className="w-1 h-8 rounded-full bg-gray-800 group-hover:bg-gray-700 transition-colors" />
+             <div className="w-1 h-8 rounded-full bg-[#111111] group-hover:bg-[#222222] transition-colors" />
           </PanelResizeHandle>
           <Panel defaultSize={50} minSize={30}>
-            <div className="flex flex-col bg-black h-full border-l border-gray-800">
+            <div className="flex flex-col bg-black h-full border-l border-[#111111]">
                 <ScrollArea className="flex-1 p-4 md:p-6" ref={scrollAreaRef}>
                     <div className="space-y-6">
                     {messages.map((msg) => (
@@ -226,13 +285,13 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
                     )}
                     </div>
                 </ScrollArea>
-                <div className="border-t border-gray-800 bg-black p-4 md:p-6">
+                <div className="border-t border-[#111111] bg-black p-4 md:p-6">
                     <form onSubmit={handleSendMessage} className="relative">
                         <Input
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             placeholder="Describe a change you want to see..."
-                            className="pr-12 h-12 bg-gray-900 border-gray-800 text-gray-200 placeholder:text-gray-500 focus:ring-gray-700"
+                            className="pr-12 h-12 bg-[#111111] border-[#111111] text-gray-200 placeholder:text-gray-500 focus:ring-gray-700"
                             disabled={isGenerating}
                         />
                         <Button
