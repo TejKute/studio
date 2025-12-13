@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Copy, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useToast } from './ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 interface CodeBlockProps {
   code: string;

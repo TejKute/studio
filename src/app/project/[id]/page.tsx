@@ -10,7 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/components/layout/app-layout';
 import { PhonePreview } from '@/components/phone-preview';
 import { CodeBlock } from '@/components/code-block';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 const MOCK_FLUTTER_CODE = `import 'package:flutter/material.dart';
 
