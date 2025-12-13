@@ -1,6 +1,5 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
+import { useState, useRef, useEffect, use } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Download, Bot, Loader2, RefreshCw, CornerDownLeft, ArrowRight } from 'lucide-react';
@@ -19,6 +18,7 @@ import {
   LayoutDashboard,
   Settings
 } from 'lucide-react';
+import Link from 'next/link';
 
 
 interface Message {
@@ -62,8 +62,8 @@ const Preview = ({ screen, isGenerating, generatedCode }: { screen: string, isGe
        <div className="p-4 h-full flex flex-col justify-center bg-black text-white">
           <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
           <div className="space-y-4">
-            <Input type="email" placeholder="Email" className="bg-gray-900 border-gray-800 text-white" />
-            <Input type="password" placeholder="Password" className="bg-gray-900 border-gray-800 text-white" />
+            <Input type="email" placeholder="Email" className="bg-gray-900 border-gray-800 text-black" />
+            <Input type="password" placeholder="Password" className="bg-gray-900 border-gray-800 text-black" />
             <Button className="w-full bg-gray-800 hover:bg-gray-700 text-white">Sign In</Button>
           </div>
       </div>
@@ -111,6 +111,7 @@ const ChatMessage = ({ message }: { message: Message }) => {
 };
 
 export default function ProjectPage({ params }: { params: { id: string } }) {
+  const resolvedParams = use(Promise.resolve(params));
   const [messages, setMessages] = useState<Message[]>([
     { id: '1', text: "Hello! How can I help you design your app today?", sender: 'ai' },
   ]);
@@ -218,7 +219,7 @@ export default function ProjectPage({ params }: { params: { id: string } }) {
             <span className="font-headline text-white">Craftify AI</span>
           </Link>
           <span className="text-sm text-gray-500">/</span>
-          <span className="text-sm text-white font-medium">Project: {params.id}</span>
+          <span className="text-sm text-white font-medium">Project: {resolvedParams.id}</span>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={handleRegenerate} disabled={isGenerating} className="border-white/20 hover:bg-white/5">
