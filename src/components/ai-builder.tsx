@@ -161,9 +161,14 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [currentScreen, setCurrentScreen] = useState('home');
   const [generatedCode, setGeneratedCode] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -306,6 +311,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
         </div>
       </header>
       <main className="flex-1 min-h-0">
+      {isMounted && (
         <PanelGroup direction="horizontal" className="h-full">
           <Panel defaultSize={50} minSize={30}>
             <div className="relative flex flex-col items-center justify-center p-4 md:p-8 bg-black h-full overflow-hidden">
@@ -413,6 +419,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
             </div>
           </Panel>
         </PanelGroup>
+      )}
       </main>
     </div>
   );
