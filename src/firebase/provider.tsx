@@ -2,9 +2,10 @@
 
 import React, { DependencyList, createContext, useContext, ReactNode, useMemo, useState, useEffect } from 'react';
 import { FirebaseApp } from 'firebase/app';
-import { Firestore } from 'firebase/firestore';
-import { Auth, User, onAuthStateChanged } from 'firebase/auth';
-import { FirebaseErrorListener } from '@/components/FirebaseErrorListener'
+import { Firestore, doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { Auth, User, onAuthStateChanged, getRedirectResult, GoogleAuthProvider } from 'firebase/auth';
+import { FirebaseErrorListener } from '@/components/FirebaseErrorListener';
+import { createUserProfileDocument } from '@/lib/user-profile';
 
 interface FirebaseProviderProps {
   children: ReactNode;
@@ -67,6 +68,24 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({
     userError: null,
   });
 
+  useEffect(() => {
+    const handleRedirectResult = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result && result.user) {
+          await createUserProfileDocument(firestore, result.user);
+        }
+      } catch (error: any) {
+        if (error.code === 'auth/account-exists-with-different-credential') {
+          const credential = GoogleAuthProvider.credentialFromError(error);
+          // Handle linking accounts if necessary
+        }
+        console.error('Error handling redirect result', error);
+      }
+    };
+    handleRedirectResult();
+  }, [auth, firestore]);
+
   // Effect to subscribe to Firebase auth state changes
   useEffect(() => {
     if (!auth) { // If no Auth service instance, cannot determine user state
@@ -78,7 +97,10 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({
 
     const unsubscribe = onAuthStateChanged(
       auth,
-      (firebaseUser) => { // Auth state determined
+      async (firebaseUser) => { // Auth state determined
+        if(firebaseUser) {
+          await createUserProfileDocument(firestore, firebaseUser);
+        }
         setUserAuthState({ user: firebaseUser, isUserLoading: false, userError: null });
       },
       (error) => { // Auth listener error
@@ -87,7 +109,7 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({
       }
     );
     return () => unsubscribe(); // Cleanup
-  }, [auth]); // Depends on the auth instance
+  }, [auth, firestore]);
 
   // Memoize the context value
   const contextValue = useMemo((): FirebaseContextState => {

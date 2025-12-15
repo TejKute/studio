@@ -1,3 +1,4 @@
+'use client';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -7,6 +8,9 @@ import AppLayout from '@/components/layout/app-layout';
 import { mockProjects } from '@/lib/data';
 import { format, parseISO } from 'date-fns';
 import type { Project } from '@/types';
+import { useUser } from '@/firebase';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 function ProjectCard({ project }: { project: Project }) {
   return (
@@ -40,13 +44,30 @@ function ProjectCard({ project }: { project: Project }) {
 }
 
 export default function DashboardPage() {
+  const { user, isUserLoading } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      router.push('/');
+    }
+  }, [user, isUserLoading, router]);
+
+  if (isUserLoading || !user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-black">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
   return (
     <AppLayout>
       <div className="space-y-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-headline font-bold">Dashboard</h1>
-            <p className="text-muted-foreground">Welcome back! Here are your recent projects.</p>
+            <h1 className="text-3xl font-headline font-bold">Welcome, {user.displayName}</h1>
+            <p className="text-muted-foreground">Here are your recent projects.</p>
           </div>
           <Button asChild>
             <Link href="/project/new">

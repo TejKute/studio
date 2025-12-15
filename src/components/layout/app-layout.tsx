@@ -6,10 +6,20 @@ import { UserNav } from '@/components/user-nav';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '../ui/button';
+import { useAuth } from '@/firebase';
+import { signOut } from 'firebase/auth';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const auth = useAuth();
+
+  const handleLogout = async () => {
+    if (auth) {
+      await signOut(auth);
+      router.push('/');
+    }
+  };
 
   if (pathname.startsWith('/project/')) {
     return <>{children}</>;
@@ -76,7 +86,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <SidebarFooter>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton onClick={() => router.push('/login')} tooltip="Logout">
+              <SidebarMenuButton onClick={handleLogout} tooltip="Logout">
                 <LogOut />
                 <span>Logout</span>
               </SidebarMenuButton>
