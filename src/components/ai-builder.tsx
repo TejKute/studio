@@ -199,27 +199,20 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
       });
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: `I have updated the preview based on your request.`,
+        text: `I have generated the Flutter code based on your request. You can export it using the button above.`,
         sender: 'ai',
         explanation: result.explanation,
       };
       setMessages((prev) => [...prev, aiResponse]);
       setGeneratedCode(result.componentCode);
-      setCurrentScreen('home');
     } catch (error) {
       console.error(error);
       const aiErrorResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: "I'm sorry, I encountered an error while generating the component. Please try again.",
+        text: "Something went wrong. Please try again.",
         sender: 'ai',
       };
       setMessages((prev) => [...prev, aiErrorResponse]);
-      toast({
-        variant: 'destructive',
-        title: 'Generation Failed',
-        description:
-          'Could not generate the component. Please check the console for more details.',
-      });
     } finally {
       setIsGenerating(false);
     }
@@ -248,27 +241,20 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
       });
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: `I've regenerated the design for: "${lastUserMessage.text}".`,
+        text: `I've regenerated the Flutter code for: "${lastUserMessage.text}".`,
         sender: 'ai',
         explanation: result.explanation,
       };
       setMessages((prev) => [...prev, aiResponse]);
       setGeneratedCode(result.componentCode);
-      setCurrentScreen('home');
     } catch (error) {
       console.error(error);
       const aiErrorResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: "I'm sorry, I encountered an error while regenerating the component. Please try again.",
+        text: "Something went wrong. Please try again.",
         sender: 'ai',
       };
       setMessages((prev) => [...prev, aiErrorResponse]);
-      toast({
-        variant: 'destructive',
-        title: 'Regeneration Failed',
-        description:
-          'Could not regenerate the component. Please check the console for more details.',
-      });
     } finally {
       setIsGenerating(false);
     }
