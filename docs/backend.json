@@ -1,0 +1,135 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the Craftify AI platform.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the User entity."
+        },
+        "uid": {
+          "type": "string",
+          "description": "The user's unique ID provided by Firebase Authentication."
+        },
+        "name": {
+          "type": "string",
+          "description": "The user's display name."
+        },
+        "email": {
+          "type": "string",
+          "description": "The user's email address.",
+          "format": "email"
+        },
+        "profilePhotoUrl": {
+          "type": "string",
+          "description": "URL of the user's profile photo.",
+          "format": "uri"
+        },
+        "loginProvider": {
+          "type": "string",
+          "description": "The authentication provider used for login (e.g., 'google', 'email')."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the user account was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "uid",
+        "name",
+        "email",
+        "profilePhotoUrl",
+        "loginProvider",
+        "createdAt"
+      ]
+    },
+    "Project": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Project",
+      "type": "object",
+      "description": "Represents a Flutter project created within Craftify AI.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Project entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N Project)"
+        },
+        "description": {
+          "type": "string",
+          "description": "A description of the Flutter project."
+        },
+        "theme": {
+          "type": "string",
+          "description": "Theme information for the Flutter project.  Could be a JSON string representing the theme."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the project was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "description",
+        "theme",
+        "createdAt"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profile data. The 'userId' parameter corresponds to the Firebase Authentication UID. Each user can only access their own document, based on the 'request.auth.uid == userId' rule.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the user, matching the Firebase Authentication UID."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/projects/{projectId}",
+        "definition": {
+          "entityName": "Project",
+          "schema": {
+            "$ref": "#/backend/entities/Project"
+          },
+          "description": "Stores project data for each user. The path-based ownership ensures that only the user who owns the project (identified by userId) can access it.  This simplifies security rules and ensures QAPs (rules are not filters).",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique ID of the user who owns the project."
+            },
+            {
+              "name": "projectId",
+              "description": "The unique ID of the project."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to ensure secure access to user data and efficient management of projects within the Craftify AI platform. The primary goal is to enforce Authorization Independence, DBAC (Database Authentication and Control), and support secure list operations (QAPs). User data is stored under `/users/{userId}`, ensuring that each user can only access their own information. Project data is stored within a subcollection of the user document at `/users/{userId}/projects/{projectId}`, inheriting authorization context via path-based ownership, further simplifying security rules and ensuring that only the owning user can access their projects. This structure eliminates the need for `get()` calls in security rules, facilitating atomic operations and easier debugging. This structure is simple and scalable."
+  }
+}

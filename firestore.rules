@@ -1,0 +1,141 @@
+/**
+ * # Firestore Security Rules for Craftify AI
+ *
+ * ## Core Philosophy
+ * This ruleset enforces a strict user-ownership model. All data is scoped to an individual user,
+ * preventing any user from accessing another user's information. The default security posture
+ * is to deny all access unless explicitly granted.
+ *
+ * ## Data Structure
+ * The data is organized hierarchically to simplify security. A top-level `/users` collection
+ * contains individual user documents. All user-specific data, such as projects, is stored in
+ * subcollections under that user's document (e.g., /users/{userId}/projects/{projectId}).
+ * This path-based ownership model is fundamental to the security design.
+ *
+ * ## Key Security Decisions
+ * - **No User Enumeration**: Listing the top-level `/users` collection is explicitly disallowed
+ *   to protect user privacy and prevent data scraping.
+ * - **Path-Based Ownership**: Access to a user's data tree (their document and all subcollections)
+ *   is granted only if the requester's authenticated UID matches the {userId} in the path. This
+ *   is highly performant as it avoids extra database reads (`get()` calls) for authorization.
+ * - **Self-Service Profile Creation**: A user can create their own profile document (`/users/{userId}`)
+ *   but cannot create one for anyone else. Once created, only they can read, update, or delete it.
+ * - **Relational Integrity**: Rules enforce that internal ownership fields (e.g., `project.userId`)
+ *   must match the user ID in the document path, ensuring data consistency and preventing
+ *   documents from being "orphaned" or mis-assigned. These ownership fields are immutable after creation.
+ *
+ * ## Denormalization for Authorization
+ * The entire data model is built on the principle of using the document path for authorization.
+ * The `userId` in `/users/{userId}` acts as a security boundary, making rules simple, fast, and secure.
+ * For example, securing the `projects` subcollection is as simple as checking the `userId` from
+ * the path, without needing to read the parent user document.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ------------------------------------------------------------------------
+    // Helper Functions
+    // ------------------------------------------------------------------------
+
+    /**
+     * Checks if the user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Checks if the authenticated user's UID matches the provided userId.
+     * This is the primary function for enforcing data ownership.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * Combines an ownership check with an existence check for the document.
+     * CRITICAL: Used for all update and delete operations to prevent modifying
+     * or deleting non-existent data.
+     */
+    function isExistingOwner(userId) {
+      return isOwner(userId) && resource != null;
+    }
+
+    /**
+     * Validates that a new user document has its internal IDs (`id` and `uid`)
+     * set correctly to match the document's ID in the path.
+     * This enforces relational integrity from the moment of creation.
+     */
+    function isCreatingValidUser(userId) {
+      let data = request.resource.data;
+      return data.uid == userId && data.id == userId;
+    }
+
+    /**
+     * Ensures critical, immutable fields (like ownership IDs) are not changed
+     * during a user profile update.
+     */
+    function isUpdatingValidUser() {
+      let incomingData = request.resource.data;
+      let existingData = resource.data;
+      return incomingData.uid == existingData.uid && incomingData.id == existingData.id;
+    }
+
+    /**
+     * Validates that a new project document has its internal `userId` field
+     * set correctly to match the user's ID in the path.
+     */
+    function isCreatingValidProject(userId) {
+      return request.resource.data.userId == userId;
+    }
+    
+    /**
+     * Ensures the parent `userId` of a project cannot be changed after creation.
+     */
+    function isUpdatingValidProject() {
+      return request.resource.data.userId == resource.data.userId;
+    }
+
+    // ------------------------------------------------------------------------
+    // Collection Rules: /users
+    // ------------------------------------------------------------------------
+
+    /**
+     * @description Rules for a user's own profile document.
+     * @path /users/{userId}
+     * @allow (get) A user retrieves their own profile document. `auth.uid == 'user_abc'`, path `/users/user_abc`
+     * @allow (create) A new user creates their own profile document for the first time. `auth.uid == 'user_abc'`, path `/users/user_abc`
+     * @deny (list) A user tries to query the entire `/users` collection to find other users.
+     * @deny (get) A user tries to read another user's profile. `auth.uid == 'user_abc'`, path `/users/user_xyz`
+     * @principle Restricts access to a user's own data tree and prevents user enumeration.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false; // CRITICAL: Prevents listing all users in the application.
+      allow create: if isOwner(userId) && isCreatingValidUser(userId);
+      allow update: if isExistingOwner(userId) && isUpdatingValidUser();
+      allow delete: if isExistingOwner(userId);
+
+      // ----------------------------------------------------------------------
+      // Subcollection Rules: /users/{userId}/projects
+      // ----------------------------------------------------------------------
+
+      /**
+       * @description Rules for a user's projects, which are stored in a subcollection.
+       * @path /users/{userId}/projects/{projectId}
+       * @allow (list) A user lists all of their own projects. `auth.uid == 'user_abc'`, path `/users/user_abc/projects`
+       * @allow (create) A user creates a new project for themselves. `auth.uid == 'user_abc'`, path `/users/user_abc/projects/project_123`
+       * @deny (get) A user tries to access a project belonging to another user. `auth.uid == 'user_abc'`, path `/users/user_xyz/projects/project_456`
+       * @principle Enforces strict data ownership using path-based security, where access to the subcollection is inherited from the parent document's path.
+       */
+      match /projects/{projectId} {
+        allow get: if isOwner(userId);
+        allow list: if isOwner(userId);
+        allow create: if isOwner(userId) && isCreatingValidProject(userId);
+        allow update: if isExistingOwner(userId) && isUpdatingValidProject();
+        allow delete: if isExistingOwner(userId);
+      }
+    }
+  }
+}
