@@ -10,7 +10,7 @@ import AppLogo from '@/components/app-logo';
 import { useAuth, useUser } from '@/firebase';
 import {
   GoogleAuthProvider,
-  AppleAuthProvider,
+  OAuthProvider,
   signInWithPopup,
   signInWithRedirect,
   createUserWithEmailAndPassword,
@@ -56,8 +56,8 @@ export default function LoginPage() {
 
     setIsSigningIn(true);
     setAuthError(null);
-
-    const provider = providerName === 'google' ? new GoogleAuthProvider() : new AppleAuthProvider();
+    
+    const provider = providerName === 'google' ? new GoogleAuthProvider() : new OAuthProvider('apple.com');
 
     try {
       await signInWithPopup(auth, provider);
