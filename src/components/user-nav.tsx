@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { CreditCard, LogOut, Settings, User as UserIcon } from 'lucide-react';
+import { CreditCard, LogOut, Settings, User as UserIcon, DollarSign } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth, useUser } from '@/firebase';
 import { signOut } from 'firebase/auth';
@@ -58,6 +58,12 @@ export function UserNav() {
             <Link href="/settings">
               <UserIcon className="mr-2 h-4 w-4" />
               <span>Profile</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+             <Link href="/pricing">
+                <DollarSign className="mr-2 h-4 w-4" />
+                <span>Pricing</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
