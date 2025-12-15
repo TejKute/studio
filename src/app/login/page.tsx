@@ -118,19 +118,19 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
-      <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-black p-4">
+      <div className="absolute inset-0 -z-10 h-full w-full bg-black bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
       <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-primary/20 opacity-20 blur-[100px]"></div>
       
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center text-center mb-8">
-            <AppLogo className="h-12 w-12 mb-4" />
-            <h1 className="text-3xl font-headline font-bold">Craftify AI</h1>
+            <AppLogo className="h-12 w-12 mb-4 text-primary" />
+            <h1 className="text-3xl font-headline font-bold text-white">Craftify AI</h1>
             <p className="mt-1 text-md text-muted-foreground">Sign in to start building with AI</p>
         </div>
 
         <div className="space-y-4">
-          <Button size="lg" className="w-full" variant="outline" onClick={() => handleOAuthSignIn('google')} disabled={isSigningIn}>
+          <Button size="lg" className="w-full bg-white text-black hover:bg-white/90" onClick={() => handleOAuthSignIn('google')} disabled={isSigningIn}>
             {isSigningIn ? (
                 <svg className="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
             ) : (
@@ -138,26 +138,26 @@ export default function LoginPage() {
             )}
             Continue with Google
           </Button>
-          <Button size="lg" className="w-full" variant="outline" onClick={() => handleOAuthSignIn('apple')} disabled={isSigningIn}>
+          <Button size="lg" className="w-full bg-white text-black hover:bg-white/90" onClick={() => handleOAuthSignIn('apple')} disabled={isSigningIn}>
               <svg className="mr-2 h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.01,2.02c-1.33-0.03-2.67,0.44-3.79,1.39c-1.2,1.01-2.11,2.44-2.43,4.05c-0.09,0.47,0.24,0.91,0.72,0.99 c0.48,0.08,0.92-0.24,1-0.71c0.03-0.18,0.06-0.35,0.1-0.52c0.47-1.2,1.57-2.01,2.9-2.21c1.33-0.2,2.7,0.09,3.73,0.9 c0.13,0.1,0.25,0.22,0.36,0.34c-1.58,0.94-2.58,2.67-2.55,4.52c0.03,2.01,1.2,3.8,2.94,4.64c0.23,0.11,0.47,0.21,0.71,0.29 c-0.25,0.44-0.52,0.86-0.81,1.26c-0.79,1.08-1.74,2.03-2.92,2.66c-1.2,0.64-2.58,0.9-3.93,0.75c-1.4-0.15-2.73-0.72-3.8-1.62 c-0.4-0.33-0.97-0.23-1.3,0.18c-0.33,0.4,-0.22,0.97,0.18,1.3c1.3,1.1,2.89,1.8,4.59,2.01c1.7,0.21,3.45-0.02,5.06-0.69 c1.58-0.66,2.98-1.76,4.05-3.18c0.05-0.07,0.1-0.14,0.15-0.21c-0.1,0.02-0.19,0.04-0.28,0.05c-1.5,0.17-3.04-0.65-3.86-1.92 c-0.57-0.88-0.8-1.93-0.64-2.98c0.15-1.05,0.7-2.02,1.52-2.75c0.55-0.49,1.2-0.86,1.9-1.09C17.2,12,17.91,12,18.6,12.2 c0.04,0.01,0.08,0.02,0.12,0.04c-0.08-0.44-0.22-0.86-0.43-1.25c-0.86-1.58-2.33-2.7-4.1-3.08C13.51,7.77,12.76,7.8,12.01,8.02z M17.06,11.02c-0.29-0.02-0.58-0.02-0.86,0.02c-1.23,0.17-2.28,0.89-2.86,1.96c-0.54,1.01-0.67,2.2-0.34,3.31 c0.33,1.11,1.13,2.01,2.21,2.48c1.08,0.47,2.3,0.43,3.35-0.12c1.05-0.55,1.82-1.53,2.15-2.67c0.01-0.05,0.02-0.09,0.03-0.14 c-1.08,0.14-2.18-0.22-2.9-0.96c-0.72-0.74-1.08-1.76-0.97-2.81c0.05-0.46-0.28-0.88-0.74-0.95C17.11,11.04,17.08,11.03,17.06,11.02z"></path></svg>
             Continue with Apple
           </Button>
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
+              <span className="w-full border-t border-zinc-800" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">or</span>
+              <span className="bg-black px-2 text-muted-foreground">or</span>
             </div>
           </div>
           
-          <Button size="lg" className="w-full" variant="secondary" onClick={() => setShowEmailForm(!showEmailForm)} disabled={isSigningIn}>
+          <Button size="lg" className="w-full bg-zinc-900 border border-zinc-800 text-white hover:bg-zinc-800" onClick={() => setShowEmailForm(!showEmailForm)} disabled={isSigningIn}>
             Continue with Email
           </Button>
 
           {showEmailForm && (
-            <div className="p-4 border rounded-lg bg-card">
+            <div className="p-4 border rounded-lg bg-zinc-900/50 border-zinc-800">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleEmailAuth)} className="space-y-4">
                   <FormField
@@ -165,9 +165,9 @@ export default function LoginPage() {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel className="text-zinc-400">Email</FormLabel>
                         <FormControl>
-                          <Input placeholder="name@example.com" {...field} />
+                          <Input placeholder="name@example.com" {...field} className="bg-zinc-900 border-zinc-700 text-white focus:ring-primary" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -178,15 +178,15 @@ export default function LoginPage() {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Password</FormLabel>
+                        <FormLabel className="text-zinc-400">Password</FormLabel>
                         <FormControl>
-                          <Input type="password" placeholder="••••••••" {...field} />
+                          <Input type="password" placeholder="••••••••" {...field} className="bg-zinc-900 border-zinc-700 text-white focus:ring-primary"/>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full" disabled={isSigningIn}>
+                  <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-white" disabled={isSigningIn}>
                     {isSigningIn ? 'Processing...' : (authMode === 'signup' ? 'Sign Up' : 'Sign In')}
                   </Button>
                 </form>
@@ -200,7 +200,7 @@ export default function LoginPage() {
         </div>
         
         {authError && (
-          <p className="mt-4 text-sm text-center text-destructive">{authError}</p>
+          <p className="mt-4 text-sm text-center text-red-400">{authError}</p>
         )}
 
         <p className="px-8 text-center text-sm text-muted-foreground mt-8">
