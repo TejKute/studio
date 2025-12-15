@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, Suspense, lazy } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -52,16 +52,17 @@ const GeneratedComponentRenderer: React.FC<GeneratedComponentRendererProps> = ({
     if (!code) return;
 
     try {
-      // A simple transformation to make the JSX string a valid component
+      // The function body will now directly contain the AI-generated code.
+      // The generated code is expected to be a self-contained functional component.
       const functionBody = `
         const { ${Object.keys(scope).join(', ')} } = scope;
-        return (${code});
+        ${code}
       `;
       
       const factory = new Function('scope', functionBody);
       const newComponent = factory(scope);
 
-      setComponent(() => () => newComponent);
+      setComponent(() => newComponent);
       setError(null);
     } catch (e: any) {
       console.error("Error creating component from string:", e);
