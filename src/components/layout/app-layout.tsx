@@ -75,11 +75,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </SidebarMenuItem>
              <SidebarMenuItem>
                 <SidebarMenuButton
-                  disabled
-                  tooltip="Templates (Coming Soon)"
+                  asChild
+                  tooltip="Templates"
+                  isActive={pathname.startsWith('/templates')}
                 >
+                  <Link href="/templates">
                     <FileCode />
                     <span>Templates</span>
+                  </Link>
                 </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
@@ -109,15 +112,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </SidebarContent>
         <SidebarFooter>
           <SidebarSeparator />
-           <Card className="m-2 bg-gradient-to-br from-purple-500/10 to-blue-500/10 border-purple-500/20">
-              <CardContent className="p-3 text-center">
-                  <h3 className="font-headline text-sm font-semibold">Upgrade to Pro</h3>
-                  <p className="text-xs text-muted-foreground mt-1 mb-2">Unlock all features.</p>
-                  <Button size="sm" className="w-full text-xs h-8" asChild>
-                      <Link href="/pricing"><Zap className="mr-2 h-3 w-3" /> Coming Soon</Link>
-                  </Button>
-              </CardContent>
-           </Card>
+           <div className="p-2">
+                <Button size="sm" variant="outline" className="w-full text-xs h-8 bg-gradient-to-r from-sky-500/10 to-cyan-500/10 border-sky-500/20 hover:border-sky-500/40 text-sky-400 hover:text-sky-300" asChild>
+                    <Link href="/pricing"><Zap className="mr-2 h-3 w-3" /> Coming Soon</Link>
+                </Button>
+           </div>
           <SidebarMenu>
              <SidebarMenuItem>
                 <SidebarMenuButton

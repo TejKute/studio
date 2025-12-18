@@ -118,8 +118,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-black p-4">
-      <div className="absolute inset-0 -z-10 h-full w-full bg-black bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
+      <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
       <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-primary/20 opacity-20 blur-[100px]"></div>
       
       <div className="w-full max-w-sm">
@@ -148,16 +148,16 @@ export default function LoginPage() {
               <span className="w-full border-t border-zinc-800" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-black px-2 text-muted-foreground">or</span>
+              <span className="bg-background px-2 text-muted-foreground">or</span>
             </div>
           </div>
           
-          <Button size="lg" className="w-full bg-zinc-900 border border-zinc-800 text-white hover:bg-zinc-800" onClick={() => setShowEmailForm(!showEmailForm)} disabled={isSigningIn}>
+          <Button size="lg" className="w-full bg-secondary/50 border border-border text-foreground hover:bg-secondary" onClick={() => setShowEmailForm(!showEmailForm)} disabled={isSigningIn}>
             Continue with Email
           </Button>
 
           {showEmailForm && (
-            <div className="p-4 border rounded-lg bg-zinc-900/50 border-zinc-800">
+            <div className="p-4 border rounded-lg bg-secondary/20 border-border">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleEmailAuth)} className="space-y-4">
                   <FormField
@@ -167,7 +167,7 @@ export default function LoginPage() {
                       <FormItem>
                         <FormLabel className="text-zinc-400">Email</FormLabel>
                         <FormControl>
-                          <Input placeholder="name@example.com" {...field} className="bg-zinc-900 border-zinc-700 text-white focus:ring-primary" />
+                          <Input placeholder="name@example.com" {...field} className="bg-background/80 border-border text-white focus:ring-primary" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -180,13 +180,13 @@ export default function LoginPage() {
                       <FormItem>
                         <FormLabel className="text-zinc-400">Password</FormLabel>
                         <FormControl>
-                          <Input type="password" placeholder="••••••••" {...field} className="bg-zinc-900 border-zinc-700 text-white focus:ring-primary"/>
+                          <Input type="password" placeholder="••••••••" {...field} className="bg-background/80 border-border text-white focus:ring-primary"/>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-white" disabled={isSigningIn}>
+                  <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" disabled={isSigningIn}>
                     {isSigningIn ? 'Processing...' : (authMode === 'signup' ? 'Sign Up' : 'Sign In')}
                   </Button>
                 </form>

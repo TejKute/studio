@@ -91,7 +91,7 @@ export default function DashboardPage() {
 
   if (isUserLoading || !user) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-black text-white">
+      <div className="flex min-h-screen items-center justify-center bg-background text-foreground">
         <Loader2 className="h-8 w-8 animate-spin" />
         <p className="ml-2">Loading...</p>
       </div>
@@ -102,6 +102,8 @@ export default function DashboardPage() {
     <AppLayout>
       <div className="space-y-12">
         <div className="text-center space-y-4">
+           <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
+           <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-primary/20 opacity-20 blur-[100px]"></div>
           <h1 className="text-4xl sm:text-5xl font-headline font-bold tracking-tighter">
             Build production-ready apps with AI
           </h1>
