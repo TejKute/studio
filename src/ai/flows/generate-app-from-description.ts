@@ -40,7 +40,6 @@ const prompt = ai.definePrompt({
 
   Generate the Flutter widget code and an explanation.
   `,
-  model: 'gemini-1.5-flash',
 });
 
 const generateAppFromDescriptionFlow = ai.defineFlow(
@@ -50,7 +49,20 @@ const generateAppFromDescriptionFlow = ai.defineFlow(
     outputSchema: GenerateAppFromDescriptionOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    try {
+      const {output} = await prompt(input);
+      return output!;
+    } catch (error) {
+      console.error('AI generation failed:', error);
+      // Return a fallback response to prevent the app from crashing.
+      return {
+        componentCode: `
+// AI Generation Failed.
+// Please check the server logs for more details.
+// You can try your request again.
+        `,
+        explanation: 'An error occurred while trying to generate the app. The AI model may be temporarily unavailable. Please try again later.',
+      };
+    }
   }
 );
