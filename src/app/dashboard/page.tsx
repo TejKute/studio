@@ -19,7 +19,7 @@ function ProjectCard({ project }: { project: Project }) {
     : 'N/A';
 
   return (
-    <Card className="flex flex-col overflow-hidden transition-transform transform-gpu hover:-translate-y-1 hover:shadow-xl">
+    <Card className="flex flex-col overflow-hidden transition-transform transform-gpu hover:-translate-y-1 hover:shadow-xl bg-card/50 hover:bg-card">
       <CardHeader>
         <CardTitle className="font-headline tracking-tight">{project.name}</CardTitle>
         <CardDescription className="line-clamp-2">{project.description}</CardDescription>
@@ -100,22 +100,34 @@ export default function DashboardPage() {
 
   return (
     <AppLayout>
-      <div className="space-y-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-headline font-bold">Welcome, {user.displayName || 'User'}</h1>
-            <p className="text-muted-foreground">Here are your recent projects.</p>
+      <div className="space-y-12">
+        <div className="text-center space-y-4">
+          <h1 className="text-4xl sm:text-5xl font-headline font-bold tracking-tighter">
+            Build production-ready apps with AI
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Design, generate, preview, and deploy apps from one studio—faster than ever.
+          </p>
+          <div className="flex justify-center gap-4">
+            <Button size="lg" asChild>
+                <Link href="/project/new">
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Create New App
+                </Link>
+            </Button>
+            <Button size="lg" variant="outline">
+                Explore Templates
+            </Button>
           </div>
-          <Button asChild>
-            <Link href="/project/new">
-              <PlusCircle className="mr-2 h-4 w-4" />
-              New App
-            </Link>
-          </Button>
         </div>
 
         <div>
-          <h2 className="text-xl font-headline font-semibold mb-4">Recent Projects</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-headline font-semibold">Recent Projects</h2>
+             <Button variant="ghost" size="sm">
+                View All
+            </Button>
+          </div>
           {areProjectsLoading ? (
              <ProjectGridSkeleton />
           ) : projects && projects.length > 0 ? (

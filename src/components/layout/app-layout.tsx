@@ -1,6 +1,6 @@
 'use client';
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarFooter, SidebarSeparator } from '@/components/ui/sidebar';
-import { LayoutDashboard, Settings, PlusCircle, LogOut, Code } from 'lucide-react';
+import { LayoutDashboard, Settings, PlusCircle, LogOut, Code, Home, Search, Folder, FileCode, Users, LifeBuoy, Zap, Star } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { UserNav } from '@/components/user-nav';
 import Link from 'next/link';
@@ -8,6 +8,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '../ui/button';
 import { useAuth } from '@/firebase';
 import { signOut } from 'firebase/auth';
+import { Card, CardContent } from '../ui/card';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -36,38 +37,51 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
-            <SidebarMenuItem>
-                <Button className="w-full justify-start" asChild>
-                    <Link href="/project/new">
-                        <PlusCircle className="mr-2 h-4 w-4" />
-                        New App
-                    </Link>
-                </Button>
-            </SidebarMenuItem>
-             <SidebarSeparator className="my-2" />
-            <SidebarMenuItem>
+             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
                 isActive={pathname.startsWith('/dashboard')}
-                tooltip="Dashboard"
+                tooltip="Home"
               >
                 <Link href="/dashboard">
-                  <LayoutDashboard />
-                  <span>Dashboard</span>
+                  <Home />
+                  <span>Home</span>
                 </Link>
               </SidebarMenuButton>
+            </SidebarMenuItem>
+             <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  tooltip="Search"
+                >
+                  <Link href="#">
+                    <Search />
+                    <span>Search</span>
+                  </Link>
+                </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
                 isActive={pathname.startsWith('/project')}
-                tooltip="Builder"
+                tooltip="All Projects"
               >
-                <Link href="/project/new">
-                  <Code />
-                  <span>Builder</span>
+                <Link href="/dashboard">
+                  <Folder />
+                  <span>All Projects</span>
                 </Link>
               </SidebarMenuButton>
+            </SidebarMenuItem>
+             <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  tooltip="Templates"
+                >
+                  <Link href="#">
+                    <FileCode />
+                    <span>Templates</span>
+                  </Link>
+                </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton
@@ -81,10 +95,42 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
+             <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  tooltip="Shared with me"
+                >
+                  <Link href="#">
+                    <Users />
+                    <span>Shared with me</span>
+                  </Link>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
+          <SidebarSeparator />
+           <Card className="m-2 bg-gradient-to-br from-purple-500/10 to-blue-500/10 border-purple-500/20">
+              <CardContent className="p-4 text-center">
+                  <h3 className="font-headline text-sm font-semibold">Upgrade to Pro</h3>
+                  <p className="text-xs text-muted-foreground mt-1 mb-3">Unlock unlimited generations and advanced features.</p>
+                  <Button size="sm" className="w-full" asChild>
+                      <Link href="/pricing"><Zap className="mr-2 h-4 w-4" /> Upgrade</Link>
+                  </Button>
+              </CardContent>
+           </Card>
           <SidebarMenu>
+             <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  tooltip="What's New"
+                >
+                  <Link href="#">
+                    <Star />
+                    <span>What’s New</span>
+                  </Link>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton onClick={handleLogout} tooltip="Logout">
                 <LogOut />
