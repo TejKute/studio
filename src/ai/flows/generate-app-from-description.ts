@@ -40,6 +40,7 @@ const prompt = ai.definePrompt({
 
   Generate the Flutter widget code and an explanation.
   `,
+  model: 'gemini-1.5-flash-latest',
 });
 
 const generateAppFromDescriptionFlow = ai.defineFlow(
