@@ -424,5 +424,3 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     </div>
   );
 }
-
-    
