@@ -49,20 +49,52 @@ const generateAppFromDescriptionFlow = ai.defineFlow(
     outputSchema: GenerateAppFromDescriptionOutputSchema,
   },
   async input => {
-    try {
-      const {output} = await prompt(input);
-      return output!;
-    } catch (error) {
-      console.error('AI generation failed:', error);
-      // Return a fallback response to prevent the app from crashing.
-      return {
-        componentCode: `
-// AI Generation Failed.
-// Please check the server logs for more details.
-// You can try your request again.
-        `,
-        explanation: 'An error occurred while trying to generate the app. The AI model may be temporarily unavailable. Please try again later.',
-      };
+    const maxRetries = 2;
+    for (let i = 0; i <= maxRetries; i++) {
+      try {
+        const {output} = await prompt(input);
+        return output!;
+      } catch (error) {
+        console.error(`AI generation attempt ${i + 1} failed:`, error);
+        if (i === maxRetries) {
+          console.error('All retries failed. Returning fallback response.');
+          // Return a fallback response after all retries have been exhausted.
+          return {
+            componentCode: `
+import 'package:flutter/material.dart';
+
+class FallbackComponent extends StatelessWidget {
+  const FallbackComponent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      appBar: AppBar(
+        title: Text('AI Generation Failed'),
+      ),
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Text(
+            'We were unable to generate your app. Please check your connection and try again.',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
+  }
+}
+            `,
+            explanation:
+              'An error occurred while trying to generate the app. The AI model may be temporarily unavailable. Please try again later. A fallback component has been provided.',
+          };
+        }
+        // Wait for a short duration before retrying (optional)
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
     }
+    // This line should be unreachable, but it satisfies TypeScript's requirement
+    // that a value is always returned.
+    throw new Error('Exited retry loop unexpectedly.');
   }
 );
