@@ -75,14 +75,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </SidebarMenuItem>
              <SidebarMenuItem>
                 <SidebarMenuButton
-                  asChild
-                  isActive={pathname.startsWith('/templates')}
-                  tooltip="Templates"
+                  disabled
+                  tooltip="Templates (Coming Soon)"
                 >
-                  <Link href="/templates">
                     <FileCode />
                     <span>Templates</span>
-                  </Link>
                 </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
