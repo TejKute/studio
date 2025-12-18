@@ -21,7 +21,7 @@ function ProjectCard({ project }: { project: Project }) {
   return (
     <Card className="flex flex-col overflow-hidden transition-transform transform-gpu hover:-translate-y-1 hover:shadow-xl bg-card/50 hover:bg-card">
       <CardHeader>
-        <CardTitle className="font-headline tracking-tight">{project.name}</CardTitle>
+        <CardTitle className="font-headline tracking-tight">{project.name || 'Untitled Project'}</CardTitle>
         <CardDescription className="line-clamp-2">{project.description}</CardDescription>
       </CardHeader>
       <CardContent className="flex-grow">
@@ -123,9 +123,11 @@ export default function DashboardPage() {
 
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-headline font-semibold">Recent Projects</h2>
-             <Button variant="ghost" size="sm">
-                View All
+            <h2 className="text-xl font-headline font-semibold">All Projects</h2>
+             <Button variant="ghost" size="sm" asChild>
+                <Link href="/project/new">
+                  New Project
+                </Link>
             </Button>
           </div>
           {areProjectsLoading ? (
@@ -138,7 +140,7 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div className="text-center py-16 border-2 border-dashed rounded-lg">
-              <h3 className="text-lg font-semibold">No projects yet</h3>
+              <h3 className="text-lg font-semibold">Your projects will appear here</h3>
               <p className="text-muted-foreground mb-4">Get started by creating your first app.</p>
               <Button asChild>
                 <Link href="/project/new">
