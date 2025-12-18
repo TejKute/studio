@@ -12,6 +12,8 @@ import {
   Home,
   LogIn,
   LayoutDashboard,
+  MessageSquare,
+  Code2,
 } from 'lucide-react';
 import { PhonePreview } from '@/components/phone-preview';
 import { useToast } from '@/hooks/use-toast';
@@ -24,6 +26,8 @@ import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { generateAppFromDescription } from '@/ai/flows/generate-app-from-description';
 import Link from 'next/link';
 import GeneratedComponentRenderer from '@/components/GeneratedComponentRenderer';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { CodeBlock } from '@/components/code-block';
 
 interface Message {
   id: string;
@@ -65,11 +69,10 @@ const Preview = ({
     home: generatedCode ? (
       <GeneratedComponentRenderer code={generatedCode} />
     ) : (
-      <div className="p-4 h-full bg-black text-white">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold">Welcome Home</h1>
-          <p className="mt-2 text-gray-400">This is your home screen.</p>
-        </div>
+      <div className="p-4 h-full bg-black text-white flex flex-col items-center justify-center text-center">
+          <Bot size={48} className="text-gray-600 mb-4" />
+          <h2 className="text-xl font-bold font-headline">AI App Preview</h2>
+          <p className="text-gray-400">Your generated app will appear here.</p>
       </div>
     ),
     login: (
@@ -118,7 +121,7 @@ const Preview = ({
 
   const content = screens[screen];
 
-  return <div className="p-4 bg-black h-full">{content}</div>;
+  return <div className="bg-black h-full">{content}</div>;
 };
 
 const ChatMessage = ({ message }: { message: Message }) => {
@@ -153,14 +156,14 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'Hello! How can I help you design your app today?',
+      text: 'Hello! Describe the Flutter app you want to create.',
       sender: 'ai',
     },
   ]);
   const [input, setInput] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [currentScreen, setCurrentScreen] = useState('home');
-  const [generatedCode, setGeneratedCode] = useState<string | null>(null);
+  const [generatedCode, setGeneratedCode] = useState<string | null>(`// Your Flutter code will appear here`);
   const [isMounted, setIsMounted] = useState(false);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -199,7 +202,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
       });
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: `I have generated the Flutter code based on your request. You can export it using the button above.`,
+        text: `I have generated the Flutter code for a ${currentInput}. You can view it in the Code tab or export it.`,
         sender: 'ai',
         explanation: result.explanation,
       };
@@ -361,48 +364,59 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
             <div className="w-1 h-8 rounded-full bg-[#111111] group-hover:bg-[#222222] transition-colors" />
           </PanelResizeHandle>
           <Panel defaultSize={50} minSize={30}>
-            <div className="flex flex-col bg-black h-full border-l border-[#111111]">
-              <ScrollArea className="flex-1 p-4 md:p-6" ref={scrollAreaRef}>
-                <div className="space-y-6">
-                  {messages.map((msg) => (
-                    <ChatMessage key={msg.id} message={msg} />
-                  ))}
-                  {isGenerating && (
-                    <div className="flex items-start gap-3">
-                      <Avatar className="h-8 w-8 bg-black border border-gray-800">
-                        <AvatarFallback className="bg-transparent">
-                          <Bot size={18} className="text-gray-400" />
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="max-w-[75%] rounded-lg p-3 text-sm bg-black text-gray-300 flex items-center gap-2">
-                        <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
-                        <span>Generating...</span>
-                      </div>
+            <Tabs defaultValue="chat" className="flex flex-col bg-black h-full border-l border-[#111111]">
+              <TabsList className="m-2 bg-zinc-900 border-zinc-800 border">
+                  <TabsTrigger value="chat" className="gap-2"><MessageSquare size={16} /> AI Chat</TabsTrigger>
+                  <TabsTrigger value="code" className="gap-2"><Code2 size={16} /> Code View</TabsTrigger>
+              </TabsList>
+              <TabsContent value="chat" className="flex-1 flex flex-col min-h-0">
+                  <ScrollArea className="flex-1 p-4 md:p-6" ref={scrollAreaRef}>
+                    <div className="space-y-6">
+                      {messages.map((msg) => (
+                        <ChatMessage key={msg.id} message={msg} />
+                      ))}
+                      {isGenerating && (
+                        <div className="flex items-start gap-3">
+                          <Avatar className="h-8 w-8 bg-black border border-gray-800">
+                            <AvatarFallback className="bg-transparent">
+                              <Bot size={18} className="text-gray-400" />
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="max-w-[75%] rounded-lg p-3 text-sm bg-black text-gray-300 flex items-center gap-2">
+                            <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+                            <span>Generating...</span>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              </ScrollArea>
-              <div className="border-t border-[#111111] bg-black p-4 md:p-6">
-                <form onSubmit={handleSendMessage} className="relative">
-                  <Input
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Describe a change you want to see..."
-                    className="pr-12 h-12 bg-[#111111] border-[#111111] text-gray-200 placeholder:text-gray-500 focus:ring-gray-700"
-                    disabled={isGenerating}
-                  />
-                  <Button
-                    type="submit"
-                    size="icon"
-                    variant="ghost"
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 h-8 w-8 hover:bg-gray-800"
-                    disabled={isGenerating || !input.trim()}
-                  >
-                    <CornerDownLeft className="h-4 w-4" />
-                  </Button>
-                </form>
-              </div>
-            </div>
+                  </ScrollArea>
+                  <div className="border-t border-[#111111] bg-black p-4 md:p-6">
+                    <form onSubmit={handleSendMessage} className="relative">
+                      <Input
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Describe a change you want to see..."
+                        className="pr-12 h-12 bg-[#111111] border-[#111111] text-gray-200 placeholder:text-gray-500 focus:ring-gray-700"
+                        disabled={isGenerating}
+                      />
+                      <Button
+                        type="submit"
+                        size="icon"
+                        variant="ghost"
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 h-8 w-8 hover:bg-gray-800"
+                        disabled={isGenerating || !input.trim()}
+                      >
+                        <CornerDownLeft className="h-4 w-4" />
+                      </Button>
+                    </form>
+                  </div>
+              </TabsContent>
+              <TabsContent value="code" className="flex-1 min-h-0">
+                  <ScrollArea className="h-full">
+                      <CodeBlock code={generatedCode ?? ''} />
+                  </ScrollArea>
+              </TabsContent>
+            </Tabs>
           </Panel>
         </PanelGroup>
       )}
@@ -410,3 +424,5 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     </div>
   );
 }
+
+    
