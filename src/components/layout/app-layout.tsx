@@ -53,8 +53,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <SidebarMenuButton
                   asChild
                   tooltip="Search"
+                  isActive={pathname.startsWith('/search')}
                 >
-                  <Link href="#">
+                  <Link href="/search">
                     <Search />
                     <span>Search</span>
                   </Link>
@@ -74,10 +75,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </SidebarMenuItem>
              <SidebarMenuItem>
                 <SidebarMenuButton
-                  asChild
+                  asChildisActive={pathname.startsWith('/templates')}
                   tooltip="Templates"
                 >
-                  <Link href="#">
+                  <Link href="/templates">
                     <FileCode />
                     <span>Templates</span>
                   </Link>
@@ -111,11 +112,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <SidebarFooter>
           <SidebarSeparator />
            <Card className="m-2 bg-gradient-to-br from-purple-500/10 to-blue-500/10 border-purple-500/20">
-              <CardContent className="p-4 text-center">
+              <CardContent className="p-3 text-center">
                   <h3 className="font-headline text-sm font-semibold">Upgrade to Pro</h3>
-                  <p className="text-xs text-muted-foreground mt-1 mb-3">Unlock unlimited generations and advanced features.</p>
-                  <Button size="sm" className="w-full" asChild>
-                      <Link href="/pricing"><Zap className="mr-2 h-4 w-4" /> Upgrade</Link>
+                  <p className="text-xs text-muted-foreground mt-1 mb-2">Unlock all features.</p>
+                  <Button size="sm" className="w-full text-xs h-8" asChild>
+                      <Link href="/pricing"><Zap className="mr-2 h-3 w-3" /> Coming Soon</Link>
                   </Button>
               </CardContent>
            </Card>

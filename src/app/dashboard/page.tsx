@@ -115,8 +115,8 @@ export default function DashboardPage() {
                     Create New App
                 </Link>
             </Button>
-            <Button size="lg" variant="outline">
-                Explore Templates
+            <Button size="lg" variant="outline" asChild>
+              <Link href="/templates">Explore Templates</Link>
             </Button>
           </div>
         </div>
