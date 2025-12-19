@@ -46,15 +46,7 @@ export default function WelcomePage() {
     setIsMounted(true);
   }, []);
 
-  const handleCreateApp = () => {
-    if (user) {
-      router.push('/dashboard');
-    } else {
-      router.push('/login');
-    }
-  };
-  
-  const handleViewProjects = () => {
+  const handleGetStarted = () => {
     if (user) {
       router.push('/dashboard');
     } else {
@@ -82,7 +74,7 @@ export default function WelcomePage() {
             <AppLogo className="h-8 w-8" />
             <span className="font-headline text-xl font-bold text-white">Craftify AI</span>
           </div>
-          <Button variant="ghost" onClick={handleCreateApp}>
+          <Button variant="ghost" onClick={handleGetStarted}>
             {user ? 'Go to Dashboard' : 'Sign In'}
           </Button>
         </div>
@@ -101,11 +93,8 @@ export default function WelcomePage() {
                 Craftify AI helps you design, generate, preview, and deploy apps using AI — without friction, without complexity.
             </p>
             <div className="mt-8 flex justify-center gap-4">
-                <Button size="lg" onClick={handleCreateApp}>
-                    Create New App <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-                <Button size="lg" variant="outline" onClick={handleViewProjects} className="bg-transparent hover:border-white/80 hover:bg-white/5">
-                    View My Projects
+                <Button size="lg" onClick={handleGetStarted}>
+                    Get Started for Free <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
             </div>
         </section>
@@ -175,7 +164,7 @@ export default function WelcomePage() {
                     Get started for free. No credit card required.
                  </p>
                  <div className="mt-8">
-                     <Button size="lg" onClick={handleCreateApp}>
+                     <Button size="lg" onClick={handleGetStarted}>
                         Create Your First App
                      </Button>
                  </div>
