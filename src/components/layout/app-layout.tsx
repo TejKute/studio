@@ -1,6 +1,6 @@
 'use client';
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarFooter, SidebarSeparator } from '@/components/ui/sidebar';
-import { LayoutDashboard, Settings, PlusCircle, LogOut, Code, Home, Search, Folder, FileCode, Users, LifeBuoy, Zap, Star, Lock } from 'lucide-react';
+import { LayoutDashboard, Settings, LogOut, Home, Search, Folder, Star, Lock } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { UserNav } from '@/components/user-nav';
 import Link from 'next/link';
@@ -54,7 +54,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   tooltip="Search"
                   isActive={pathname.startsWith('/search')}
                 >
-                  <Link href="/search">
+                  <Link href="#">
                     <Search />
                     <span>Search</span>
                   </Link>
@@ -71,15 +71,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   <span>All Projects</span>
                 </Link>
               </SidebarMenuButton>
-            </SidebarMenuItem>
-             <SidebarMenuItem>
-                <SidebarMenuButton
-                  tooltip="Templates — Coming Soon"
-                  disabled
-                >
-                  <Lock />
-                  <span>Templates</span>
-                </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton
@@ -101,22 +92,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
           <SidebarSeparator />
            <div className="p-2">
-                <Button size="sm" variant="outline" className="w-full h-8 border-violet-500/30 bg-violet-500/10 hover:bg-violet-500/20 hover:border-violet-500/40 text-violet-300" asChild>
-                    <Link href="/pricing"><Zap className="mr-2 h-3 w-3" /> Upgrade — Coming Soon</Link>
+                 <Button variant="outline" size="sm" className="w-full h-8 border-violet-500/30 bg-violet-500/10 hover:bg-violet-500/20 text-violet-300">
+                    <Star className="mr-2 h-3 w-3" /> What's New
                 </Button>
            </div>
           <SidebarMenu>
-             <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  tooltip="What's New"
-                >
-                  <Link href="#">
-                    <Star />
-                    <span>What’s New</span>
-                  </Link>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton onClick={handleLogout} tooltip="Logout">
                 <LogOut />
