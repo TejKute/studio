@@ -138,12 +138,12 @@ export default function LoginPage() {
             )}
             Continue with Google
           </Button>
-          <Button size="lg" className="w-full gap-3 bg-black text-white hover:bg-black/80" onClick={() => handleOAuthSignIn('apple')} disabled={isSigningIn}>
+          <Button size="lg" className="w-full gap-2 bg-white text-black hover:bg-gray-100 border border-gray-200" onClick={() => handleOAuthSignIn('apple')} disabled={isSigningIn}>
               <svg
                 height="18"
                 width="18"
                 viewBox="0 0 24 24"
-                fill="#FFFFFF"
+                fill="#000000"
                 preserveAspectRatio="xMidYMid meet"
                 xmlns="http://www.w3.org/2000/svg"
               >
