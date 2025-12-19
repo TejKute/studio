@@ -1,6 +1,6 @@
 'use client';
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarFooter, SidebarSeparator } from '@/components/ui/sidebar';
-import { LayoutDashboard, Settings, PlusCircle, LogOut, Code, Home, Search, Folder, FileCode, Users, LifeBuoy, Zap, Star } from 'lucide-react';
+import { LayoutDashboard, Settings, PlusCircle, LogOut, Code, Home, Search, Folder, FileCode, Users, LifeBuoy, Zap, Star, Lock } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { UserNav } from '@/components/user-nav';
 import Link from 'next/link';
@@ -8,7 +8,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '../ui/button';
 import { useAuth } from '@/firebase';
 import { signOut } from 'firebase/auth';
-import { Card, CardContent } from '../ui/card';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -75,14 +74,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </SidebarMenuItem>
              <SidebarMenuItem>
                 <SidebarMenuButton
-                  asChild
-                  tooltip="Templates"
-                  isActive={pathname.startsWith('/templates')}
+                  tooltip="Templates — Coming Soon"
+                  disabled
                 >
-                  <Link href="/templates">
-                    <FileCode />
-                    <span>Templates</span>
-                  </Link>
+                  <Lock />
+                  <span>Templates</span>
                 </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
@@ -97,24 +93,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-             <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  tooltip="Shared with me"
-                >
-                  <Link href="#">
-                    <Users />
-                    <span>Shared with me</span>
-                  </Link>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
+          <div className="p-4">
+            <p className="text-xs text-muted-foreground mb-2">High-quality starter templates are on the way.</p>
+          </div>
           <SidebarSeparator />
            <div className="p-2">
-                <Button size="sm" variant="outline" className="w-full text-xs h-8 bg-gradient-to-r from-sky-500/10 to-cyan-500/10 border-sky-500/20 hover:border-sky-500/40 text-sky-400 hover:text-sky-300" asChild>
-                    <Link href="/pricing"><Zap className="mr-2 h-3 w-3" /> Coming Soon</Link>
+                <Button size="sm" variant="outline" className="w-full h-8 border-violet-500/30 bg-violet-500/10 hover:bg-violet-500/20 hover:border-violet-500/40 text-violet-300" asChild>
+                    <Link href="/pricing"><Zap className="mr-2 h-3 w-3" /> Upgrade — Coming Soon</Link>
                 </Button>
            </div>
           <SidebarMenu>
