@@ -128,7 +128,7 @@ export default function LoginPage() {
             <h1 className="text-3xl font-headline font-bold text-white">Welcome to Craftify AI</h1>
             <p className="mt-1 text-md text-muted-foreground">Sign in to start building with AI</p>
         </div>
-
+          
         <div className="space-y-4">
           <Button size="lg" className="w-full bg-white text-black hover:bg-white/90" onClick={() => handleOAuthSignIn('google')} disabled={isSigningIn}>
             {isSigningIn ? (
@@ -139,29 +139,19 @@ export default function LoginPage() {
             Continue with Google
           </Button>
           <Button size="lg" className="w-full gap-3 bg-black text-white hover:bg-black/80" onClick={() => handleOAuthSignIn('apple')} disabled={isSigningIn}>
-            <svg
-              height="20"
-              width="20"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              preserveAspectRatio="xMidYMid meet"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M12.221,6.545c-0.297-0.345-0.78-0.551-1.286-0.551c-0.551,0-1.127,0.25-1.579,0.723c-1.002,1.046-1.666,2.775-1.666,4.393c0,1.554,0.523,3.22,1.488,4.246c0.476,0.502,1.077,0.795,1.714,0.795c0.208,0,0.625-0.09,1.023-0.312c0.417-0.232,0.76-0.533,1.071-0.909c-1.25-0.75-2.024-2.129-2.024-3.819c0-1.744,0.863-3.155,2.143-3.955C12.333,7.994,12.631,8.024,12.75,8.006C12.551,7.562,12.429,7.013,12.221,6.545z"></path>
-              <path d="M18.881,14.045c-0.018,0-0.036,0-0.054,0c-1.341,0-2.617-0.573-3.482-1.581c-0.9-1.046-1.469-2.6-1.469-4.228c0-1.47,0.479-2.924,1.31-3.955c0.887-1.091,2.115-1.756,3.464-1.845c0.036,0,0.054,0,0.09,0c1.232,0,2.381,0.536,3.161,1.488c-1.359,0.857-2.232,2.381-2.232,4.159c0,1.832,0.929,3.337,2.357,4.141c-0.911,0.954-2.143,1.522-3.482,1.609C18.917,14.045,18.899,14.045,18.881,14.045z"></path>
-            </svg>
+              <svg
+                height="18"
+                width="18"
+                viewBox="0 0 24 24"
+                fill="#FFFFFF"
+                preserveAspectRatio="xMidYMid meet"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                  <path d="M16.365 1.43c0 1.14-.463 2.257-1.282 3.112-.827.86-2.183 1.53-3.34 1.44-.14-1.125.457-2.31 1.236-3.15.78-.86 2.14-1.48 3.386-1.402zM20.447 17.34c-.59 1.32-.86 1.91-1.62 3.09-1.07 1.66-2.58 3.72-4.45 3.74-1.66.02-2.08-1.09-4.32-1.09-2.24 0-2.7 1.07-4.32 1.11-1.87.04-3.3-1.9-4.37-3.55-2.44-3.76-2.7-8.17-1.19-10.47 1.07-1.63 2.77-2.58 4.32-2.58 1.7 0 2.77 1.11 4.32 1.11 1.5 0 2.42-1.11 4.3-1.11 1.38 0 2.84.76 3.9 2.07-3.42 1.87-2.87 6.73 1.41 8.68z"/>
+              </svg>
             Continue with Apple
           </Button>
 
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-zinc-800" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">or</span>
-            </div>
-          </div>
-          
           <Button size="lg" className="w-full bg-secondary/50 border border-border text-foreground hover:bg-secondary" onClick={() => setShowEmailForm(!showEmailForm)} disabled={isSigningIn}>
             Continue with Email
           </Button>
@@ -206,7 +196,6 @@ export default function LoginPage() {
               </Button>
             </div>
           )}
-
         </div>
         
         {authError && (
