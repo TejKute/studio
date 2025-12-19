@@ -8,11 +8,14 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '../ui/button';
 import { useAuth } from '@/firebase';
 import { signOut } from 'firebase/auth';
+import { ProjectSearchModal } from '@/components/project-search-modal';
+import React from 'react';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const auth = useAuth();
+  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
 
   const handleLogout = async () => {
     if (auth) {
@@ -50,14 +53,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </SidebarMenuItem>
              <SidebarMenuItem>
                 <SidebarMenuButton
-                  asChild
+                  onClick={() => setIsSearchOpen(true)}
                   tooltip="Search"
                   isActive={pathname.startsWith('/search')}
                 >
-                  <Link href="#">
                     <Search />
                     <span>Search</span>
-                  </Link>
                 </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
@@ -93,9 +94,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   <Zap className="h-4 w-4 text-violet-300" />
                   <h4 className="font-semibold text-sm text-white">Upgrade to Pro</h4>
                 </div>
-                <Button size="sm" className="w-full mt-2 h-7 text-xs bg-white/10 hover:bg-white/20 text-white" disabled>
-                    Coming Soon
-                </Button>
+                <p className='text-xs text-muted-foreground mt-1'>Coming Soon</p>
             </div>
              <Button variant="outline" size="sm" className="w-full h-8 border-violet-500/30 bg-violet-500/10 hover:bg-violet-500/20 text-violet-300">
                 <Star className="mr-2 h-3 w-3" /> What's New
@@ -127,6 +126,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             {children}
         </main>
       </SidebarInset>
+      <ProjectSearchModal isOpen={isSearchOpen} onOpenChange={setIsSearchOpen} />
     </SidebarProvider>
   );
 }
