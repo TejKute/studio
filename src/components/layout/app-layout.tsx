@@ -90,11 +90,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <SidebarFooter>
           <div className="p-4 space-y-2">
             <div className="p-2 rounded-lg bg-gradient-to-br from-violet-500/10 to-sky-500/10 border border-violet-500/20 text-center">
-                <div className='flex items-center justify-center gap-2'>
-                  <Zap className="h-4 w-4 text-violet-300" />
-                  <h4 className="font-semibold text-sm text-white">Upgrade to Pro</h4>
-                </div>
-                <p className='text-xs text-muted-foreground mt-1'>Coming Soon</p>
+                <h4 className="font-semibold text-sm text-white">Upgrade to Pro</h4>
+                <Button size="sm" disabled className="w-full mt-2 h-7 text-xs">Coming Soon</Button>
             </div>
              <Button variant="outline" size="sm" className="w-full h-8 border-violet-500/30 bg-violet-500/10 hover:bg-violet-500/20 text-violet-300">
                 <Star className="mr-2 h-3 w-3" /> What's New
