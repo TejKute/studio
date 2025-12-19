@@ -87,14 +87,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
-          <div className="p-4 space-y-4">
-            <div className="p-3 rounded-lg bg-gradient-to-br from-violet-500/10 to-sky-500/10 border border-violet-500/20 text-center">
+          <div className="p-4 space-y-2">
+            <div className="p-2 rounded-lg bg-gradient-to-br from-violet-500/10 to-sky-500/10 border border-violet-500/20 text-center">
                 <div className='flex items-center justify-center gap-2'>
                   <Zap className="h-4 w-4 text-violet-300" />
                   <h4 className="font-semibold text-sm text-white">Upgrade to Pro</h4>
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">Unlock premium features.</p>
-                <Button size="sm" className="w-full mt-3 h-8 text-xs bg-white/10 hover:bg-white/20 text-white" disabled>
+                <Button size="sm" className="w-full mt-2 h-7 text-xs bg-white/10 hover:bg-white/20 text-white" disabled>
                     Coming Soon
                 </Button>
             </div>
