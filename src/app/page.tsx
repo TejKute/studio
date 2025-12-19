@@ -9,8 +9,8 @@ import { ArrowRight, Bot, Code2, Eye, LineChart, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const FeatureCard = ({ icon, title, description, className }: { icon: React.ReactNode, title: string, description: string, className?: string }) => (
-    <div className={cn("relative overflow-hidden rounded-2xl border border-white/10 p-6 flex flex-col items-start gap-4 transition-transform transform-gpu hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10", className)}>
-        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-50"></div>
+    <div className={cn("relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 flex flex-col items-start gap-4 transition-all duration-300 transform-gpu hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 group", className)}>
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         <div className="relative z-10 flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-primary/50 to-accent/30 border border-white/20 shadow-lg">
             {icon}
         </div>
@@ -72,8 +72,8 @@ export default function WelcomePage() {
 
   return (
     <div className={`min-h-screen bg-background text-foreground transition-opacity duration-1000 ${isMounted ? 'opacity-100' : 'opacity-0'}`}>
-        <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
-        <div className="absolute top-0 left-0 right-0 -z-10 m-auto h-[410px] w-[410px] rounded-full bg-primary/20 opacity-20 blur-[120px]"></div>
+       <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
+       <div className="absolute top-0 left-0 right-0 -z-10 m-auto h-[410px] w-[410px] rounded-full bg-primary/20 opacity-20 blur-[120px]"></div>
 
       {/* Header */}
       <header className="sticky top-0 z-50 p-4 backdrop-blur-sm bg-background/50">
