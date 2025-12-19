@@ -87,26 +87,24 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
-          <div className="p-4">
+          <div className="p-4 space-y-4">
             <div className="p-3 rounded-lg bg-gradient-to-br from-violet-500/10 to-sky-500/10 border border-violet-500/20 text-center">
                 <div className='flex items-center justify-center gap-2'>
                   <Zap className="h-4 w-4 text-violet-300" />
                   <h4 className="font-semibold text-sm text-white">Upgrade to Pro</h4>
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">Get access to premium features.</p>
+                <p className="text-xs text-muted-foreground mt-1">Unlock premium features.</p>
                 <Button size="sm" className="w-full mt-3 h-8 text-xs bg-white/10 hover:bg-white/20 text-white" disabled>
                     Coming Soon
                 </Button>
             </div>
-          </div>
-          <div className="p-4">
-            <p className="text-xs text-muted-foreground mb-2">High-quality starter templates are on the way.</p>
+             <Button variant="outline" size="sm" className="w-full h-8 border-violet-500/30 bg-violet-500/10 hover:bg-violet-500/20 text-violet-300">
+                <Star className="mr-2 h-3 w-3" /> What's New
+            </Button>
           </div>
           <SidebarSeparator />
            <div className="p-2">
-                 <Button variant="outline" size="sm" className="w-full h-8 border-violet-500/30 bg-violet-500/10 hover:bg-violet-500/20 text-violet-300">
-                    <Star className="mr-2 h-3 w-3" /> What's New
-                </Button>
+                 <p className="text-xs text-center text-muted-foreground mb-2">High-quality starter templates are on the way.</p>
            </div>
           <SidebarMenu>
             <SidebarMenuItem>
