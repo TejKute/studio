@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Check } from 'lucide-react';
@@ -33,9 +34,9 @@ const plans = {
     {
       id: 'pro_v1_monthly',
       name: 'Pro',
-      price: '₹299',
+      price: '₹0',
       frequency: '/ month',
-      description: 'For professional developers who need unlimited power.',
+      description: 'For professional developers who need unlimited power. (Limited Time Offer)',
       features: [
         'Unlimited Flutter app generations',
         'Advanced Flutter widgets',
@@ -44,7 +45,7 @@ const plans = {
         'Faster AI responses',
         'Priority support',
       ],
-      cta: 'Upgrade to Pro',
+      cta: 'Get Pro for Free',
       popular: true,
       comingSoon: false,
       href: '/login'
@@ -52,9 +53,9 @@ const plans = {
     {
       id: 'studio_v1_monthly',
       name: 'Studio',
-      price: '₹799',
+      price: '₹0',
       frequency: '/ month',
-      description: 'For teams that need collaborative tools and advanced features.',
+      description: 'For teams that need collaborative tools and advanced features. (Limited Time Offer)',
       features: [
         'Everything in Pro',
         'Multi-project management',
@@ -90,9 +91,9 @@ const plans = {
     {
       id: 'pro_v1_yearly',
       name: 'Pro',
-      price: '₹2,999',
+      price: '₹0',
       frequency: '/ year',
-      description: 'For professional developers who need unlimited power.',
+      description: 'For professional developers who need unlimited power. (Limited Time Offer)',
       features: [
         'Unlimited Flutter app generations',
         'Advanced Flutter widgets',
@@ -101,7 +102,7 @@ const plans = {
         'Faster AI responses',
         'Priority support',
       ],
-      cta: 'Upgrade to Pro',
+      cta: 'Get Pro for Free',
       popular: true,
       comingSoon: false,
       href: '/login'
@@ -109,9 +110,9 @@ const plans = {
     {
       id: 'studio_v1_yearly',
       name: 'Studio',
-      price: '₹7,999',
+      price: '₹0',
       frequency: '/ year',
-      description: 'For teams that need collaborative tools and advanced features.',
+      description: 'For teams that need collaborative tools and advanced features. (Limited Time Offer)',
       features: [
         'Everything in Pro',
         'Multi-project management',
@@ -143,7 +144,7 @@ export default function PricingPage() {
         <Tabs value={billingCycle} onValueChange={(value) => setBillingCycle(value as BillingCycle)}>
           <TabsList>
             <TabsTrigger value="monthly">Monthly</TabsTrigger>
-            <TabsTrigger value="yearly">Yearly (Save 15%)</TabsTrigger>
+            <TabsTrigger value="yearly">Yearly</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
