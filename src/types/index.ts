@@ -1,8 +1,11 @@
 export type Project = {
   id: string;
+  userId?: string;
   name: string;
   description: string;
+  theme?: string;
   createdAt: string; // ISO string or Firestore Timestamp
-  previewImageUrl: string;
-  imageHint: string;
+  updatedAt?: string;
+  previewImageUrl?: string;
+  imageHint?: string;
 };
