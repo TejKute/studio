@@ -218,7 +218,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
 
   return (
     <div className="h-screen w-full flex flex-col bg-background">
-      <header className="flex h-14 items-center justify-between border-b border-border bg-background/95 px-4 lg:px-6 flex-shrink-0 backdrop-blur-sm">
+      <header className="flex h-14 items-center justify-between border-b border-border bg-background/95 px-4 lg:px-6 flex-shrink-0 backdrop-blur-sm z-20 relative">
         <div className="flex items-center gap-4">
           <Link
             href="/dashboard"
@@ -255,34 +255,66 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
       <main className="flex-1 min-h-0">
         {isMounted && (
           <PanelGroup direction="horizontal" className="h-full">
-            <Panel defaultSize={50} minSize={30}>
-              <div className="relative flex flex-col items-center justify-center p-4 md:p-8 bg-background h-full overflow-hidden">
-                <div className="mb-4 p-1 rounded-full bg-black/20 border border-white/10 flex items-center gap-1">
-                    <Button
-                        variant={device === 'mobile' ? 'secondary' : 'ghost'}
-                        size="icon"
-                        onClick={() => setDevice('mobile')}
-                        className={cn("h-8 w-8 rounded-full", device === 'mobile' ? 'bg-accent text-accent-foreground' : 'text-muted-foreground')}
-                    >
-                        <Smartphone className="h-5 w-5" />
-                    </Button>
-                    <Button
-                        variant={device === 'tablet' ? 'secondary' : 'ghost'}
-                        size="icon"
-                        onClick={() => setDevice('tablet')}
-                        className={cn("h-8 w-8 rounded-full", device === 'tablet' ? 'bg-accent text-accent-foreground' : 'text-muted-foreground')}
-                    >
-                        <Tablet className="h-5 w-5" />
-                    </Button>
-                    <Button
-                        variant={device === 'desktop' ? 'secondary' : 'ghost'}
-                        size="icon"
-                        onClick={() => setDevice('desktop')}
-                        className={cn("h-8 w-8 rounded-full", device === 'desktop' ? 'bg-accent text-accent-foreground' : 'text-muted-foreground')}
-                    >
-                        <Laptop className="h-5 w-5" />
-                    </Button>
-                </div>
+            <Panel defaultSize={50} minSize={30} className="relative">
+               <div
+                style={{
+                  position: 'fixed',
+                  top: '72px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  zIndex: 999999,
+                  overflow: 'visible',
+                  opacity: 1,
+                  display: 'flex',
+                  pointerEvents: 'auto',
+                }}
+                className="p-1.5 rounded-full bg-slate-900 border border-white/15 shadow-lg flex items-center gap-1"
+              >
+                <Button
+                  variant={device === 'mobile' ? 'secondary' : 'ghost'}
+                  size="sm"
+                  onClick={() => setDevice('mobile')}
+                  className={cn(
+                    'h-8 rounded-full px-3 flex items-center gap-1.5',
+                    device === 'mobile'
+                      ? 'bg-accent text-accent-foreground'
+                      : 'text-muted-foreground'
+                  )}
+                >
+                  <Smartphone className="h-4 w-4" />
+                  <span className="text-xs">Mobile</span>
+                </Button>
+                <Button
+                  variant={device === 'tablet' ? 'secondary' : 'ghost'}
+                  size="sm"
+                  onClick={() => setDevice('tablet')}
+                  className={cn(
+                    'h-8 rounded-full px-3 flex items-center gap-1.5',
+                    device === 'tablet'
+                      ? 'bg-accent text-accent-foreground'
+                      : 'text-muted-foreground'
+                  )}
+                >
+                  <Tablet className="h-4 w-4" />
+                   <span className="text-xs">Tablet</span>
+                </Button>
+                <Button
+                  variant={device === 'desktop' ? 'secondary' : 'ghost'}
+                  size="sm"
+                  onClick={() => setDevice('desktop')}
+                  className={cn(
+                    'h-8 rounded-full px-3 flex items-center gap-1.5',
+                    device === 'desktop'
+                      ? 'bg-accent text-accent-foreground'
+                      : 'text-muted-foreground'
+                  )}
+                >
+                  <Laptop className="h-4 w-4" />
+                   <span className="text-xs">Desktop</span>
+                </Button>
+              </div>
+
+              <div className="relative flex flex-col items-center justify-center p-8 bg-background h-full overflow-hidden">
                 <DevicePreview device={device}>
                   <Preview
                     isGenerating={isGenerating}
