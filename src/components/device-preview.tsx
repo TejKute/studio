@@ -5,24 +5,6 @@ import React from "react";
 
 export type Device = 'mobile' | 'tablet' | 'desktop';
 
-const deviceConfig = {
-  mobile: {
-    width: 375,
-    height: 812,
-    scale: 1,
-  },
-  tablet: {
-    width: 768,
-    height: 1024,
-    scale: 0.8,
-  },
-  desktop: {
-    width: 1280,
-    height: 800,
-    scale: 0.7
-  },
-};
-
 export function DevicePreview({ 
   children, 
   device = 'mobile' 
@@ -30,74 +12,52 @@ export function DevicePreview({
   children: React.ReactNode; 
   device?: Device;
 }) {
-  
-  const config = deviceConfig[device];
 
-  const styles: React.CSSProperties = {
-      width: `${config.width * config.scale}px`,
-      height: `${config.height * config.scale}px`,
-  };
+  const frameClasses = cn(
+    "relative mx-auto transition-all duration-300 ease-in-out flex flex-col",
+    "bg-black",
+    {
+      // Mobile (iPhone-like)
+      "w-[390px] h-[760px] rounded-[40px] p-3.5 border-[8px] border-gray-900 shadow-2xl": device === 'mobile',
+      // Tablet
+      "max-h-[75vh] aspect-[4/3] w-auto rounded-[14px] border border-[rgba(255,255,255,0.12)] p-1.5 shadow-[0_0_0_1px_rgba(0,0,0,0.6),_0_12px_30px_rgba(0,0,0,0.55)]": device === 'tablet',
+      // Desktop
+      "max-h-[78vh] aspect-video w-auto rounded-[14px] border border-[rgba(255,255,255,0.12)] p-1.5 shadow-[0_0_0_1px_rgba(0,0,0,0.6),_0_12px_30px_rgba(0,0,0,0.55)]": device === 'desktop',
+    }
+  );
 
-  const outerFrameClasses = cn(
-    "relative mx-auto transition-all duration-300 ease-in-out",
-    "flex items-center justify-center", // Center the inner phone frame
-    device === 'mobile' && "rounded-[20px] border-[10px] border-gray-900 bg-gray-900 shadow-2xl",
-    (device === 'tablet' || device === 'desktop') && "rounded-[14px] border border-[rgba(255,255,255,0.12)] p-1.5 bg-black/30",
+  const contentWrapperClasses = cn(
+    "relative w-full h-full flex-1 flex flex-col bg-black overflow-hidden",
+    {
+      "rounded-[20px]": device === 'mobile',
+      "rounded-lg": device === 'tablet' || device === 'desktop'
+    }
   );
   
-  const boxShadow = (device === 'tablet' || device === 'desktop') 
-    ? '0 0 0 1px rgba(0,0,0,0.6), 0 12px 30px rgba(0,0,0,0.55)' 
-    : undefined;
-
-
-  const innerContentWrapperStyles: React.CSSProperties = {
-    width: `${config.width}px`,
-    height: `${config.height}px`,
-    transform: `scale(${config.scale})`,
-    transformOrigin: 'center center',
-  };
-
   return (
-    <div
-      style={{ ...styles, boxShadow }}
-      className={outerFrameClasses}
-    >
+    <div className={frameClasses}>
        {device === 'mobile' && (
-        <>
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-900 rounded-b-xl z-10"></div>
-            <div className={cn("absolute flex justify-between items-center px-6 pt-1 pb-1 text-xs font-sans z-20 w-full top-1", "bg-transparent text-white/80")}>
-                <div>9:41</div>
-                <div className="flex items-center gap-1">
-                    <Signal size={14} />
-                    <Wifi size={14} />
-                    <BatteryFull size={16} />
-                </div>
-            </div>
-        </>
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10">
+          <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-900 rounded-b-xl"></div>
+          <div className="absolute flex justify-between items-center px-6 pt-1 text-xs font-sans w-full top-3 text-white/80">
+              <div>9:41</div>
+              <div className="flex items-center gap-1">
+                  <Signal size={14} />
+                  <Wifi size={14} />
+                  <BatteryFull size={16} />
+              </div>
+          </div>
+        </div>
        )}
 
-      <div
-        className="flex flex-col bg-black overflow-hidden"
-        style={{
-          width: '100%',
-          height: '100%',
-          borderRadius: device === 'mobile' ? '10px' : '8px'
-        }}
-      >
-        <div 
-          className="flex-1 w-full h-full overflow-y-scroll"
-        >
-          <div style={{
-             width: `${config.width}px`,
-             minHeight: `${config.height}px`,
-          }}>
-            {children}
-          </div>
+      <div className={contentWrapperClasses}>
+        <div className="w-full flex-1 overflow-y-scroll">
+          {children}
         </div>
         
         {device === 'mobile' && (
-            <div className="py-3.5 flex justify-center bg-black">
-                <div className={cn("w-28 h-1 rounded-full", "bg-gray-700")}></div>
+            <div className="py-3.5 flex justify-center bg-black/80 backdrop-blur-sm border-t border-white/5 relative z-20">
+                <div className="w-28 h-1 rounded-full bg-gray-700"></div>
             </div>
         )}
       </div>
