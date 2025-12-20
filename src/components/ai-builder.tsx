@@ -304,17 +304,14 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
         <PanelGroup direction="horizontal" className="h-full">
           <Panel defaultSize={50} minSize={30}>
             <div className="relative flex flex-col items-center justify-center p-4 md:p-8 bg-background h-full overflow-hidden">
-              <Card className="w-full h-full max-w-md mx-auto shadow-2xl rounded-2xl flex flex-col overflow-hidden bg-black border-border">
-                <CardContent className="p-0 flex-1 min-h-0">
-                  <PhonePreview className="shadow-none border-none h-full max-w-full">
-                    <Preview
-                      screen={currentScreen}
-                      isGenerating={isGenerating}
-                      generatedCode={generatedCode}
-                    />
-                  </PhonePreview>
-                </CardContent>
-                <div className="flex items-center justify-between border-t border-border p-2 bg-background/50 flex-shrink-0">
+                <PhonePreview>
+                  <Preview
+                    screen={currentScreen}
+                    isGenerating={isGenerating}
+                    generatedCode={generatedCode}
+                  />
+                </PhonePreview>
+              <div className="flex items-center justify-between border-t border-border p-2 bg-background/50 flex-shrink-0 absolute bottom-10 rounded-b-3xl w-[calc(100%-6rem)] max-w-[calc(24rem-1.5rem)]">
                   <div className="flex items-center gap-1">
                     <Button
                       variant={currentScreen === 'home' ? 'secondary' : 'ghost'}
@@ -357,7 +354,6 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                     </Button>
                   </Link>
                 </div>
-              </Card>
             </div>
           </Panel>
           <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">
