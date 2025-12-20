@@ -1,6 +1,6 @@
 'use client';
 import { SidebarProvider, Sidebar, SidebarTrigger, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarFooter, SidebarSeparator } from '@/components/ui/sidebar';
-import { LayoutDashboard, Settings, LogOut, Home, Search, Folder, Star, Lock, Zap } from 'lucide-react';
+import { LayoutDashboard, Settings, LogOut, Home, Search, Folder, Star } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { UserNav } from '@/components/user-nav';
 import Link from 'next/link';
@@ -10,12 +10,14 @@ import { useAuth } from '@/firebase';
 import { signOut } from 'firebase/auth';
 import { ProjectSearchModal } from '@/components/project-search-modal';
 import React from 'react';
+import { WhatsNewPanel } from '@/components/whats-new-panel';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const auth = useAuth();
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
+  const [isWhatsNewOpen, setIsWhatsNewOpen] = React.useState(false);
 
   const handleLogout = async () => {
     if (auth) {
@@ -33,8 +35,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <Sidebar>
         <SidebarHeader className="p-4">
           <div className="flex items-center gap-2">
-            <AppLogo className="w-8 h-8 text-primary" />
-            <h1 className="font-headline text-xl font-bold">Craftify AI</h1>
+            <AppLogo className="w-8 h-8" />
+            <h1 className="font-headline text-xl font-bold text-white">Craftify AI</h1>
           </div>
         </SidebarHeader>
         <SidebarContent>
@@ -88,12 +90,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </SidebarContent>
         <SidebarFooter>
           <div className="p-4 space-y-2">
-            <div className="p-2 rounded-lg bg-gradient-to-br from-violet-500/10 to-sky-500/10 border border-violet-500/20 text-center">
+             <div className="p-3 rounded-lg bg-gradient-to-br from-primary/10 via-accent/10 to-primary/10 border border-border text-center">
                 <h4 className="font-semibold text-sm text-white">Upgrade to Pro</h4>
                 <p className="text-xs text-muted-foreground mt-1">Advanced features are coming soon.</p>
-                <Button size="sm" disabled className="w-full mt-2 h-7 text-xs">Coming Soon</Button>
+                <Button size="sm" disabled className="w-full mt-2 h-8 text-xs bg-primary/20 hover:bg-primary/30">Coming Soon</Button>
             </div>
-             <Button variant="outline" size="sm" className="w-full h-8 border-violet-500/30 bg-violet-500/10 hover:bg-violet-500/20 text-violet-300">
+             <Button variant="outline" size="sm" className="w-full h-8 border-border hover:bg-accent/50 text-foreground" onClick={() => setIsWhatsNewOpen(true)}>
                 <Star className="mr-2 h-3 w-3" /> What's New
             </Button>
           </div>
@@ -124,6 +126,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </main>
       </SidebarInset>
       <ProjectSearchModal isOpen={isSearchOpen} onOpenChange={setIsSearchOpen} />
+      <WhatsNewPanel isOpen={isWhatsNewOpen} onOpenChange={setIsWhatsNewOpen} />
     </SidebarProvider>
   );
 }
