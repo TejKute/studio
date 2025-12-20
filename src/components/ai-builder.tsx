@@ -1,7 +1,6 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import {
   Download,
   Bot,
@@ -14,8 +13,10 @@ import {
   LayoutDashboard,
   MessageSquare,
   Code2,
+  Smartphone,
+  Tablet,
+  Laptop,
 } from 'lucide-react';
-import { PhonePreview } from '@/components/phone-preview';
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
@@ -28,6 +29,7 @@ import Link from 'next/link';
 import GeneratedComponentRenderer from '@/components/GeneratedComponentRenderer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CodeBlock } from '@/components/code-block';
+import { DevicePreview, type Device } from '@/components/device-preview';
 
 interface Message {
   id: string;
@@ -53,11 +55,9 @@ function LoadingPreview() {
 }
 
 const Preview = ({
-  screen,
   isGenerating,
   generatedCode,
 }: {
-  screen: string;
   isGenerating: boolean;
   generatedCode: string | null;
 }) => {
@@ -65,63 +65,15 @@ const Preview = ({
     return <LoadingPreview />;
   }
 
-  const screens: { [key: string]: React.ReactNode } = {
-    home: generatedCode ? (
-      <GeneratedComponentRenderer code={generatedCode} />
-    ) : (
-      <div className="p-4 h-full bg-black text-white flex flex-col items-center justify-center text-center">
-          <Bot size={48} className="text-gray-600 mb-4" />
-          <h2 className="text-xl font-bold font-headline">AI App Preview</h2>
-          <p className="text-gray-400">Your generated app will appear here.</p>
-      </div>
-    ),
-    login: (
-      <div className="p-4 h-full flex flex-col justify-center bg-black text-white">
-        <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
-        <div className="space-y-4">
-          <Input
-            type="email"
-            placeholder="Email"
-            className="bg-gray-900 border-gray-800 text-white"
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            className="bg-gray-900 border-gray-800 text-white"
-          />
-          <Button className="w-full bg-gray-800 hover:bg-gray-700 text-white">
-            Sign In
-          </Button>
-        </div>
-      </div>
-    ),
-    dashboard: (
-      <div className="p-4 h-full bg-black text-white">
-        <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-        <div className="grid grid-cols-2 gap-4">
-          <Card className="p-4 bg-gray-900 border-gray-800">
-            <CardContent>
-              <p>Card 1</p>
-            </CardContent>
-          </Card>
-          <Card className="p-4 bg-gray-900 border-gray-800">
-            <CardContent>
-              <p>Card 2</p>
-            </CardContent>
-          </Card>
-          <Card className="p-4 col-span-2 bg-gray-900 border-gray-800">
-            <CardContent>
-              <p>Full-width Card</p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    ),
-  };
-
-  const content = screens[screen];
-
-  return <div className="bg-black h-full">{content}</div>;
+  return generatedCode ? (
+    <GeneratedComponentRenderer code={generatedCode} />
+  ) : (
+    <div className="p-4 h-full bg-black text-white flex flex-col items-center justify-center text-center">
+      <Bot size={48} className="text-gray-600 mb-4" />
+      <h2 className="text-xl font-bold font-headline">AI App Preview</h2>
+      <p className="text-gray-400">Your generated app will appear here.</p>
+    </div>
+  );
 };
 
 const ChatMessage = ({ message }: { message: Message }) => {
@@ -162,13 +114,14 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
   ]);
   const [input, setInput] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [currentScreen, setCurrentScreen] = useState('home');
-  const [generatedCode, setGeneratedCode] = useState<string | null>(`// Your Flutter code will appear here`);
+  const [generatedCode, setGeneratedCode] =
+    useState<string | null>(`// Your Flutter code will appear here`);
   const [isMounted, setIsMounted] = useState(false);
+  const [device, setDevice] = useState<Device>('mobile');
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -212,7 +165,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
       console.error(error);
       const aiErrorResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: "Something went wrong. Please try again.",
+        text: 'Something went wrong. Please try again.',
         sender: 'ai',
       };
       setMessages((prev) => [...prev, aiErrorResponse]);
@@ -254,7 +207,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
       console.error(error);
       const aiErrorResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: "Something went wrong. Please try again.",
+        text: 'Something went wrong. Please try again.',
         sender: 'ai',
       };
       setMessages((prev) => [...prev, aiErrorResponse]);
@@ -300,72 +253,64 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
         </div>
       </header>
       <main className="flex-1 min-h-0">
-      {isMounted && (
-        <PanelGroup direction="horizontal" className="h-full">
-          <Panel defaultSize={50} minSize={30}>
-            <div className="relative flex flex-col items-center justify-center p-4 md:p-8 bg-background h-full overflow-hidden">
-                <PhonePreview>
+        {isMounted && (
+          <PanelGroup direction="horizontal" className="h-full">
+            <Panel defaultSize={50} minSize={30}>
+              <div className="relative flex flex-col items-center justify-center p-4 md:p-8 bg-background h-full overflow-hidden">
+                <div className="flex items-center gap-2 mb-4">
+                  <Button
+                    variant={device === 'mobile' ? 'secondary' : 'ghost'}
+                    size="icon"
+                    onClick={() => setDevice('mobile')}
+                    className={cn(device === 'mobile' ? 'bg-accent text-accent-foreground' : '')}
+                  >
+                    <Smartphone className="h-5 w-5" />
+                  </Button>
+                  <Button
+                    variant={device === 'tablet' ? 'secondary' : 'ghost'}
+                    size="icon"
+                    onClick={() => setDevice('tablet')}
+                     className={cn(device === 'tablet' ? 'bg-accent text-accent-foreground' : '')}
+                  >
+                    <Tablet className="h-5 w-5" />
+                  </Button>
+                  <Button
+                    variant={device === 'desktop' ? 'secondary' : 'ghost'}
+                    size="icon"
+                    onClick={() => setDevice('desktop')}
+                     className={cn(device === 'desktop' ? 'bg-accent text-accent-foreground' : '')}
+                  >
+                    <Laptop className="h-5 w-5" />
+                  </Button>
+                </div>
+                <DevicePreview device={device}>
                   <Preview
-                    screen={currentScreen}
                     isGenerating={isGenerating}
                     generatedCode={generatedCode}
                   />
-                </PhonePreview>
-              <div className="flex items-center justify-between border-t border-border p-2 bg-background/50 flex-shrink-0 absolute bottom-10 rounded-b-3xl w-[calc(100%-6rem)] max-w-[calc(24rem-1.5rem)]">
-                  <div className="flex items-center gap-1">
-                    <Button
-                      variant={currentScreen === 'home' ? 'secondary' : 'ghost'}
-                      size="sm"
-                      onClick={() => setCurrentScreen('home')}
-                      className={
-                        currentScreen === 'home' ? 'bg-accent text-accent-foreground' : ''
-                      }
-                    >
-                      <Home className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant={
-                        currentScreen === 'login' ? 'secondary' : 'ghost'
-                      }
-                      size="sm"
-                      onClick={() => setCurrentScreen('login')}
-                       className={
-                        currentScreen === 'login' ? 'bg-accent text-accent-foreground' : ''
-                      }
-                    >
-                      <LogIn className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant={
-                        currentScreen === 'dashboard' ? 'secondary' : 'ghost'
-                      }
-                      size="sm"
-                      onClick={() => setCurrentScreen('dashboard')}
-                       className={
-                        currentScreen === 'dashboard' ? 'bg-accent text-accent-foreground' : ''
-                      }
-                    >
-                      <LayoutDashboard className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <Link href="/settings">
-                    <Button variant="ghost" size="sm">
-                      <Settings className="h-4 w-4" />
-                    </Button>
-                  </Link>
-                </div>
-            </div>
-          </Panel>
-          <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">
-            <div className="w-1 h-8 rounded-full bg-border group-hover:bg-ring transition-colors" />
-          </PanelResizeHandle>
-          <Panel defaultSize={50} minSize={30}>
-            <Tabs defaultValue="chat" className="flex flex-col bg-background h-full border-l border-border">
-              <TabsList className="m-2 bg-muted border-border border">
-                  <TabsTrigger value="chat" className="gap-2"><MessageSquare size={16} /> AI Chat</TabsTrigger>
-                  <TabsTrigger value="code" className="gap-2"><Code2 size={16} /> Code View</TabsTrigger>
-              </TabsList>
-              <TabsContent value="chat" className="flex-1 flex flex-col min-h-0">
+                </DevicePreview>
+              </div>
+            </Panel>
+            <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">
+              <div className="w-1 h-8 rounded-full bg-border group-hover:bg-ring transition-colors" />
+            </PanelResizeHandle>
+            <Panel defaultSize={50} minSize={30}>
+              <Tabs
+                defaultValue="chat"
+                className="flex flex-col bg-background h-full border-l border-border"
+              >
+                <TabsList className="m-2 bg-muted border-border border">
+                  <TabsTrigger value="chat" className="gap-2">
+                    <MessageSquare size={16} /> AI Chat
+                  </TabsTrigger>
+                  <TabsTrigger value="code" className="gap-2">
+                    <Code2 size={16} /> Code View
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent
+                  value="chat"
+                  className="flex-1 flex flex-col min-h-0"
+                >
                   <ScrollArea className="flex-1 p-4 md:p-6" ref={scrollAreaRef}>
                     <div className="space-y-6">
                       {messages.map((msg) => (
@@ -375,7 +320,10 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                         <div className="flex items-start gap-3">
                           <Avatar className="h-8 w-8 bg-muted border border-border">
                             <AvatarFallback className="bg-transparent">
-                              <Bot size={18} className="text-muted-foreground" />
+                              <Bot
+                                size={18}
+                                className="text-muted-foreground"
+                              />
                             </AvatarFallback>
                           </Avatar>
                           <div className="max-w-[75%] rounded-lg p-3 text-sm bg-muted text-muted-foreground flex items-center gap-2">
@@ -406,16 +354,16 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                       </Button>
                     </form>
                   </div>
-              </TabsContent>
-              <TabsContent value="code" className="flex-1 min-h-0">
+                </TabsContent>
+                <TabsContent value="code" className="flex-1 min-h-0">
                   <ScrollArea className="h-full">
-                      <CodeBlock code={generatedCode ?? ''} />
+                    <CodeBlock code={generatedCode ?? ''} />
                   </ScrollArea>
-              </TabsContent>
-            </Tabs>
-          </Panel>
-        </PanelGroup>
-      )}
+                </TabsContent>
+              </Tabs>
+            </Panel>
+          </PanelGroup>
+        )}
       </main>
     </div>
   );
