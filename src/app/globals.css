@@ -83,7 +83,6 @@
   * {
     @apply border-border;
     box-sizing: border-box;
-    /* overflow: visible !important; */
   }
   body {
     @apply bg-background text-foreground;
@@ -125,14 +124,5 @@
 
   ::-webkit-scrollbar-corner {
     background: transparent;
-  }
-
-  .preview-container,
-  .device-preview,
-  .ai-preview,
-  iframe,
-  canvas {
-    overflow: visible !important;
-    max-height: 80vh !important;
   }
 }
