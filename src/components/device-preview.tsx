@@ -18,11 +18,11 @@ export function DevicePreview({
     "bg-black",
     {
       // Mobile (iPhone-like)
-      "w-[390px] h-[760px] rounded-[40px] p-3.5 border-[8px] border-gray-900 shadow-2xl": device === 'mobile',
+      "w-[390px] h-[760px] rounded-[28px] p-3.5 border-[8px] border-gray-900 shadow-2xl": device === 'mobile',
       // Tablet
-      "max-h-[75vh] aspect-[4/3] w-auto rounded-[14px] border border-[rgba(255,255,255,0.12)] p-1.5 shadow-[0_0_0_1px_rgba(0,0,0,0.6),_0_12px_30px_rgba(0,0,0,0.55)]": device === 'tablet',
+      "w-[820px] max-h-[75vh] aspect-[4/3] rounded-[18px] border border-[rgba(255,255,255,0.12)] p-1.5 shadow-[0_0_0_1px_rgba(0,0,0,0.6),_0_12px_30px_rgba(0,0,0,0.55)]": device === 'tablet',
       // Desktop
-      "max-h-[78vh] aspect-video w-auto rounded-[14px] border border-[rgba(255,255,255,0.12)] p-1.5 shadow-[0_0_0_1px_rgba(0,0,0,0.6),_0_12px_30px_rgba(0,0,0,0.55)]": device === 'desktop',
+      "w-full max-w-[1280px] max-h-[78vh] aspect-video rounded-[12px] border border-[rgba(255,255,255,0.12)] p-1.5 shadow-[0_0_0_1px_rgba(0,0,0,0.6),_0_12px_30px_rgba(0,0,0,0.55)]": device === 'desktop',
     }
   );
 
@@ -30,7 +30,8 @@ export function DevicePreview({
     "relative w-full h-full flex-1 flex flex-col bg-black overflow-hidden",
     {
       "rounded-[20px]": device === 'mobile',
-      "rounded-lg": device === 'tablet' || device === 'desktop'
+      "rounded-lg": device === 'tablet',
+      "rounded-[6px]": device === 'desktop'
     }
   );
   
