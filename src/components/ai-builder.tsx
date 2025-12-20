@@ -16,6 +16,8 @@ import {
   Smartphone,
   Tablet,
   Laptop,
+  ZoomIn,
+  ZoomOut,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -118,6 +120,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     useState<string | null>(`// Your Flutter code will appear here`);
   const [isMounted, setIsMounted] = useState(false);
   const [device, setDevice] = useState<Device>('mobile');
+  const [zoom, setZoom] = useState(1);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -215,10 +218,13 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
       setIsGenerating(false);
     }
   };
+  
+  const handleZoomIn = () => setZoom((prev) => Math.min(prev + 0.1, 1.5));
+  const handleZoomOut = () => setZoom((prev) => Math.max(prev - 0.1, 0.5));
 
   return (
     <div className="h-screen w-full flex flex-col bg-background">
-      <header className="flex h-14 items-center justify-between border-b border-border bg-background/95 px-4 lg:px-6 flex-shrink-0 backdrop-blur-sm z-20 relative">
+       <header className="flex h-14 items-center justify-between border-b border-border bg-background/95 px-4 lg:px-6 flex-shrink-0 backdrop-blur-sm z-20 relative">
         <div className="flex items-center gap-4">
           <Link
             href="/dashboard"
@@ -257,53 +263,67 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
           <PanelGroup direction="horizontal" className="h-full">
             <Panel defaultSize={50} minSize={30} className="relative flex flex-col">
               <div className="flex items-center justify-center p-2 border-b border-border bg-background">
-                 <div className="p-1.5 rounded-full bg-slate-900 border border-white/15 shadow-lg flex items-center gap-1">
-                  <Button
-                    variant={device === 'mobile' ? 'secondary' : 'ghost'}
-                    size="sm"
-                    onClick={() => setDevice('mobile')}
-                    className={cn(
-                      'h-8 rounded-full px-3 flex items-center gap-1.5',
-                      device === 'mobile'
-                        ? 'bg-accent text-accent-foreground'
-                        : 'text-muted-foreground'
-                    )}
-                  >
-                    <Smartphone className="h-4 w-4" />
-                    <span className="text-xs">Mobile</span>
-                  </Button>
-                  <Button
-                    variant={device === 'tablet' ? 'secondary' : 'ghost'}
-                    size="sm"
-                    onClick={() => setDevice('tablet')}
-                    className={cn(
-                      'h-8 rounded-full px-3 flex items-center gap-1.5',
-                      device === 'tablet'
-                        ? 'bg-accent text-accent-foreground'
-                        : 'text-muted-foreground'
-                    )}
-                  >
-                    <Tablet className="h-4 w-4" />
-                    <span className="text-xs">Tablet</span>
-                  </Button>
-                  <Button
-                    variant={device === 'desktop' ? 'secondary' : 'ghost'}
-                    size="sm"
-                    onClick={() => setDevice('desktop')}
-                    className={cn(
-                      'h-8 rounded-full px-3 flex items-center gap-1.5',
-                      device === 'desktop'
-                        ? 'bg-accent text-accent-foreground'
-                        : 'text-muted-foreground'
-                    )}
-                  >
-                    <Laptop className="h-4 w-4" />
-                    <span className="text-xs">Desktop</span>
-                  </Button>
-                </div>
+                 <div className="flex items-center justify-center w-full gap-4">
+                  <div className="p-1.5 rounded-full bg-slate-900 border border-white/15 shadow-lg flex items-center gap-1">
+                    <Button
+                      variant={device === 'mobile' ? 'secondary' : 'ghost'}
+                      size="sm"
+                      onClick={() => setDevice('mobile')}
+                      className={cn(
+                        'h-8 rounded-full px-3 flex items-center gap-1.5',
+                        device === 'mobile'
+                          ? 'bg-accent text-accent-foreground'
+                          : 'text-muted-foreground'
+                      )}
+                    >
+                      <Smartphone className="h-4 w-4" />
+                      <span className="text-xs hidden sm:inline">Mobile</span>
+                    </Button>
+                    <Button
+                      variant={device === 'tablet' ? 'secondary' : 'ghost'}
+                      size="sm"
+                      onClick={() => setDevice('tablet')}
+                      className={cn(
+                        'h-8 rounded-full px-3 flex items-center gap-1.5',
+                        device === 'tablet'
+                          ? 'bg-accent text-accent-foreground'
+                          : 'text-muted-foreground'
+                      )}
+                    >
+                      <Tablet className="h-4 w-4" />
+                      <span className="text-xs hidden sm:inline">Tablet</span>
+                    </Button>
+                    <Button
+                      variant={device === 'desktop' ? 'secondary' : 'ghost'}
+                      size="sm"
+                      onClick={() => setDevice('desktop')}
+                      className={cn(
+                        'h-8 rounded-full px-3 flex items-center gap-1.5',
+                        device === 'desktop'
+                          ? 'bg-accent text-accent-foreground'
+                          : 'text-muted-foreground'
+                      )}
+                    >
+                      <Laptop className="h-4 w-4" />
+                       <span className="text-xs hidden sm:inline">Desktop</span>
+                    </Button>
+                  </div>
+
+                  <div className="p-1.5 rounded-full bg-slate-900 border border-white/15 shadow-lg flex items-center gap-1">
+                     <Button variant="ghost" size="sm" onClick={handleZoomOut} className="h-8 w-8 rounded-full text-muted-foreground">
+                        <ZoomOut className="h-4 w-4" />
+                    </Button>
+                    <div className="text-xs font-medium text-muted-foreground w-12 text-center">
+                        {Math.round(zoom * 100)}%
+                    </div>
+                     <Button variant="ghost" size="sm" onClick={handleZoomIn} className="h-8 w-8 rounded-full text-muted-foreground">
+                        <ZoomIn className="h-4 w-4" />
+                    </Button>
+                  </div>
+                 </div>
               </div>
               <div className="relative flex-1 flex flex-col items-center justify-center p-8 bg-background overflow-auto">
-                <DevicePreview device={device}>
+                <DevicePreview device={device} zoom={zoom}>
                   <Preview
                     isGenerating={isGenerating}
                     generatedCode={generatedCode}

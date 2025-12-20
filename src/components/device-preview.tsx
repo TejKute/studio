@@ -7,20 +7,19 @@ export type Device = 'mobile' | 'tablet' | 'desktop';
 
 export function DevicePreview({ 
   children, 
-  device = 'mobile' 
+  device = 'mobile',
+  zoom = 1,
 }: { 
   children: React.ReactNode; 
   device?: Device;
+  zoom?: number;
 }) {
 
   const frameClasses = cn(
     "relative mx-auto transition-all duration-300 ease-in-out flex flex-col bg-black shadow-2xl",
     {
-      // Mobile (iPhone-like) - fixed size
       "w-[390px] h-[760px] rounded-[28px] p-3.5 border-[8px] border-gray-900": device === 'mobile',
-      // Tablet - proportional size
       "w-[820px] max-h-[75vh] aspect-[4/3] rounded-[18px] border border-[rgba(255,255,255,0.12)] p-1.5 shadow-[0_0_0_1px_rgba(0,0,0,0.6),_0_12px_30px_rgba(0,0,0,0.55)]": device === 'tablet',
-      // Desktop - proportional size
       "w-full max-w-[1280px] max-h-[78vh] aspect-video rounded-[12px] border border-[rgba(255,255,255,0.12)] p-1.5 shadow-[0_0_0_1px_rgba(0,0,0,0.6),_0_12px_30px_rgba(0,0,0,0.55)]": device === 'desktop',
     }
   );
@@ -51,8 +50,13 @@ export function DevicePreview({
        )}
 
       <div className={contentWrapperClasses}>
-        <div className="w-full flex-1 overflow-y-scroll">
-          {children}
+        <div className="w-full h-full flex-1 overflow-y-scroll">
+            <div 
+              className="origin-top-center transition-transform duration-300 ease-in-out"
+              style={{ transform: `scale(${zoom})` }}
+            >
+              {children}
+           </div>
         </div>
         
         {device === 'mobile' && (
