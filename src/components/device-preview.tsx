@@ -38,19 +38,34 @@ export function DevicePreview({
       height: `${config.height * config.scale}px`,
   };
 
+  const outerFrameClasses = cn(
+    "relative mx-auto transition-all duration-300 ease-in-out",
+    "flex items-center justify-center", // Center the inner phone frame
+    device === 'mobile' && "rounded-[20px] border-[10px] border-gray-900 bg-gray-900 shadow-2xl",
+    (device === 'tablet' || device === 'desktop') && "rounded-[14px] border border-[rgba(255,255,255,0.12)] p-1.5 bg-black/30",
+  );
+  
+  const boxShadow = (device === 'tablet' || device === 'desktop') 
+    ? '0 0 0 1px rgba(0,0,0,0.6), 0 12px 30px rgba(0,0,0,0.55)' 
+    : undefined;
+
+
+  const innerContentWrapperStyles: React.CSSProperties = {
+    width: `${config.width}px`,
+    height: `${config.height}px`,
+    transform: `scale(${config.scale})`,
+    transformOrigin: 'center center',
+  };
+
   return (
     <div
-      style={styles}
-      className={cn(
-        "relative mx-auto shadow-2xl overflow-hidden transition-all duration-300 ease-in-out bg-black",
-        device === 'mobile' && "rounded-[20px] border-[10px] border-gray-900",
-        device === 'tablet' && "rounded-xl border-8 border-gray-800",
-        device === 'desktop' && "rounded-lg border-8 border-gray-800"
-    )}>
+      style={{ ...styles, boxShadow }}
+      className={outerFrameClasses}
+    >
        {device === 'mobile' && (
         <>
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-900 rounded-b-xl z-10"></div>
-            <div className={cn("absolute flex justify-between items-center px-6 pt-3 pb-1 text-xs font-sans z-20 w-full", "bg-transparent text-white/80")}>
+            <div className={cn("absolute flex justify-between items-center px-6 pt-1 pb-1 text-xs font-sans z-20 w-full top-1", "bg-transparent text-white/80")}>
                 <div>9:41</div>
                 <div className="flex items-center gap-1">
                     <Signal size={14} />
@@ -61,23 +76,27 @@ export function DevicePreview({
         </>
        )}
 
-      <div className={cn(
-        "w-full h-full flex flex-col bg-black", 
-        `transform scale-[${config.scale}]`
-      )}
-      style={{
-        width: `${config.width}px`,
-        height: `${config.height}px`,
-        transform: `scale(${config.scale})`,
-        transformOrigin: 'top left',
-      }}
+      <div
+        className="flex flex-col bg-black overflow-hidden"
+        style={{
+          width: '100%',
+          height: '100%',
+          borderRadius: device === 'mobile' ? '10px' : '8px'
+        }}
       >
-        <div className="flex-1 overflow-y-auto bg-black">
-          {children}
+        <div 
+          className="flex-1 w-full h-full overflow-y-scroll"
+        >
+          <div style={{
+             width: `${config.width}px`,
+             minHeight: `${config.height}px`,
+          }}>
+            {children}
+          </div>
         </div>
-
+        
         {device === 'mobile' && (
-            <div className="py-3.5 flex justify-center">
+            <div className="py-3.5 flex justify-center bg-black">
                 <div className={cn("w-28 h-1 rounded-full", "bg-gray-700")}></div>
             </div>
         )}
