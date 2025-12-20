@@ -42,9 +42,10 @@ export function DevicePreview({
     <div
       style={styles}
       className={cn(
-        "relative mx-auto rounded-[20px] border-[10px] shadow-2xl overflow-hidden transition-all duration-300 ease-in-out",
-        "border-gray-900 bg-black",
-        device === 'desktop' && "rounded-lg border-8"
+        "relative mx-auto shadow-2xl overflow-hidden transition-all duration-300 ease-in-out bg-black",
+        device === 'mobile' && "rounded-[20px] border-[10px] border-gray-900",
+        device === 'tablet' && "rounded-xl border-8 border-gray-800",
+        device === 'desktop' && "rounded-lg border-8 border-gray-800"
     )}>
        {device === 'mobile' && (
         <>
