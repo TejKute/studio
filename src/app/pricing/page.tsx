@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Check } from 'lucide-react';
@@ -154,7 +153,7 @@ export default function PricingPage() {
           <Card
             key={plan.id}
             className={cn(
-              'flex flex-col relative',
+              'flex flex-col relative transition-all duration-300 hover:shadow-xl hover:-translate-y-1',
               plan.popular ? 'border-primary ring-2 ring-primary' : ''
             )}
           >

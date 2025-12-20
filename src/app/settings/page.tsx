@@ -48,19 +48,18 @@ export default function SettingsPage() {
           <h1 className="text-3xl font-headline font-bold">Settings</h1>
           <p className="text-muted-foreground">Manage your account settings and preferences.</p>
         </div>
-        <Separator />
-
+        
         <div className="grid gap-8 md:grid-cols-3">
-          <div className="md:col-span-2">
+          <div className="md:col-span-2 space-y-8">
             {isUserLoading ? (
               <ProfileCardSkeleton />
             ) : user ? (
               <Card>
                 <CardHeader>
                   <CardTitle>Profile</CardTitle>
-                  <CardDescription>Update your personal information.</CardDescription>
+                  <CardDescription>This is how your name and photo will appear.</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-6">
                   <div className="flex items-center space-x-4">
                       <Avatar className="h-20 w-20">
                           <AvatarImage src={user.photoURL ?? ''} data-ai-hint="person portrait" />
@@ -83,7 +82,7 @@ export default function SettingsPage() {
                <ProfileCardSkeleton />
             )}
 
-            <Card className="mt-8">
+            <Card>
               <CardHeader>
                 <CardTitle>Notification Settings</CardTitle>
                 <CardDescription>Choose what you want to be notified about.</CardDescription>

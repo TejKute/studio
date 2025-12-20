@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { PlusCircle, ArrowRight, Loader2, Search, ArrowDown, ListFilter, LayoutGrid, Plus } from 'lucide-react';
+import { PlusCircle, Search, ArrowDown, ListFilter, Plus, FolderOpen } from 'lucide-react';
 import AppLayout from '@/components/layout/app-layout';
 import { formatDistanceToNow } from 'date-fns';
 import type { Project } from '@/types';
@@ -59,6 +59,22 @@ function CreateProjectCard() {
     );
 }
 
+function EmptyState() {
+  return (
+    <div className="text-center py-16 rounded-lg border-2 border-dashed border-border bg-card/20">
+      <FolderOpen className="mx-auto h-12 w-12 text-muted-foreground" />
+      <h3 className="mt-4 text-lg font-medium text-foreground">No projects yet</h3>
+      <p className="mt-1 text-sm text-muted-foreground">Get started by creating a new project.</p>
+      <Button asChild className="mt-6">
+        <Link href="/project/new">
+          <PlusCircle className="mr-2 h-4 w-4" />
+          Create New Project
+        </Link>
+      </Button>
+    </div>
+  );
+}
+
 
 function ProjectGridSkeleton() {
   return (
@@ -103,9 +119,9 @@ export default function DashboardPage() {
 
   if (isUserLoading || !user) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background text-foreground">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
+      <AppLayout>
+          <ProjectGridSkeleton />
+      </AppLayout>
     );
   }
 
@@ -165,10 +181,17 @@ export default function DashboardPage() {
                 <ProjectCard key={project.id} project={project} />
               ))}
             </div>
+        ) : searchTerm ? (
+            <div className="text-center py-16 rounded-lg border-2 border-dashed border-border bg-card/20">
+              <Search className="mx-auto h-12 w-12 text-muted-foreground" />
+              <h3 className="mt-4 text-lg font-medium text-foreground">No projects found</h3>
+              <p className="mt-1 text-sm text-muted-foreground">Your search for "{searchTerm}" did not match any projects.</p>
+              <Button variant="outline" className="mt-6" onClick={() => setSearchTerm('')}>
+                Clear Search
+              </Button>
+            </div>
         ) : (
-             <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                 <CreateProjectCard />
-             </div>
+             <EmptyState />
         )}
       </div>
     </AppLayout>

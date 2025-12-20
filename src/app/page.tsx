@@ -32,7 +32,7 @@ const Step = ({ number, title, description }: { number: string, title: string, d
 );
 
 const TrustBadge = ({ children }: { children: React.ReactNode }) => (
-    <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm text-muted-foreground">
+    <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm text-muted-foreground transition-all duration-300 hover:bg-white/10 hover:shadow-md">
         {children}
     </div>
 )

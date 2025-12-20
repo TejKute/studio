@@ -138,7 +138,7 @@ const ChatMessage = ({ message }: { message: Message }) => {
       <div
         className={cn(
           'max-w-[80%] rounded-lg p-3 text-sm',
-          isUser ? 'bg-[#111111] text-gray-200' : 'bg-black text-gray-300'
+          isUser ? 'bg-primary/10 text-gray-200' : 'bg-black/20 text-gray-300'
         )}
       >
         <p>{message.text}</p>
