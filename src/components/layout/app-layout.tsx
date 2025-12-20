@@ -55,7 +55,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <SidebarMenuButton
                   onClick={() => setIsSearchOpen(true)}
                   tooltip="Search"
-                  isActive={pathname.startsWith('/search')}
                 >
                     <Search />
                     <span>Search</span>
@@ -91,6 +90,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <div className="p-4 space-y-2">
             <div className="p-2 rounded-lg bg-gradient-to-br from-violet-500/10 to-sky-500/10 border border-violet-500/20 text-center">
                 <h4 className="font-semibold text-sm text-white">Upgrade to Pro</h4>
+                <p className="text-xs text-muted-foreground mt-1">Advanced features are coming soon.</p>
                 <Button size="sm" disabled className="w-full mt-2 h-7 text-xs">Coming Soon</Button>
             </div>
              <Button variant="outline" size="sm" className="w-full h-8 border-violet-500/30 bg-violet-500/10 hover:bg-violet-500/20 text-violet-300">

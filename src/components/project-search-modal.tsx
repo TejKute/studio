@@ -8,6 +8,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  Command,
 } from '@/components/ui/command';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import type { Project } from '@/types';
@@ -16,6 +17,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { formatDistanceToNow } from 'date-fns';
 import { File } from 'lucide-react';
+import { DialogTitle } from '@radix-ui/react-dialog';
 
 interface ProjectSearchModalProps {
   isOpen: boolean;
@@ -53,8 +55,8 @@ export function ProjectSearchModal({ isOpen, onOpenChange }: ProjectSearchModalP
 
   return (
     <CommandDialog open={isOpen} onOpenChange={onOpenChange}>
-      <CommandInput placeholder="Search projects..." />
-      <CommandList>
+        <CommandInput placeholder="Search projects..." />
+        <CommandList>
         <CommandEmpty>{!isLoading && 'No results found.'}</CommandEmpty>
         {isLoading && <div className="p-4 text-sm text-center text-muted-foreground">Loading projects...</div>}
         {projects && projects.length > 0 && (
