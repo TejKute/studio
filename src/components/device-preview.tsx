@@ -14,8 +14,7 @@ export function DevicePreview({
 }) {
 
   const frameClasses = cn(
-    "relative mx-auto transition-all duration-300 ease-in-out flex flex-col",
-    "bg-black",
+    "relative mx-auto transition-all duration-300 ease-in-out flex flex-col bg-black",
     {
       // Mobile (iPhone-like)
       "w-[390px] h-[760px] rounded-[28px] p-3.5 border-[8px] border-gray-900 shadow-2xl": device === 'mobile',
