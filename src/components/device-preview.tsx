@@ -38,22 +38,31 @@ export function DevicePreview({
     width: `${width}px`,
     height: `${height}px`,
     transform: `scale(${zoom})`,
-    transformOrigin: 'center center',
+    transformOrigin: 'top center',
     pointerEvents: 'auto',
   };
 
+  // PreviewViewport: This container handles scrolling.
+  // `overscroll-contain` is the key to preventing "bounce" and scroll chaining.
   return (
     <div
       className="relative w-full h-full overflow-auto overscroll-contain"
     >
+       {/* This inner div centers the scaled content and defines the scrollable area */}
       <div 
         style={{
-          width: `${width * zoom}px`,
-          height: `${height * zoom}px`,
-          margin: 'auto',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'flex-start',
+          minWidth: `${width * zoom}px`,
+          minHeight: `${height * zoom}px`,
+          width: '100%',
+          height: '100%',
+          paddingTop: '2rem',
+          paddingBottom: '2rem',
         }}
-        className="flex items-center justify-center"
       >
+        {/* PreviewScaledContent: This container handles zooming. */}
         <div 
           style={scaledContentStyle}
         >
