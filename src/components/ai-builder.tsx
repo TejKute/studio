@@ -229,7 +229,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                         Project: {projectId}
                     </span>
                  </div>
-                 <div className="flex items-center justify-end gap-4">
+                 <div className="flex items-center justify-end gap-2">
                     <Button
                         variant="outline"
                         size="sm"
@@ -247,7 +247,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                     </Button>
                  </div>
               </div>
-              <div className="flex items-center justify-between p-2 border-b border-border bg-background z-10">
+              <div className="flex items-center p-2 border-b border-border bg-background z-10">
                 <div className="p-1 rounded-md bg-muted border border-border shadow-sm flex items-center gap-1">
                     <Button
                       variant={device === 'mobile' ? 'secondary' : 'ghost'}
@@ -278,7 +278,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                     </Button>
                 </div>
 
-                 <div className="flex items-center justify-center w-full gap-4">
+                 <div className="flex items-center justify-center flex-1 gap-2">
                   <div className="p-1 rounded-md bg-muted border border-border shadow-sm flex items-center gap-1">
                      <Button variant="ghost" size="icon" onClick={() => handleZoom('out')} className="h-7 w-7 rounded-sm text-muted-foreground">
                         <Minus className="h-4 w-4" />
@@ -294,7 +294,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
               </div>
                <div
                 ref={previewPanelRef}
-                className="relative flex-1 flex flex-col items-center justify-center p-4 md:p-8 bg-black/50 overflow-auto overscroll-contain"
+                className="relative flex-1 flex flex-col items-center justify-center p-4 bg-black/50 overflow-auto overscroll-contain"
               >
                 <div className="preview-glow-container">
                     <div className="preview-glow-shine" />
@@ -314,8 +314,8 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
               <div className="flex flex-col bg-background h-full border-l border-border">
                 {editorView === 'chat' && (
                   <div className="flex-1 flex flex-col min-h-0">
-                    <ScrollArea className="flex-1 p-4 md:p-6" ref={scrollAreaRef}>
-                      <div className="space-y-6">
+                    <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
+                      <div className="space-y-4">
                         {messages.map((msg) => (
                           <ChatMessage key={msg.id} message={msg} />
                         ))}
@@ -337,13 +337,13 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                         )}
                       </div>
                     </ScrollArea>
-                    <div className="border-t border-border bg-background p-4 md:p-6">
+                    <div className="border-t border-border bg-background p-3">
                       <form onSubmit={handleSendMessage} className="relative">
                         <Input
                           value={input}
                           onChange={(e) => setInput(e.target.value)}
                           placeholder="Describe a change you want to see..."
-                          className="pr-12 h-12 bg-muted border-border text-foreground placeholder:text-muted-foreground focus:ring-ring"
+                          className="pr-10 h-10 bg-muted border-border text-foreground placeholder:text-muted-foreground focus:ring-ring"
                           disabled={isGenerating}
                         />
 
@@ -351,7 +351,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                           type="submit"
                           size="icon"
                           variant="ghost"
-                          className="absolute right-2.5 top-1/2 -translate-y-1/2 h-8 w-8 hover:bg-accent"
+                          className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 hover:bg-accent"
                           disabled={isGenerating || !input.trim()}
                         >
                           <CornerDownLeft className="h-4 w-4" />
@@ -363,7 +363,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
 
                 {editorView === 'code' && (
                     <div className="flex-1 flex flex-col min-h-0">
-                        <div className="p-4 border-b border-border flex items-center gap-2">
+                        <div className="p-2 border-b border-border flex items-center gap-2">
                             <Code2 size={16} />
                             <h2 className="text-sm font-medium">Code View</h2>
                         </div>
