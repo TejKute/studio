@@ -341,9 +341,10 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                   </div>
                  </div>
               </div>
-              <div
+               <div
                 ref={previewPanelRef}
                 className="relative flex-1 flex flex-col items-center justify-center p-4 md:p-8 bg-black/50 overflow-auto"
+                style={{ overscrollBehavior: 'contain' }}
               >
                 <div className="preview-glow-container">
                     <div className="preview-glow-shine" />
@@ -433,3 +434,5 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     </div>
   );
 }
+
+    
