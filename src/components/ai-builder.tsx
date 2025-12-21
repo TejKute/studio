@@ -180,7 +180,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     const step = 0.1;
     setZoom((prev) => {
       const newZoom = direction === 'in' ? prev + step : prev - step;
-      return Math.max(0.2, Math.min(1.0, newZoom));
+      return Math.max(0.01, Math.min(1.0, newZoom));
     });
   };
 
@@ -192,7 +192,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
         {isMounted && (
           <PanelGroup direction="horizontal" className="h-full">
             <Panel defaultSize={50} minSize={30} className="flex flex-col h-full">
-               <div className="flex shrink-0 items-center justify-between gap-1 p-1 border-b border-border bg-background z-10">
+               <header className="flex shrink-0 items-center justify-between gap-1 p-1 border-b border-border bg-background z-10 h-[41px]">
                  <div className="flex items-center gap-2">
                     <Link
                         href="/dashboard"
@@ -214,13 +214,13 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                     <Button
                         variant="default"
                         size="sm"
-                        className='h-8'
+                        className='h-8 bg-blue-600 hover:bg-blue-700 text-white'
                     >
                         Publish
                     </Button>
                  </div>
-              </div>
-              <div className="flex shrink-0 items-center justify-between gap-2 p-1 border-b border-border bg-background z-10">
+              </header>
+              <div className="flex shrink-0 items-center justify-between gap-2 p-1 border-b border-border bg-background z-10 h-[41px]">
                 <div className="flex items-center gap-1">
                     <Button
                       variant={device === 'mobile' ? 'secondary' : 'ghost'}
@@ -251,7 +251,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                     </Button>
                 </div>
 
-                 <div className="flex items-center justify-center flex-1 gap-2">
+                 <div className="flex items-center justify-end flex-1 gap-2">
                   <div className="flex items-center gap-1">
                      <Button variant="ghost" size="icon" onClick={() => handleZoom('out')} className="h-8 w-8 rounded-sm text-muted-foreground">
                         <Minus className="h-4 w-4" />
@@ -264,7 +264,6 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                     </Button>
                   </div>
                  </div>
-                 <div className='w-[100px]'></div>
               </div>
               {/* PREVIEW ROOT */}
               <div className="relative flex-1 bg-black/50 overflow-hidden">
