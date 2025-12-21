@@ -191,7 +191,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     <div className="h-screen w-full flex flex-col bg-background text-foreground">
       {isMounted && (
         <PanelGroup direction="horizontal" className="flex-1">
-          <Panel defaultSize={35} minSize={25} className="flex flex-col h-full">
+          <Panel defaultSize={50} minSize={30} className="flex flex-col h-full">
             <header className="flex-shrink-0 h-14 flex items-center justify-between gap-1 p-2 border-b border-r border-border bg-background z-10">
               <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-foreground hover:text-white px-2">
                 <AppLogo className="h-7 w-7" />
@@ -230,7 +230,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
           <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">
             <div className="w-1 h-8 rounded-full bg-border group-hover:bg-ring transition-colors" />
           </PanelResizeHandle>
-          <Panel defaultSize={40} minSize={25} className="flex flex-col h-full bg-background">
+          <Panel defaultSize={50} minSize={30} className="flex flex-col h-full bg-background">
             <header className="flex-shrink-0 h-14 flex items-center justify-between p-2 border-b border-border">
               <div className="font-semibold text-sm px-2">Chat</div>
               <div className="flex items-center gap-2">
@@ -243,61 +243,55 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
               </div>
             </header>
             <div className="flex-1 flex flex-col min-h-0">
-              <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
-                <div className="space-y-4">
-                  {messages.map((msg) => (
-                    <ChatMessage key={msg.id} message={msg} />
-                  ))}
-                  {isGenerating && (
-                    <div className="flex items-start gap-3">
-                      <Avatar className="h-8 w-8 bg-muted border border-border">
-                        <AvatarFallback className="bg-transparent">
-                          <Bot size={18} className="text-muted-foreground" />
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="max-w-[75%] rounded-lg p-3 text-sm bg-muted text-muted-foreground flex items-center gap-2">
-                        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                        <span>Generating...</span>
-                      </div>
+              {editorView === 'chat' ? (
+                <>
+                  <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
+                    <div className="space-y-4">
+                      {messages.map((msg) => (
+                        <ChatMessage key={msg.id} message={msg} />
+                      ))}
+                      {isGenerating && (
+                        <div className="flex items-start gap-3">
+                          <Avatar className="h-8 w-8 bg-muted border border-border">
+                            <AvatarFallback className="bg-transparent">
+                              <Bot size={18} className="text-muted-foreground" />
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="max-w-[75%] rounded-lg p-3 text-sm bg-muted text-muted-foreground flex items-center gap-2">
+                            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                            <span>Generating...</span>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              </ScrollArea>
-              <div className="border-t border-border bg-background p-3">
-                <form onSubmit={handleSendMessage} className="relative">
-                  <Input
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Describe a change you want to see..."
-                    className="pr-10 h-10 bg-muted border-border text-foreground placeholder:text-muted-foreground focus:ring-ring"
-                    disabled={isGenerating}
-                  />
-
-                  <Button
-                    type="submit"
-                    size="icon"
-                    variant="ghost"
-                    className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 hover:bg-accent"
-                    disabled={isGenerating || !input.trim()}
-                  >
-                    <CornerDownLeft className="h-4 w-4" />
-                  </Button>
-                </form>
-              </div>
-            </div>
-          </Panel>
-           <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">
-            <div className="w-1 h-8 rounded-full bg-border group-hover:bg-ring transition-colors" />
-          </PanelResizeHandle>
-           <Panel defaultSize={25} minSize={20} className="flex flex-col h-full bg-background border-l border-border">
-             <header className="flex-shrink-0 h-14 flex items-center p-2 border-b border-border">
-                <div className="font-semibold text-sm px-2">Code</div>
-             </header>
-             <div className="flex-1 flex flex-col min-h-0">
-                  <ScrollArea className="h-full">
-                      <CodeBlock code={generatedCode ?? ''} />
                   </ScrollArea>
-              </div>
+                  <div className="border-t border-border bg-background p-3">
+                    <form onSubmit={handleSendMessage} className="relative">
+                      <Input
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Describe a change you want to see..."
+                        className="pr-10 h-10 bg-muted border-border text-foreground placeholder:text-muted-foreground focus:ring-ring"
+                        disabled={isGenerating}
+                      />
+                      <Button
+                        type="submit"
+                        size="icon"
+                        variant="ghost"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 hover:bg-accent"
+                        disabled={isGenerating || !input.trim()}
+                      >
+                        <CornerDownLeft className="h-4 w-4" />
+                      </Button>
+                    </form>
+                  </div>
+                </>
+              ) : (
+                 <ScrollArea className="h-full">
+                    <CodeBlock code={generatedCode ?? ''} />
+                </ScrollArea>
+              )}
+            </div>
           </Panel>
         </PanelGroup>
       )}
