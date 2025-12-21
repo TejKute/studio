@@ -12,6 +12,7 @@ import {
   Laptop,
   Minus,
   Plus,
+  Paperclip,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -201,7 +202,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     <div className="h-screen w-full flex flex-col bg-background text-foreground">
       {isMounted && (
         <PanelGroup direction="horizontal" className="flex-1">
-          <Panel defaultSize={50} minSize={30} className="flex flex-col h-screen">
+          <Panel defaultSize={40} minSize={30} className="flex flex-col h-screen">
             <header className="flex-shrink-0 h-14 flex items-center justify-between gap-1 p-2 border-b border-r border-border bg-background z-10">
               <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-foreground hover:text-white px-2">
                 <AppLogo className="h-7 w-7" />
@@ -239,7 +240,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
           <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">
             <div className="w-1 h-8 rounded-full bg-border group-hover:bg-ring transition-colors" />
           </PanelResizeHandle>
-          <Panel defaultSize={50} minSize={30} className="flex flex-col h-full bg-background">
+          <Panel defaultSize={30} minSize={20} className="flex flex-col h-full bg-background">
             <header className="flex-shrink-0 h-14 flex items-center justify-between p-2 border-b border-border">
               <div className="font-semibold text-sm px-2">Chat</div>
               <div className="flex items-center gap-2">
@@ -275,12 +276,21 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                     </div>
                   </ScrollArea>
                   <div className="border-t border-border bg-background p-3">
-                    <form onSubmit={handleSendMessage} className="relative">
+                    <form onSubmit={handleSendMessage} className="relative flex items-center gap-2">
+                       <Button
+                          type="button"
+                          size="icon"
+                          variant="ghost"
+                          className="h-8 w-8 text-muted-foreground shrink-0"
+                          disabled={isGenerating}
+                        >
+                          <Paperclip className="h-4 w-4" />
+                        </Button>
                       <Input
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         placeholder="Describe a change you want to see..."
-                        className="pr-10 h-10 bg-muted border-border text-foreground placeholder:text-muted-foreground focus:ring-ring"
+                        className="pr-10 h-10 bg-muted border-border text-foreground placeholder:text-muted-foreground focus:ring-ring flex-1"
                         disabled={isGenerating}
                       />
                       <Button
@@ -296,14 +306,31 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                   </div>
                 </>
               ) : (
-                 <ScrollArea className="h-full">
-                    <CodeBlock code={generatedCode ?? ''} />
-                </ScrollArea>
+                 <div className="flex-1 min-h-0">
+                   <ScrollArea className="h-full">
+                      <CodeBlock code={generatedCode ?? ''} />
+                  </ScrollArea>
+                </div>
               )}
             </div>
+          </Panel>
+           <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">
+            <div className="w-1 h-8 rounded-full bg-border group-hover:bg-ring transition-colors" />
+          </PanelResizeHandle>
+           <Panel defaultSize={30} minSize={20} className="flex flex-col h-full bg-background">
+             <header className="flex-shrink-0 h-14 flex items-center justify-between p-2 border-b border-border">
+              <div className="font-semibold text-sm px-2">AI Response</div>
+            </header>
+             <div className="flex-1 min-h-0">
+                <ScrollArea className="h-full">
+                    <CodeBlock code={generatedCode ?? ''} />
+                </ScrollArea>
+              </div>
           </Panel>
         </PanelGroup>
       )}
     </div>
   );
 }
+
+    
