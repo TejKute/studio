@@ -191,25 +191,21 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
       <main className="flex-1 min-h-0">
         {isMounted && (
           <PanelGroup direction="horizontal" className="h-full">
-            <Panel defaultSize={50} minSize={30} className="relative flex flex-col">
-               <div className="flex items-center justify-between p-2 border-b border-border bg-background z-10">
+            <Panel defaultSize={50} minSize={30} className="flex flex-col h-full">
+               <div className="flex shrink-0 items-center justify-between gap-1 p-1 border-b border-border bg-background z-10">
                  <div className="flex items-center gap-2">
                     <Link
                         href="/dashboard"
-                        className="flex items-center gap-2 font-semibold text-foreground hover:text-white"
+                        className="flex items-center gap-2 font-semibold text-foreground hover:text-white px-2"
                     >
                         <span className="font-headline text-white">Craftify AI</span>
                     </Link>
-                    <span className="text-sm text-muted-foreground">/</span>
-                    <span className="text-sm text-white font-medium">
-                        Project: {projectId}
-                    </span>
                  </div>
                  <div className="flex items-center justify-end gap-2">
                     <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-9 w-9 p-0"
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
                         onClick={() => setEditorView(editorView === 'code' ? 'chat' : 'code')}
                         aria-label="Toggle code view"
                     >
@@ -218,18 +214,19 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                     <Button
                         variant="default"
                         size="sm"
+                        className='h-8'
                     >
                         Publish
                     </Button>
                  </div>
               </div>
-              <div className="flex items-center p-2 border-b border-border bg-background z-10">
-                <div className="p-1 rounded-md bg-muted border border-border shadow-sm flex items-center gap-1">
+              <div className="flex shrink-0 items-center justify-between gap-2 p-1 border-b border-border bg-background z-10">
+                <div className="flex items-center gap-1">
                     <Button
                       variant={device === 'mobile' ? 'secondary' : 'ghost'}
                       size="icon"
                       onClick={() => setDevice('mobile')}
-                      className={cn('h-7 w-7', device === 'mobile' ? 'text-accent-foreground' : 'text-muted-foreground')}
+                      className={cn('h-8 w-8', device === 'mobile' ? 'text-accent-foreground' : 'text-muted-foreground')}
                       aria-label="Mobile preview"
                     >
                       <Smartphone className="h-4 w-4" />
@@ -238,7 +235,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                       variant={device === 'tablet' ? 'secondary' : 'ghost'}
                       size="icon"
                       onClick={() => setDevice('tablet')}
-                       className={cn('h-7 w-7', device === 'tablet' ? 'text-accent-foreground' : 'text-muted-foreground')}
+                       className={cn('h-8 w-8', device === 'tablet' ? 'text-accent-foreground' : 'text-muted-foreground')}
                        aria-label="Tablet preview"
                     >
                       <Tablet className="h-4 w-4" />
@@ -247,7 +244,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                       variant={device === 'desktop' ? 'secondary' : 'ghost'}
                       size="icon"
                       onClick={() => setDevice('desktop')}
-                       className={cn('h-7 w-7', device === 'desktop' ? 'text-accent-foreground' : 'text-muted-foreground')}
+                       className={cn('h-8 w-8', device === 'desktop' ? 'text-accent-foreground' : 'text-muted-foreground')}
                        aria-label="Desktop preview"
                     >
                       <Laptop className="h-4 w-4" />
@@ -255,31 +252,28 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                 </div>
 
                  <div className="flex items-center justify-center flex-1 gap-2">
-                  <div className="p-1 rounded-md bg-muted border border-border shadow-sm flex items-center gap-1">
-                     <Button variant="ghost" size="icon" onClick={() => handleZoom('out')} className="h-7 w-7 rounded-sm text-muted-foreground">
+                  <div className="flex items-center gap-1">
+                     <Button variant="ghost" size="icon" onClick={() => handleZoom('out')} className="h-8 w-8 rounded-sm text-muted-foreground">
                         <Minus className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" onClick={handleResetZoom} className="text-xs font-medium text-muted-foreground w-12 text-center h-7 rounded-sm">
+                    <Button variant="ghost" onClick={handleResetZoom} className="text-xs font-medium text-muted-foreground w-12 text-center h-8 rounded-sm">
                         {Math.round(zoom * 100)}%
                     </Button>
-                     <Button variant="ghost" size="icon" onClick={() => handleZoom('in')} className="h-7 w-7 rounded-sm text-muted-foreground">
+                     <Button variant="ghost" size="icon" onClick={() => handleZoom('in')} className="h-8 w-8 rounded-sm text-muted-foreground">
                         <Plus className="h-4 w-4" />
                     </Button>
                   </div>
                  </div>
+                 <div className='w-[100px]'></div>
               </div>
-              <div className="relative flex-1 bg-black/50">
-                  <div className="absolute inset-0 flex items-center justify-center p-4">
-                      <div className="preview-glow-container">
-                          <div className="preview-glow-shine" />
-                          <DevicePreview device={device} zoom={zoom}>
-                              <Preview
-                                  isGenerating={isGenerating}
-                                  generatedCode={generatedCode}
-                              />
-                          </DevicePreview>
-                      </div>
-                  </div>
+              {/* PREVIEW ROOT */}
+              <div className="relative flex-1 bg-black/50 overflow-hidden">
+                  <DevicePreview device={device} zoom={zoom}>
+                      <Preview
+                          isGenerating={isGenerating}
+                          generatedCode={generatedCode}
+                      />
+                  </DevicePreview>
               </div>
             </Panel>
             <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">
