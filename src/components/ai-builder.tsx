@@ -312,10 +312,6 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
               <div className="flex flex-col bg-background h-full border-l border-border">
                 {editorView === 'chat' && (
                   <div className="flex-1 flex flex-col min-h-0">
-                    <div className="p-4 border-b border-border flex items-center gap-2">
-                        <MessageSquare size={16} />
-                        <h2 className="text-sm font-medium">AI Chat</h2>
-                    </div>
                     <ScrollArea className="flex-1 p-4 md:p-6" ref={scrollAreaRef}>
                       <div className="space-y-6">
                         {messages.map((msg) => (
