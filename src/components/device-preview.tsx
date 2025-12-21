@@ -37,14 +37,14 @@ export function DevicePreview({
   return (
     <div
       id="preview-viewport"
-      className="absolute inset-0 overflow-auto overscroll-contain p-8"
+      className="absolute inset-0 p-8 overflow-auto overscroll-contain"
     >
         <div
           id="preview-frame-wrapper"
           className="relative mx-auto transition-all duration-300 rounded-[14px] bg-gradient-to-br from-yellow-300 to-amber-500 p-0.5 shadow-lg shadow-amber-500/10"
            style={{
-            width: `${width}px`,
-            height: `${height}px`,
+            width: `${width * zoom}px`,
+            height: `${height * zoom}px`,
           }}
         >
           <div
