@@ -18,10 +18,15 @@ export function DevicePreview({
   const frameClasses = cn(
     "relative mx-auto transition-all duration-300 ease-in-out flex flex-col bg-black shadow-2xl",
     "box-border origin-top",
+    // Base border style for all devices
+    "border border-[rgba(255,255,255,0.08)]",
     {
+      // Mobile-specific styles
       "w-[390px] h-[760px] rounded-[28px] p-3.5 border-[8px] border-gray-900": device === 'mobile',
-      "w-[820px] max-h-[75vh] aspect-[4/3] rounded-[18px] p-1.5 border border-[rgba(255,255,255,0.12)] shadow-[0_0_0_1px_rgba(0,0,0,0.6),_0_12px_30px_rgba(0,0,0,0.55)]": device === 'tablet',
-      "w-full max-w-[1280px] max-h-[78vh] aspect-[16/10] rounded-[12px] p-1.5 border border-[rgba(255,255,255,0.12)] shadow-[0_0_0_1px_rgba(0,0,0,0.6),_0_12px_30px_rgba(0,0,0,0.55)]": device === 'desktop',
+      // Tablet-specific styles
+      "w-[768px] max-h-[75vh] aspect-[4/3] rounded-[18px] p-2": device === 'tablet',
+      // Desktop-specific styles
+      "w-full max-w-[1200px] max-h-[78vh] aspect-[16/10] rounded-[14px] p-2": device === 'desktop',
     }
   );
 
@@ -30,7 +35,7 @@ export function DevicePreview({
     {
       "rounded-[20px]": device === 'mobile',
       "rounded-lg": device === 'tablet',
-      "rounded-[6px]": device === 'desktop'
+      "rounded-md": device === 'desktop'
     }
   );
   
