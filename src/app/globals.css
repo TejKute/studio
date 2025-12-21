@@ -142,7 +142,7 @@
 
 .preview-glow-container::before {
   content: '';
-  @apply absolute inset-0 -z-10 bg-gradient-to-tr from-amber-500/10 via-violet-500/5 to-amber-500/10 blur-2xl;
+  @apply absolute inset-0 -z-10 bg-gradient-to-tr from-amber-500/10 via-violet-500/5 to-amber-500/10;
   filter: blur(120px);
 }
 
