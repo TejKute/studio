@@ -122,7 +122,6 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
   const [editorView, setEditorView] = useState<EditorView>('chat');
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const previewPanelRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -178,37 +177,14 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
   };
 
   const handleZoom = (direction: 'in' | 'out') => {
-    const step = 0.05;
+    const step = 0.1;
     setZoom((prev) => {
       const newZoom = direction === 'in' ? prev + step : prev - step;
-      return Math.max(0.01, Math.min(1.0, newZoom));
+      return Math.max(0.2, Math.min(1.0, newZoom));
     });
   };
 
   const handleResetZoom = () => setZoom(1);
-
-  useEffect(() => {
-    const previewPanel = previewPanelRef.current;
-    if (!previewPanel) return;
-
-    const handleWheel = (e: WheelEvent) => {
-      if (e.ctrlKey || e.metaKey) {
-        e.preventDefault();
-        const direction = e.deltaY > 0 ? 'out' : 'in';
-        const step = 0.02;
-         setZoom((prev) => {
-            const newZoom = direction === 'in' ? prev + step : prev - step;
-            return Math.max(0.01, Math.min(1.0, newZoom));
-        });
-      }
-    };
-
-    previewPanel.addEventListener('wheel', handleWheel, { passive: false });
-    return () => {
-      previewPanel.removeEventListener('wheel', handleWheel);
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div className="h-screen w-full flex flex-col bg-background">
@@ -292,19 +268,18 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                   </div>
                  </div>
               </div>
-               <div
-                ref={previewPanelRef}
-                className="relative flex-1 flex flex-col items-center justify-center p-4 bg-black/50 overflow-auto overscroll-contain"
-              >
-                <div className="preview-glow-container">
-                    <div className="preview-glow-shine" />
-                    <DevicePreview device={device} zoom={zoom}>
-                    <Preview
-                        isGenerating={isGenerating}
-                        generatedCode={generatedCode}
-                    />
-                    </DevicePreview>
-                </div>
+              <div className="relative flex-1 bg-black/50">
+                  <div className="absolute inset-0 flex items-center justify-center p-4">
+                      <div className="preview-glow-container">
+                          <div className="preview-glow-shine" />
+                          <DevicePreview device={device} zoom={zoom}>
+                              <Preview
+                                  isGenerating={isGenerating}
+                                  generatedCode={generatedCode}
+                              />
+                          </DevicePreview>
+                      </div>
+                  </div>
               </div>
             </Panel>
             <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">

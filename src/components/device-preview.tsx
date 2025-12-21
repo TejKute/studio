@@ -32,79 +32,62 @@ export function DevicePreview({
   device?: Device;
   zoom?: number;
 }) {
-
   const { width, height, borderRadius } = deviceConfig[device];
 
-  // Layer 1: The fixed-size viewport that clips content.
-  const viewportStyle: React.CSSProperties = {
-    width: `${width}px`,
-    height: `${height}px`,
-    overflow: 'hidden',
-    position: 'relative',
-    border: '1px solid rgba(255,255,255,0.08)',
-    borderRadius: '14px',
-    transform: `scale(${zoom})`,
-    transformOrigin: 'top center',
-  };
-
-  // Layer 2: The ONLY scrollable element.
-  const scrollContainerStyle: React.CSSProperties = {
-    position: 'absolute',
-    inset: 0,
-    overflowX: 'auto',
-    overflowY: 'auto',
-    overscrollBehavior: 'contain',
-    scrollbarGutter: 'stable',
-    touchAction: 'pan-x pan-y',
-  };
-
-  // Layer 3: The content that gets scaled.
   const scaledContentStyle: React.CSSProperties = {
     width: `${width}px`,
     height: `${height}px`,
+    transform: `scale(${zoom})`,
+    transformOrigin: 'center center',
     pointerEvents: 'auto',
   };
 
   return (
-    <div 
-      className="relative mx-auto"
-      style={viewportStyle}
+    <div
+      className="relative w-full h-full overflow-auto overscroll-contain"
     >
+      <div 
+        style={{
+          width: `${width * zoom}px`,
+          height: `${height * zoom}px`,
+          margin: 'auto',
+        }}
+        className="flex items-center justify-center"
+      >
         <div 
-            style={scrollContainerStyle}
+          style={scaledContentStyle}
         >
-            <div style={scaledContentStyle}>
-                <div className={cn(
-                    "relative w-full h-full flex flex-col bg-black box-border",
-                    )}
-                    style={{ borderRadius: borderRadius }}
-                >
-                    {device === 'mobile' && (
-                    <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10">
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-900 rounded-b-xl"></div>
-                        <div className="absolute flex justify-between items-center px-6 pt-1 text-xs font-sans w-full top-3 text-white/80">
-                            <div>9:41</div>
-                            <div className="flex items-center gap-1">
-                                <Signal size={14} />
-                                <Wifi size={14} />
-                                <BatteryFull size={16} />
-                            </div>
-                        </div>
-                    </div>
-                    )}
-                    
-                    <div className="w-full h-full flex-1">
-                    {children}
-                    </div>
-
-                    {device === 'mobile' && (
-                    <div className="py-3.5 flex justify-center bg-black/80 backdrop-blur-sm border-t border-white/5 relative z-20">
-                        <div className="w-28 h-1 rounded-full bg-gray-700"></div>
-                    </div>
-                    )}
+          <div className={cn(
+              "relative w-full h-full flex flex-col bg-black box-border border border-white/10",
+              )}
+              style={{ borderRadius: borderRadius }}
+          >
+            {device === 'mobile' && (
+              <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-900 rounded-b-xl"></div>
+                <div className="absolute flex justify-between items-center px-6 pt-1 text-xs font-sans w-full top-3 text-white/80">
+                  <div>9:41</div>
+                  <div className="flex items-center gap-1">
+                    <Signal size={14} />
+                    <Wifi size={14} />
+                    <BatteryFull size={16} />
+                  </div>
                 </div>
+              </div>
+            )}
+            
+            <div className="w-full h-full flex-1">
+              {children}
             </div>
+
+            {device === 'mobile' && (
+              <div className="py-3.5 flex justify-center bg-black/80 backdrop-blur-sm border-t border-white/5 relative z-20">
+                <div className="w-28 h-1 rounded-full bg-gray-700"></div>
+              </div>
+            )}
+          </div>
         </div>
+      </div>
     </div>
   );
 }
