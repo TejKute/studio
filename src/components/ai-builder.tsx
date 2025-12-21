@@ -28,6 +28,7 @@ import { DevicePreview, type Device } from '@/components/device-preview';
 import { MessageSquare, Code2 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import AppLogo from './app-logo';
 
 interface Message {
   id: string;
@@ -118,7 +119,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     useState<string | null>(`// Your Flutter code will appear here`);
   const [isMounted, setIsMounted] = useState(false);
   const [device, setDevice] = useState<Device>('mobile');
-  const [zoom, setZoom] = useState(1);
+  const [zoom, setZoom] = useState(0.8);
   const [editorView, setEditorView] = useState<EditorView>('chat');
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -187,164 +188,119 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
   const handleResetZoom = () => setZoom(1);
 
   return (
-    <div className="h-screen w-full flex flex-col bg-background">
-      <main className="flex-1 min-h-0">
-        {isMounted && (
-          <PanelGroup direction="horizontal" className="h-full">
-            <Panel defaultSize={50} minSize={30} className="flex flex-col h-full">
-               <header className="flex shrink-0 items-center justify-between gap-1 p-1 border-b border-border bg-background z-10 h-[41px]">
-                 <div className="flex items-center gap-2">
-                    <Link
-                        href="/dashboard"
-                        className="flex items-center gap-2 font-semibold text-foreground hover:text-white px-2"
-                    >
-                        <span className="font-headline text-white">Craftify AI</span>
-                    </Link>
-                 </div>
-                 <div className="flex items-center justify-end gap-2">
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => setEditorView(editorView === 'code' ? 'chat' : 'code')}
-                        aria-label="Toggle code view"
-                    >
-                        <Code2 className="h-4 w-4" />
-                    </Button>
-                    <Button
-                        variant="default"
-                        size="sm"
-                        className='h-8 bg-blue-600 hover:bg-blue-700 text-white'
-                    >
-                        Publish
-                    </Button>
-                 </div>
-              </header>
-              <div className="flex shrink-0 items-center justify-between gap-2 p-1 border-b border-border bg-background z-10 h-[41px]">
-                <div className="flex items-center gap-1">
-                    <Button
-                      variant={device === 'mobile' ? 'secondary' : 'ghost'}
-                      size="icon"
-                      onClick={() => setDevice('mobile')}
-                      className={cn('h-8 w-8', device === 'mobile' ? 'text-accent-foreground' : 'text-muted-foreground')}
-                      aria-label="Mobile preview"
-                    >
-                      <Smartphone className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant={device === 'tablet' ? 'secondary' : 'ghost'}
-                      size="icon"
-                      onClick={() => setDevice('tablet')}
-                       className={cn('h-8 w-8', device === 'tablet' ? 'text-accent-foreground' : 'text-muted-foreground')}
-                       aria-label="Tablet preview"
-                    >
-                      <Tablet className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant={device === 'desktop' ? 'secondary' : 'ghost'}
-                      size="icon"
-                      onClick={() => setDevice('desktop')}
-                       className={cn('h-8 w-8', device === 'desktop' ? 'text-accent-foreground' : 'text-muted-foreground')}
-                       aria-label="Desktop preview"
-                    >
-                      <Laptop className="h-4 w-4" />
-                    </Button>
-                </div>
+    <div className="h-screen w-full flex flex-col bg-background text-foreground">
+      {isMounted && (
+        <PanelGroup direction="horizontal" className="flex-1">
+          <Panel defaultSize={35} minSize={25} className="flex flex-col h-full">
+            <header className="flex-shrink-0 h-14 flex items-center justify-between gap-1 p-2 border-b border-r border-border bg-background z-10">
+              <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-foreground hover:text-white px-2">
+                <AppLogo className="h-7 w-7" />
+                <span className="font-headline text-lg font-bold text-white">Craftify</span>
+              </Link>
+              <div className="flex items-center gap-1">
+                <Button variant={device === 'mobile' ? 'secondary' : 'ghost'} size="icon" onClick={() => setDevice('mobile')} className={cn('h-8 w-8', device === 'mobile' ? 'text-accent-foreground' : 'text-muted-foreground')} aria-label="Mobile preview">
+                  <Smartphone className="h-4 w-4" />
+                </Button>
+                <Button variant={device === 'tablet' ? 'secondary' : 'ghost'} size="icon" onClick={() => setDevice('tablet')} className={cn('h-8 w-8', device === 'tablet' ? 'text-accent-foreground' : 'text-muted-foreground')} aria-label="Tablet preview">
+                  <Tablet className="h-4 w-4" />
+                </Button>
+                <Button variant={device === 'desktop' ? 'secondary' : 'ghost'} size="icon" onClick={() => setDevice('desktop')} className={cn('h-8 w-8', device === 'desktop' ? 'text-accent-foreground' : 'text-muted-foreground')} aria-label="Desktop preview">
+                  <Laptop className="h-4 w-4" />
+                </Button>
+              </div>
+            </header>
+            <div className="flex-1 relative bg-black/50 overflow-hidden border-r border-border">
+              <DevicePreview device={device} zoom={zoom}>
+                <Preview isGenerating={isGenerating} generatedCode={generatedCode} />
+              </DevicePreview>
 
-                 <div className="flex items-center justify-end flex-1 gap-2">
-                  <div className="flex items-center gap-1">
-                     <Button variant="ghost" size="icon" onClick={() => handleZoom('out')} className="h-8 w-8 rounded-sm text-muted-foreground">
-                        <Minus className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" onClick={handleResetZoom} className="text-xs font-medium text-muted-foreground w-12 text-center h-8 rounded-sm">
-                        {Math.round(zoom * 100)}%
-                    </Button>
-                     <Button variant="ghost" size="icon" onClick={() => handleZoom('in')} className="h-8 w-8 rounded-sm text-muted-foreground">
-                        <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                 </div>
+              <div className="absolute bottom-4 right-4 z-20 flex items-center gap-1 rounded-full border border-border bg-background/50 p-1 backdrop-blur-sm">
+                <Button variant="ghost" size="icon" onClick={() => handleZoom('out')} className="h-7 w-7 rounded-full text-muted-foreground">
+                  <Minus className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" onClick={handleResetZoom} className="text-xs font-medium text-muted-foreground w-12 text-center h-7 rounded-full">
+                  {Math.round(zoom * 100)}%
+                </Button>
+                <Button variant="ghost" size="icon" onClick={() => handleZoom('in')} className="h-7 w-7 rounded-full text-muted-foreground">
+                  <Plus className="h-4 w-4" />
+                </Button>
               </div>
-              {/* PREVIEW ROOT */}
-              <div className="relative flex-1 bg-black/50 overflow-hidden">
-                  <DevicePreview device={device} zoom={zoom}>
-                      <Preview
-                          isGenerating={isGenerating}
-                          generatedCode={generatedCode}
-                      />
-                  </DevicePreview>
+            </div>
+          </Panel>
+          <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">
+            <div className="w-1 h-8 rounded-full bg-border group-hover:bg-ring transition-colors" />
+          </PanelResizeHandle>
+          <Panel defaultSize={40} minSize={25} className="flex flex-col h-full bg-background">
+            <header className="flex-shrink-0 h-14 flex items-center justify-between p-2 border-b border-border">
+              <div className="font-semibold text-sm px-2">Chat</div>
+              <div className="flex items-center gap-2">
+                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setEditorView(editorView === 'code' ? 'chat' : 'code')}>
+                    <Code2 className="h-4 w-4" />
+                </Button>
+                <Button size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white">
+                  Publish
+                </Button>
               </div>
-            </Panel>
-            <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">
-              <div className="w-1 h-8 rounded-full bg-border group-hover:bg-ring transition-colors" />
-            </PanelResizeHandle>
-            <Panel defaultSize={50} minSize={30}>
-              <div className="flex flex-col bg-background h-full border-l border-border">
-                {editorView === 'chat' && (
-                  <div className="flex-1 flex flex-col min-h-0">
-                    <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
-                      <div className="space-y-4">
-                        {messages.map((msg) => (
-                          <ChatMessage key={msg.id} message={msg} />
-                        ))}
-                        {isGenerating && (
-                          <div className="flex items-start gap-3">
-                            <Avatar className="h-8 w-8 bg-muted border border-border">
-                              <AvatarFallback className="bg-transparent">
-                                <Bot
-                                  size={18}
-                                  className="text-muted-foreground"
-                                />
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="max-w-[75%] rounded-lg p-3 text-sm bg-muted text-muted-foreground flex items-center gap-2">
-                              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                              <span>Generating...</span>
-                            </div>
-                          </div>
-                        )}
+            </header>
+            <div className="flex-1 flex flex-col min-h-0">
+              <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
+                <div className="space-y-4">
+                  {messages.map((msg) => (
+                    <ChatMessage key={msg.id} message={msg} />
+                  ))}
+                  {isGenerating && (
+                    <div className="flex items-start gap-3">
+                      <Avatar className="h-8 w-8 bg-muted border border-border">
+                        <AvatarFallback className="bg-transparent">
+                          <Bot size={18} className="text-muted-foreground" />
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="max-w-[75%] rounded-lg p-3 text-sm bg-muted text-muted-foreground flex items-center gap-2">
+                        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                        <span>Generating...</span>
                       </div>
-                    </ScrollArea>
-                    <div className="border-t border-border bg-background p-3">
-                      <form onSubmit={handleSendMessage} className="relative">
-                        <Input
-                          value={input}
-                          onChange={(e) => setInput(e.target.value)}
-                          placeholder="Describe a change you want to see..."
-                          className="pr-10 h-10 bg-muted border-border text-foreground placeholder:text-muted-foreground focus:ring-ring"
-                          disabled={isGenerating}
-                        />
-
-                        <Button
-                          type="submit"
-                          size="icon"
-                          variant="ghost"
-                          className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 hover:bg-accent"
-                          disabled={isGenerating || !input.trim()}
-                        >
-                          <CornerDownLeft className="h-4 w-4" />
-                        </Button>
-                      </form>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
+              </ScrollArea>
+              <div className="border-t border-border bg-background p-3">
+                <form onSubmit={handleSendMessage} className="relative">
+                  <Input
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder="Describe a change you want to see..."
+                    className="pr-10 h-10 bg-muted border-border text-foreground placeholder:text-muted-foreground focus:ring-ring"
+                    disabled={isGenerating}
+                  />
 
-                {editorView === 'code' && (
-                    <div className="flex-1 flex flex-col min-h-0">
-                        <div className="p-2 border-b border-border flex items-center gap-2">
-                            <Code2 size={16} />
-                            <h2 className="text-sm font-medium">Code View</h2>
-                        </div>
-                        <ScrollArea className="h-full">
-                            <CodeBlock code={generatedCode ?? ''} />
-                        </ScrollArea>
-                    </div>
-                )}
+                  <Button
+                    type="submit"
+                    size="icon"
+                    variant="ghost"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 hover:bg-accent"
+                    disabled={isGenerating || !input.trim()}
+                  >
+                    <CornerDownLeft className="h-4 w-4" />
+                  </Button>
+                </form>
               </div>
-            </Panel>
-          </PanelGroup>
-        )}
-      </main>
+            </div>
+          </Panel>
+           <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">
+            <div className="w-1 h-8 rounded-full bg-border group-hover:bg-ring transition-colors" />
+          </PanelResizeHandle>
+           <Panel defaultSize={25} minSize={20} className="flex flex-col h-full bg-background border-l border-border">
+             <header className="flex-shrink-0 h-14 flex items-center p-2 border-b border-border">
+                <div className="font-semibold text-sm px-2">Code</div>
+             </header>
+             <div className="flex-1 flex flex-col min-h-0">
+                  <ScrollArea className="h-full">
+                      <CodeBlock code={generatedCode ?? ''} />
+                  </ScrollArea>
+              </div>
+          </Panel>
+        </PanelGroup>
+      )}
     </div>
   );
 }
