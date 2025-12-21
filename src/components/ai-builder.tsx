@@ -230,10 +230,6 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                     </span>
                  </div>
                  <div className="flex items-center justify-end gap-4">
-                     <div className="flex items-center space-x-2">
-                        <Switch id="prototyper-mode" defaultChecked />
-                        <Label htmlFor="prototyper-mode" className="text-sm">Prototyper</Label>
-                    </div>
                     <Button
                         variant="outline"
                         size="sm"
