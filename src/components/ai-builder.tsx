@@ -173,48 +173,6 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     }
   };
 
-  const handleRegenerate = async () => {
-    const lastUserMessage = messages
-      .slice()
-      .reverse()
-      .find((m) => m.sender === 'user');
-    if (!lastUserMessage || isGenerating) {
-      if (!isGenerating) {
-        toast({
-          variant: 'destructive',
-          title: 'Nothing to regenerate',
-          description: 'Please send a message first.',
-        });
-      }
-      return;
-    }
-
-    setIsGenerating(true);
-    try {
-      const result = await generateAppFromDescription({
-        description: lastUserMessage.text,
-      });
-      const aiResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        text: `I've regenerated the Flutter code for: "${lastUserMessage.text}".`,
-        sender: 'ai',
-        explanation: result.explanation,
-      };
-      setMessages((prev) => [...prev, aiResponse]);
-      setGeneratedCode(result.componentCode);
-    } catch (error) {
-      console.error(error);
-      const aiErrorResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        text: 'Something went wrong. Please try again.',
-        sender: 'ai',
-      };
-      setMessages((prev) => [...prev, aiErrorResponse]);
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
   const handleZoom = (direction: 'in' | 'out') => {
     const step = 0.05;
     setZoom((prev) => {
@@ -269,12 +227,10 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                  </div>
                  <div className="flex items-center justify-end gap-2">
                     <Button
-                        variant="outline"
+                        variant="default"
                         size="sm"
-                        className="border-border hover:bg-accent"
                     >
-                        <Download className="mr-2 h-4 w-4" />
-                        Export Code
+                        Publish
                     </Button>
                  </div>
               </div>
@@ -390,6 +346,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                         className="pr-12 h-12 bg-muted border-border text-foreground placeholder:text-muted-foreground focus:ring-ring"
                         disabled={isGenerating}
                       />
+
                       <Button
                         type="submit"
                         size="icon"
