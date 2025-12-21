@@ -18,6 +18,8 @@ import {
   Laptop,
   ZoomIn,
   ZoomOut,
+  Minus,
+  Plus,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -123,6 +125,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
   const [zoom, setZoom] = useState(1);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const previewPanelRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -218,51 +221,76 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
       setIsGenerating(false);
     }
   };
-  
-  const handleZoomIn = () => setZoom((prev) => Math.min(prev + 0.1, 1.5));
-  const handleZoomOut = () => setZoom((prev) => Math.max(prev - 0.1, 0.5));
+
+  const handleZoom = (direction: 'in' | 'out', step = 0.05) => {
+    setZoom((prev) => {
+      const newZoom = direction === 'in' ? prev + step : prev - step;
+      return Math.max(0.01, Math.min(1.0, newZoom));
+    });
+  };
+
+  const handleResetZoom = () => setZoom(1);
+
+  useEffect(() => {
+    const previewPanel = previewPanelRef.current;
+    if (!previewPanel) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+        const direction = e.deltaY > 0 ? 'out' : 'in';
+        handleZoom(direction, 0.02);
+      }
+    };
+
+    previewPanel.addEventListener('wheel', handleWheel);
+    return () => {
+      previewPanel.removeEventListener('wheel', handleWheel);
+    };
+  }, []);
 
   return (
     <div className="h-screen w-full flex flex-col bg-background">
-       <header className="flex h-14 items-center justify-between border-b border-border bg-background/95 px-4 lg:px-6 flex-shrink-0 backdrop-blur-sm z-20 relative">
-        <div className="flex items-center gap-4">
-          <Link
-            href="/dashboard"
-            className="flex items-center gap-2 font-semibold text-foreground hover:text-white"
-          >
-            <span className="font-headline text-white">Craftify AI</span>
-          </Link>
-          <span className="text-sm text-muted-foreground">/</span>
-          <span className="text-sm text-white font-medium">
-            Project: {projectId}
-          </span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleRegenerate}
-            disabled={isGenerating}
-            className="border-border hover:bg-accent"
-          >
-            <RefreshCw className="mr-2 h-4 w-4" />
-            Regenerate
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="border-border hover:bg-accent"
-          >
-            <Download className="mr-2 h-4 w-4" />
-            Export Code
-          </Button>
-        </div>
-      </header>
       <main className="flex-1 min-h-0">
         {isMounted && (
           <PanelGroup direction="horizontal" className="h-full">
             <Panel defaultSize={50} minSize={30} className="relative flex flex-col">
-              <div className="flex items-center justify-center p-2 border-b border-border bg-background">
+              <div className="flex items-center justify-between p-2 border-b border-border bg-background">
+                 <div className="flex items-center gap-4">
+                    <Link
+                        href="/dashboard"
+                        className="flex items-center gap-2 font-semibold text-foreground hover:text-white"
+                    >
+                        <span className="font-headline text-white">Craftify AI</span>
+                    </Link>
+                    <span className="text-sm text-muted-foreground">/</span>
+                    <span className="text-sm text-white font-medium">
+                        Project: {projectId}
+                    </span>
+                 </div>
+                 <div className="flex items-center justify-end gap-2">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleRegenerate}
+                        disabled={isGenerating}
+                        className="border-border hover:bg-accent"
+                    >
+                        <RefreshCw className="mr-2 h-4 w-4" />
+                        Regenerate
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-border hover:bg-accent"
+                    >
+                        <Download className="mr-2 h-4 w-4" />
+                        Export Code
+                    </Button>
+                 </div>
+              </div>
+
+               <div className="flex items-center justify-center p-2 border-b border-border bg-background">
                  <div className="flex items-center justify-center w-full gap-4">
                   <div className="p-1.5 rounded-full bg-slate-900 border border-white/15 shadow-lg flex items-center gap-1">
                     <Button
@@ -310,19 +338,23 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                   </div>
 
                   <div className="p-1.5 rounded-full bg-slate-900 border border-white/15 shadow-lg flex items-center gap-1">
-                     <Button variant="ghost" size="sm" onClick={handleZoomOut} className="h-8 w-8 rounded-full text-muted-foreground">
-                        <ZoomOut className="h-4 w-4" />
+                     <Button variant="ghost" size="icon" onClick={() => handleZoom('out')} className="h-8 w-8 rounded-full text-muted-foreground">
+                        <Minus className="h-4 w-4" />
                     </Button>
-                    <div className="text-xs font-medium text-muted-foreground w-12 text-center">
+                    <Button variant="ghost" onClick={handleResetZoom} className="text-xs font-medium text-muted-foreground w-12 text-center h-8 rounded-full">
                         {Math.round(zoom * 100)}%
-                    </div>
-                     <Button variant="ghost" size="sm" onClick={handleZoomIn} className="h-8 w-8 rounded-full text-muted-foreground">
-                        <ZoomIn className="h-4 w-4" />
+                    </Button>
+                     <Button variant="ghost" size="icon" onClick={() => handleZoom('in')} className="h-8 w-8 rounded-full text-muted-foreground">
+                        <Plus className="h-4 w-4" />
                     </Button>
                   </div>
                  </div>
               </div>
-              <div className="relative flex-1 flex flex-col items-center justify-center p-8 bg-background overflow-auto">
+
+              <div
+                ref={previewPanelRef}
+                className="relative flex-1 flex flex-col items-center justify-center p-4 md:p-8 bg-background overflow-auto"
+              >
                 <DevicePreview device={device} zoom={zoom}>
                   <Preview
                     isGenerating={isGenerating}

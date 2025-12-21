@@ -17,10 +17,11 @@ export function DevicePreview({
 
   const frameClasses = cn(
     "relative mx-auto transition-all duration-300 ease-in-out flex flex-col bg-black shadow-2xl",
+    "box-border",
     {
       "w-[390px] h-[760px] rounded-[28px] p-3.5 border-[8px] border-gray-900": device === 'mobile',
-      "w-[820px] max-h-[75vh] aspect-[4/3] rounded-[18px] border border-[rgba(255,255,255,0.12)] p-1.5 shadow-[0_0_0_1px_rgba(0,0,0,0.6),_0_12px_30px_rgba(0,0,0,0.55)]": device === 'tablet',
-      "w-full max-w-[1280px] max-h-[78vh] aspect-video rounded-[12px] border border-[rgba(255,255,255,0.12)] p-1.5 shadow-[0_0_0_1px_rgba(0,0,0,0.6),_0_12px_30px_rgba(0,0,0,0.55)]": device === 'desktop',
+      "w-[820px] max-h-[75vh] aspect-[4/3] rounded-[18px] border p-1.5 border-[rgba(255,255,255,0.12)] shadow-[0_0_0_1px_rgba(0,0,0,0.6),_0_12px_30px_rgba(0,0,0,0.55)]": device === 'tablet',
+      "w-full max-w-[1280px] max-h-[78vh] aspect-video rounded-[12px] border p-1.5 border-[rgba(255,255,255,0.12)] shadow-[0_0_0_1px_rgba(0,0,0,0.6),_0_12px_30px_rgba(0,0,0,0.55)]": device === 'desktop',
     }
   );
 
@@ -53,7 +54,7 @@ export function DevicePreview({
         <div className="w-full h-full flex-1 overflow-y-scroll">
             <div 
               className="origin-top-center transition-transform duration-300 ease-in-out"
-              style={{ transform: `scale(${zoom})` }}
+              style={{ transform: `scale(${zoom})`, transformOrigin: 'top center' }}
             >
               {children}
            </div>
