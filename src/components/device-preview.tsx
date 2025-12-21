@@ -41,6 +41,10 @@ export function DevicePreview({
     height: `${height}px`,
     overflow: 'hidden',
     position: 'relative',
+    border: '1px solid rgba(255,255,255,0.08)',
+    borderRadius: '14px',
+    transform: `scale(${zoom})`,
+    transformOrigin: 'top center',
   };
 
   // Layer 2: The ONLY scrollable element.
@@ -58,8 +62,6 @@ export function DevicePreview({
   const scaledContentStyle: React.CSSProperties = {
     width: `${width}px`,
     height: `${height}px`,
-    transform: `scale(${zoom})`,
-    transformOrigin: 'top center',
     pointerEvents: 'auto',
   };
 
@@ -74,8 +76,6 @@ export function DevicePreview({
             <div style={scaledContentStyle}>
                 <div className={cn(
                     "relative w-full h-full flex flex-col bg-black box-border",
-                    "border border-[rgba(255,255,255,0.08)]",
-                    "shadow-[0_0_0_1px_rgba(0,0,0,0.6),0_12px_30px_rgba(0,0,0,0.55)]"
                     )}
                     style={{ borderRadius: borderRadius }}
                 >
