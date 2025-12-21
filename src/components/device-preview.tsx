@@ -8,18 +8,18 @@ export type Device = 'mobile' | 'tablet' | 'desktop';
 const deviceConfig = {
   mobile: {
     width: 390,
-    height: 760,
+    height: 780,
     borderRadius: '28px',
   },
   tablet: {
-    width: 768,
-    height: 1024,
+    width: 640,
+    height: 820,
     borderRadius: '18px',
   },
   desktop: {
-    width: 1280,
-    height: 800,
-    borderRadius: '14px',
+    width: 1024,
+    height: 720,
+    borderRadius: '12px',
   },
 };
 
@@ -38,7 +38,6 @@ export function DevicePreview({
   const viewportStyle: React.CSSProperties = {
     width: `${width}px`,
     height: `${height}px`,
-    borderRadius: borderRadius,
   };
 
   const scaledContentStyle: React.CSSProperties = {
@@ -49,18 +48,24 @@ export function DevicePreview({
     pointerEvents: 'auto',
   };
 
+  const frameStyle: React.CSSProperties = {
+    borderRadius: borderRadius,
+  };
+
   return (
     // Layer 1: The fixed-size viewport that clips content.
     <div 
-      className="relative mx-auto bg-black shadow-2xl box-border border border-[rgba(255,255,255,0.08)] overflow-hidden"
-      style={viewportStyle}
+      className={cn(
+        "relative mx-auto box-border transition-all duration-300",
+        "border border-[rgba(255,255,255,0.08)]",
+        "shadow-[0_0_0_1px_rgba(0,0,0,0.6),0_12px_30px_rgba(0,0,0,0.55)]"
+      )}
+      style={{...viewportStyle, ...frameStyle}}
     >
-      {/* Layer 2: The container that handles all scrolling. */}
       <div 
         className="absolute inset-0 overflow-auto touch-pan-x touch-pan-y"
-        style={{ overscrollBehavior: 'contain', scrollbarGutter: 'stable' }}
+        style={{ overscrollBehavior: 'contain', scrollbarGutter: 'stable', borderRadius: borderRadius }}
       >
-        {/* Layer 3: The content that is scaled by the zoom factor. */}
         <div style={scaledContentStyle}>
           <div className="relative w-full h-full flex flex-col bg-black">
             {device === 'mobile' && (
