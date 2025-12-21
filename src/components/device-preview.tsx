@@ -34,21 +34,28 @@ export function DevicePreview({
 }) {
   const { width, height, borderRadius } = deviceConfig[device];
 
+  // This style is for the scaled content. It should NOT be scrollable.
   const scaledContentStyle: React.CSSProperties = {
     width: `${width}px`,
     height: `${height}px`,
     transform: `scale(${zoom})`,
     transformOrigin: 'top center',
-    pointerEvents: 'auto',
   };
 
-  // PreviewViewport: This container handles scrolling.
-  // `overscroll-contain` is the key to preventing "bounce" and scroll chaining.
+  // This style defines the size of the "canvas" inside the scrollable area.
+  // It needs to be large enough to contain the scaled content.
+  const viewportSizerStyle: React.CSSProperties = {
+    width: `${width * zoom}px`,
+    height: `${height * zoom}px`,
+  }
+
   return (
+    // PreviewViewport: This container is the ONLY scrollable element.
+    // `overscroll-contain` is the key to preventing "bounce" and scroll chaining.
     <div
       className="relative w-full h-full overflow-auto overscroll-contain"
     >
-       {/* This inner div centers the scaled content and defines the scrollable area */}
+       {/* This inner div centers the scaled content and defines the scrollable area's total size */}
       <div 
         style={{
           display: 'flex',
@@ -62,7 +69,7 @@ export function DevicePreview({
           paddingBottom: '2rem',
         }}
       >
-        {/* PreviewScaledContent: This container handles zooming. */}
+        {/* PreviewScaledContent: This container handles zooming. It is NOT scrollable. */}
         <div 
           style={scaledContentStyle}
         >
