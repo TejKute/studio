@@ -255,7 +255,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
           <PanelGroup direction="horizontal" className="h-full">
             <Panel defaultSize={50} minSize={30} className="relative flex flex-col">
                <div className="flex items-center justify-between p-2 border-b border-border bg-background z-10">
-                 <div className="flex items-center gap-4">
+                 <div className="flex items-center gap-2">
                     <Link
                         href="/dashboard"
                         className="flex items-center gap-2 font-semibold text-foreground hover:text-white"
@@ -271,16 +271,6 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={handleRegenerate}
-                        disabled={isGenerating}
-                        className="border-border hover:bg-accent"
-                    >
-                        <RefreshCw className="mr-2 h-4 w-4" />
-                        Regenerate
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
                         className="border-border hover:bg-accent"
                     >
                         <Download className="mr-2 h-4 w-4" />
@@ -288,60 +278,46 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                     </Button>
                  </div>
               </div>
-              <div className="flex items-center justify-center p-2 border-b border-border bg-background z-10">
-                 <div className="flex items-center justify-center w-full gap-4">
-                  <div className="p-1.5 rounded-full bg-slate-900 border border-white/15 shadow-lg flex items-center gap-1">
+              <div className="flex items-center justify-between p-2 border-b border-border bg-background z-10">
+                <div className="p-1 rounded-md bg-muted border border-border shadow-sm flex items-center gap-1">
                     <Button
                       variant={device === 'mobile' ? 'secondary' : 'ghost'}
-                      size="sm"
+                      size="icon"
                       onClick={() => setDevice('mobile')}
-                      className={cn(
-                        'h-8 rounded-full px-3 flex items-center gap-1.5',
-                        device === 'mobile'
-                          ? 'bg-accent text-accent-foreground'
-                          : 'text-muted-foreground'
-                      )}
+                      className={cn('h-7 w-7', device === 'mobile' ? 'text-accent-foreground' : 'text-muted-foreground')}
+                      aria-label="Mobile preview"
                     >
                       <Smartphone className="h-4 w-4" />
-                      <span className="text-xs hidden sm:inline">Mobile</span>
                     </Button>
                     <Button
                       variant={device === 'tablet' ? 'secondary' : 'ghost'}
-                      size="sm"
+                      size="icon"
                       onClick={() => setDevice('tablet')}
-                      className={cn(
-                        'h-8 rounded-full px-3 flex items-center gap-1.5',
-                        device === 'tablet'
-                          ? 'bg-accent text-accent-foreground'
-                          : 'text-muted-foreground'
-                      )}
+                       className={cn('h-7 w-7', device === 'tablet' ? 'text-accent-foreground' : 'text-muted-foreground')}
+                       aria-label="Tablet preview"
                     >
                       <Tablet className="h-4 w-4" />
-                      <span className="text-xs hidden sm:inline">Tablet</span>
                     </Button>
                     <Button
                       variant={device === 'desktop' ? 'secondary' : 'ghost'}
-                      size="sm"
+                      size="icon"
                       onClick={() => setDevice('desktop')}
-                      className={cn(
-                        'h-8 rounded-full px-3 flex items-center gap-1.5',
-                        device === 'desktop'
-                          ? 'bg-accent text-accent-foreground'
-                          : 'text-muted-foreground'
-                      )}
+                       className={cn('h-7 w-7', device === 'desktop' ? 'text-accent-foreground' : 'text-muted-foreground')}
+                       aria-label="Desktop preview"
                     >
                       <Laptop className="h-4 w-4" />
-                       <span className="text-xs hidden sm:inline">Desktop</span>
                     </Button>
-                  </div>
-                  <div className="p-1.5 rounded-full bg-slate-900 border border-white/15 shadow-lg flex items-center gap-1">
-                     <Button variant="ghost" size="icon" onClick={() => handleZoom('out')} className="h-8 w-8 rounded-full text-muted-foreground">
+                </div>
+
+                 <div className="flex items-center justify-center w-full gap-4">
+                  <div className="p-1 rounded-md bg-muted border border-border shadow-sm flex items-center gap-1">
+                     <Button variant="ghost" size="icon" onClick={() => handleZoom('out')} className="h-7 w-7 rounded-sm text-muted-foreground">
                         <Minus className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" onClick={handleResetZoom} className="text-xs font-medium text-muted-foreground w-12 text-center h-8 rounded-full">
+                    <Button variant="ghost" onClick={handleResetZoom} className="text-xs font-medium text-muted-foreground w-12 text-center h-7 rounded-sm">
                         {Math.round(zoom * 100)}%
                     </Button>
-                     <Button variant="ghost" size="icon" onClick={() => handleZoom('in')} className="h-8 w-8 rounded-full text-muted-foreground">
+                     <Button variant="ghost" size="icon" onClick={() => handleZoom('in')} className="h-7 w-7 rounded-sm text-muted-foreground">
                         <Plus className="h-4 w-4" />
                     </Button>
                   </div>
@@ -349,7 +325,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
               </div>
                <div
                 ref={previewPanelRef}
-                className="relative flex-1 flex flex-col items-center justify-center p-4 md:p-8 bg-black/50"
+                className="relative flex-1 flex flex-col items-center justify-center p-4 md:p-8 bg-black/50 overflow-auto overscroll-contain"
               >
                 <div className="preview-glow-container">
                     <div className="preview-glow-shine" />
