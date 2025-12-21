@@ -62,6 +62,14 @@
           "type": "string",
           "description": "Reference to User. (Relationship: User 1:N Project)"
         },
+        "name": {
+          "type": "string",
+          "description": "The name of the Flutter project."
+        },
+        "projectType": {
+          "type": "string",
+          "description": "The type of the project (e.g., 'flutter_all', 'android_only')."
+        },
         "description": {
           "type": "string",
           "description": "A description of the Flutter project."
@@ -79,8 +87,8 @@
       "required": [
         "id",
         "userId",
+        "name",
         "description",
-        "theme",
         "createdAt"
       ]
     }

@@ -10,7 +10,7 @@ import type { Project } from '@/types';
 import { useUser, useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useMemo } from 'react';
-import { collection } from 'firebase/firestore';
+import { collection, query, orderBy } from 'firebase/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -98,7 +98,7 @@ export default function DashboardPage() {
 
   const projectsQuery = useMemoFirebase(() => {
     if (!firestore || !user?.uid) return null;
-    return collection(firestore, 'users', user.uid, 'projects');
+    return query(collection(firestore, 'users', user.uid, 'projects'), orderBy('createdAt', 'desc'));
   }, [firestore, user?.uid]);
 
   const { data: projects, isLoading: areProjectsLoading } = useCollection<Project>(projectsQuery);
