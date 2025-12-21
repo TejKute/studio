@@ -7,17 +7,9 @@ import {
   Loader2,
   RefreshCw,
   CornerDownLeft,
-  Settings,
-  Home,
-  LogIn,
-  LayoutDashboard,
-  MessageSquare,
-  Code2,
   Smartphone,
   Tablet,
   Laptop,
-  ZoomIn,
-  ZoomOut,
   Minus,
   Plus,
 } from 'lucide-react';
@@ -34,6 +26,7 @@ import GeneratedComponentRenderer from '@/components/GeneratedComponentRenderer'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CodeBlock } from '@/components/code-block';
 import { DevicePreview, type Device } from '@/components/device-preview';
+import { MessageSquare, Code2 } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -243,7 +236,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
       }
     };
 
-    previewPanel.addEventListener('wheel', handleWheel);
+    previewPanel.addEventListener('wheel', handleWheel, { passive: false });
     return () => {
       previewPanel.removeEventListener('wheel', handleWheel);
     };
@@ -255,7 +248,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
         {isMounted && (
           <PanelGroup direction="horizontal" className="h-full">
             <Panel defaultSize={50} minSize={30} className="relative flex flex-col">
-              <div className="flex items-center justify-between p-2 border-b border-border bg-background">
+               <div className="flex items-center justify-between p-2 border-b border-border bg-background">
                  <div className="flex items-center gap-4">
                     <Link
                         href="/dashboard"
@@ -289,8 +282,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                     </Button>
                  </div>
               </div>
-
-               <div className="flex items-center justify-center p-2 border-b border-border bg-background">
+              <div className="flex items-center justify-center p-2 border-b border-border bg-background">
                  <div className="flex items-center justify-center w-full gap-4">
                   <div className="p-1.5 rounded-full bg-slate-900 border border-white/15 shadow-lg flex items-center gap-1">
                     <Button
@@ -336,7 +328,6 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                        <span className="text-xs hidden sm:inline">Desktop</span>
                     </Button>
                   </div>
-
                   <div className="p-1.5 rounded-full bg-slate-900 border border-white/15 shadow-lg flex items-center gap-1">
                      <Button variant="ghost" size="icon" onClick={() => handleZoom('out')} className="h-8 w-8 rounded-full text-muted-foreground">
                         <Minus className="h-4 w-4" />
@@ -350,7 +341,6 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                   </div>
                  </div>
               </div>
-
               <div
                 ref={previewPanelRef}
                 className="relative flex-1 flex flex-col items-center justify-center p-4 md:p-8 bg-background overflow-auto"
