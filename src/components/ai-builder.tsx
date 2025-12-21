@@ -248,7 +248,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
         {isMounted && (
           <PanelGroup direction="horizontal" className="h-full">
             <Panel defaultSize={50} minSize={30} className="relative flex flex-col">
-               <div className="flex items-center justify-between p-2 border-b border-border bg-background">
+               <div className="flex items-center justify-between p-2 border-b border-border bg-background z-10">
                  <div className="flex items-center gap-4">
                     <Link
                         href="/dashboard"
@@ -282,7 +282,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                     </Button>
                  </div>
               </div>
-              <div className="flex items-center justify-center p-2 border-b border-border bg-background">
+              <div className="flex items-center justify-center p-2 border-b border-border bg-background z-10">
                  <div className="flex items-center justify-center w-full gap-4">
                   <div className="p-1.5 rounded-full bg-slate-900 border border-white/15 shadow-lg flex items-center gap-1">
                     <Button
@@ -343,14 +343,17 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
               </div>
               <div
                 ref={previewPanelRef}
-                className="relative flex-1 flex flex-col items-center justify-center p-4 md:p-8 bg-background overflow-auto"
+                className="relative flex-1 flex flex-col items-center justify-center p-4 md:p-8 bg-black/50 overflow-auto"
               >
-                <DevicePreview device={device} zoom={zoom}>
-                  <Preview
-                    isGenerating={isGenerating}
-                    generatedCode={generatedCode}
-                  />
-                </DevicePreview>
+                <div className="preview-glow-container">
+                    <div className="preview-glow-shine" />
+                    <DevicePreview device={device} zoom={zoom}>
+                    <Preview
+                        isGenerating={isGenerating}
+                        generatedCode={generatedCode}
+                    />
+                    </DevicePreview>
+                </div>
               </div>
             </Panel>
             <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">

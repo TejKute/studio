@@ -126,3 +126,32 @@
     background: transparent;
   }
 }
+
+@keyframes shine-effect {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(25deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(25deg);
+  }
+}
+
+.preview-glow-container {
+  @apply relative isolate flex items-center justify-center;
+}
+
+.preview-glow-container::before {
+  content: '';
+  @apply absolute inset-0 -z-10 bg-gradient-to-tr from-amber-500/10 via-violet-500/5 to-amber-500/10 blur-2xl;
+  filter: blur(120px);
+}
+
+.preview-glow-shine {
+  @apply absolute inset-[-200%] -z-10;
+}
+
+.preview-glow-shine::before {
+  content: '';
+  @apply absolute inset-0 bg-[linear-gradient(90deg,transparent,rgba(255,211,106,0.15),transparent)] opacity-60;
+  animation: shine-effect 12s infinite ease-in-out;
+}
