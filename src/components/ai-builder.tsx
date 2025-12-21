@@ -43,7 +43,7 @@ type EditorView = 'chat' | 'code';
 const defaultZooms: Record<Device, number> = {
   mobile: 0.4,
   tablet: 0.3,
-  desktop: 0.35,
+  desktop: 0.32,
 };
 
 function LoadingPreview() {
@@ -240,7 +240,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
           <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">
             <div className="w-1 h-8 rounded-full bg-border group-hover:bg-ring transition-colors" />
           </PanelResizeHandle>
-          <Panel defaultSize={30} minSize={20} className="flex flex-col h-full bg-background">
+          <Panel defaultSize={60} minSize={20} className="flex flex-col h-full bg-background">
             <header className="flex-shrink-0 h-14 flex items-center justify-between p-2 border-b border-border">
               <div className="font-semibold text-sm px-2">Chat</div>
               <div className="flex items-center gap-2">
@@ -255,7 +255,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
             <div className="flex-1 flex flex-col min-h-0">
               {editorView === 'chat' ? (
                 <>
-                  <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
+                  <ScrollArea className="flex-1 p-4 no-scrollbar" ref={scrollAreaRef}>
                     <div className="space-y-4">
                       {messages.map((msg) => (
                         <ChatMessage key={msg.id} message={msg} />
@@ -307,30 +307,15 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                 </>
               ) : (
                  <div className="flex-1 min-h-0">
-                   <ScrollArea className="h-full">
+                   <ScrollArea className="h-full no-scrollbar">
                       <CodeBlock code={generatedCode ?? ''} />
                   </ScrollArea>
                 </div>
               )}
             </div>
           </Panel>
-           <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">
-            <div className="w-1 h-8 rounded-full bg-border group-hover:bg-ring transition-colors" />
-          </PanelResizeHandle>
-           <Panel defaultSize={30} minSize={20} className="flex flex-col h-full bg-background">
-             <header className="flex-shrink-0 h-14 flex items-center justify-between p-2 border-b border-border">
-              <div className="font-semibold text-sm px-2">AI Response</div>
-            </header>
-             <div className="flex-1 min-h-0">
-                <ScrollArea className="h-full">
-                    <CodeBlock code={generatedCode ?? ''} />
-                </ScrollArea>
-              </div>
-          </Panel>
         </PanelGroup>
       )}
     </div>
   );
 }
-
-    

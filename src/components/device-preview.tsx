@@ -37,7 +37,7 @@ export function DevicePreview({
   return (
     <div 
       id="preview-viewport"
-      className="absolute inset-0 w-full h-full overflow-auto overscroll-contain p-8"
+      className="absolute inset-0 w-full h-full overflow-auto overscroll-contain p-8 no-scrollbar"
     >
       <div
           id="preview-scaled-content"
