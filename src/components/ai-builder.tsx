@@ -41,8 +41,8 @@ interface Message {
 type EditorView = 'chat' | 'code';
 
 const defaultZooms: Record<Device, number> = {
-  mobile: 0.4,
-  tablet: 0.3,
+  mobile: 0.45,
+  tablet: 0.4,
   desktop: 0.32,
 };
 
@@ -231,7 +231,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                 </Button>
               </div>
             </header>
-            <div className="flex-1 relative bg-black/50 overflow-hidden border-r border-border">
+            <div className="flex-1 relative bg-black/50 overflow-hidden border-r border-border no-scrollbar">
               <DevicePreview device={device} zoom={zoom}>
                 <Preview isGenerating={isGenerating} generatedCode={generatedCode} />
               </DevicePreview>
