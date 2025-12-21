@@ -23,7 +23,6 @@ import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { generateAppFromDescription } from '@/ai/flows/generate-app-from-description';
 import Link from 'next/link';
 import GeneratedComponentRenderer from '@/components/GeneratedComponentRenderer';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CodeBlock } from '@/components/code-block';
 import { DevicePreview, type Device } from '@/components/device-preview';
 import { MessageSquare, Code2 } from 'lucide-react';
@@ -34,6 +33,8 @@ interface Message {
   sender: 'user' | 'ai';
   explanation?: string;
 }
+
+type EditorView = 'chat' | 'code';
 
 function LoadingPreview() {
   return (
@@ -116,6 +117,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
   const [isMounted, setIsMounted] = useState(false);
   const [device, setDevice] = useState<Device>('mobile');
   const [zoom, setZoom] = useState(1);
+  const [editorView, setEditorView] = useState<EditorView>('chat');
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const previewPanelRef = useRef<HTMLDivElement>(null);
@@ -227,6 +229,15 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                  </div>
                  <div className="flex items-center justify-end gap-2">
                     <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-9 w-9 p-0"
+                        onClick={() => setEditorView(editorView === 'code' ? 'chat' : 'code')}
+                        aria-label="Toggle code view"
+                    >
+                        <Code2 className="h-4 w-4" />
+                    </Button>
+                    <Button
                         variant="default"
                         size="sm"
                     >
@@ -298,73 +309,72 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
               <div className="w-1 h-8 rounded-full bg-border group-hover:bg-ring transition-colors" />
             </PanelResizeHandle>
             <Panel defaultSize={50} minSize={30}>
-              <Tabs
-                defaultValue="chat"
-                className="flex flex-col bg-background h-full border-l border-border"
-              >
-                <TabsList className="m-2 bg-muted border-border border">
-                  <TabsTrigger value="chat" className="gap-2">
-                    <MessageSquare size={16} /> AI Chat
-                  </TabsTrigger>
-                  <TabsTrigger value="code" className="gap-2">
-                    <Code2 size={16} /> Code View
-                  </TabsTrigger>
-                </TabsList>
-                <TabsContent
-                  value="chat"
-                  className="flex-1 flex flex-col min-h-0"
-                >
-                  <ScrollArea className="flex-1 p-4 md:p-6" ref={scrollAreaRef}>
-                    <div className="space-y-6">
-                      {messages.map((msg) => (
-                        <ChatMessage key={msg.id} message={msg} />
-                      ))}
-                      {isGenerating && (
-                        <div className="flex items-start gap-3">
-                          <Avatar className="h-8 w-8 bg-muted border border-border">
-                            <AvatarFallback className="bg-transparent">
-                              <Bot
-                                size={18}
-                                className="text-muted-foreground"
-                              />
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="max-w-[75%] rounded-lg p-3 text-sm bg-muted text-muted-foreground flex items-center gap-2">
-                            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                            <span>Generating...</span>
-                          </div>
-                        </div>
-                      )}
+              <div className="flex flex-col bg-background h-full border-l border-border">
+                {editorView === 'chat' && (
+                  <div className="flex-1 flex flex-col min-h-0">
+                    <div className="p-4 border-b border-border flex items-center gap-2">
+                        <MessageSquare size={16} />
+                        <h2 className="text-sm font-medium">AI Chat</h2>
                     </div>
-                  </ScrollArea>
-                  <div className="border-t border-border bg-background p-4 md:p-6">
-                    <form onSubmit={handleSendMessage} className="relative">
-                      <Input
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        placeholder="Describe a change you want to see..."
-                        className="pr-12 h-12 bg-muted border-border text-foreground placeholder:text-muted-foreground focus:ring-ring"
-                        disabled={isGenerating}
-                      />
+                    <ScrollArea className="flex-1 p-4 md:p-6" ref={scrollAreaRef}>
+                      <div className="space-y-6">
+                        {messages.map((msg) => (
+                          <ChatMessage key={msg.id} message={msg} />
+                        ))}
+                        {isGenerating && (
+                          <div className="flex items-start gap-3">
+                            <Avatar className="h-8 w-8 bg-muted border border-border">
+                              <AvatarFallback className="bg-transparent">
+                                <Bot
+                                  size={18}
+                                  className="text-muted-foreground"
+                                />
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="max-w-[75%] rounded-lg p-3 text-sm bg-muted text-muted-foreground flex items-center gap-2">
+                              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                              <span>Generating...</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </ScrollArea>
+                    <div className="border-t border-border bg-background p-4 md:p-6">
+                      <form onSubmit={handleSendMessage} className="relative">
+                        <Input
+                          value={input}
+                          onChange={(e) => setInput(e.target.value)}
+                          placeholder="Describe a change you want to see..."
+                          className="pr-12 h-12 bg-muted border-border text-foreground placeholder:text-muted-foreground focus:ring-ring"
+                          disabled={isGenerating}
+                        />
 
-                      <Button
-                        type="submit"
-                        size="icon"
-                        variant="ghost"
-                        className="absolute right-2.5 top-1/2 -translate-y-1/2 h-8 w-8 hover:bg-accent"
-                        disabled={isGenerating || !input.trim()}
-                      >
-                        <CornerDownLeft className="h-4 w-4" />
-                      </Button>
-                    </form>
+                        <Button
+                          type="submit"
+                          size="icon"
+                          variant="ghost"
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 h-8 w-8 hover:bg-accent"
+                          disabled={isGenerating || !input.trim()}
+                        >
+                          <CornerDownLeft className="h-4 w-4" />
+                        </Button>
+                      </form>
+                    </div>
                   </div>
-                </TabsContent>
-                <TabsContent value="code" className="flex-1 min-h-0">
-                  <ScrollArea className="h-full">
-                    <CodeBlock code={generatedCode ?? ''} />
-                  </ScrollArea>
-                </TabsContent>
-              </Tabs>
+                )}
+
+                {editorView === 'code' && (
+                    <div className="flex-1 flex flex-col min-h-0">
+                        <div className="p-4 border-b border-border flex items-center gap-2">
+                            <Code2 size={16} />
+                            <h2 className="text-sm font-medium">Code View</h2>
+                        </div>
+                        <ScrollArea className="h-full">
+                            <CodeBlock code={generatedCode ?? ''} />
+                        </ScrollArea>
+                    </div>
+                )}
+              </div>
             </Panel>
           </PanelGroup>
         )}
