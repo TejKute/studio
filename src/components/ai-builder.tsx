@@ -39,6 +39,12 @@ interface Message {
 
 type EditorView = 'chat' | 'code';
 
+const defaultZooms: Record<Device, number> = {
+  mobile: 0.4,
+  tablet: 0.3,
+  desktop: 0.35,
+};
+
 function LoadingPreview() {
   return (
     <div className="p-4 bg-black h-full">
@@ -119,7 +125,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     useState<string | null>(`// Your Flutter code will appear here`);
   const [isMounted, setIsMounted] = useState(false);
   const [device, setDevice] = useState<Device>('mobile');
-  const [zoom, setZoom] = useState(0.8);
+  const [zoom, setZoom] = useState(defaultZooms.mobile);
   const [editorView, setEditorView] = useState<EditorView>('chat');
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -128,6 +134,10 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    setZoom(defaultZooms[device]);
+  }, [device]);
 
   useEffect(() => {
     if (scrollAreaRef.current) {
@@ -185,13 +195,13 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     });
   };
 
-  const handleResetZoom = () => setZoom(1);
+  const handleResetZoom = () => setZoom(defaultZooms[device]);
 
   return (
     <div className="h-screen w-full flex flex-col bg-background text-foreground">
       {isMounted && (
         <PanelGroup direction="horizontal" className="flex-1">
-          <Panel defaultSize={50} minSize={30} className="flex flex-col h-full">
+          <Panel defaultSize={50} minSize={30} className="flex flex-col h-screen">
             <header className="flex-shrink-0 h-14 flex items-center justify-between gap-1 p-2 border-b border-r border-border bg-background z-10">
               <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-foreground hover:text-white px-2">
                 <AppLogo className="h-7 w-7" />
@@ -208,13 +218,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                   <Laptop className="h-4 w-4" />
                 </Button>
               </div>
-            </header>
-            <div className="flex-1 relative bg-black/50 overflow-hidden border-r border-border">
-              <DevicePreview device={device} zoom={zoom}>
-                <Preview isGenerating={isGenerating} generatedCode={generatedCode} />
-              </DevicePreview>
-
-              <div className="absolute bottom-4 right-4 z-20 flex items-center gap-1 rounded-full border border-border bg-background/50 p-1 backdrop-blur-sm">
+               <div className="flex items-center gap-1">
                 <Button variant="ghost" size="icon" onClick={() => handleZoom('out')} className="h-7 w-7 rounded-full text-muted-foreground">
                   <Minus className="h-4 w-4" />
                 </Button>
@@ -225,6 +229,11 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
+            </header>
+            <div className="flex-1 relative bg-black/50 overflow-hidden border-r border-border">
+              <DevicePreview device={device} zoom={zoom}>
+                <Preview isGenerating={isGenerating} generatedCode={generatedCode} />
+              </DevicePreview>
             </div>
           </Panel>
           <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">
