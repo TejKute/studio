@@ -8,17 +8,17 @@ export type Device = 'mobile' | 'tablet' | 'desktop';
 const deviceConfig = {
   mobile: {
     width: 390,
-    height: 780,
+    height: 844,
     borderRadius: '28px',
   },
   tablet: {
-    width: 640,
-    height: 820,
+    width: 768,
+    height: 1024,
     borderRadius: '18px',
   },
   desktop: {
-    width: 1024,
-    height: 720,
+    width: 1280,
+    height: 800,
     borderRadius: '12px',
   },
 };
@@ -34,30 +34,18 @@ export function DevicePreview({
 }) {
   const { width, height, borderRadius } = deviceConfig[device];
 
-  // This style is for the scaled content. It should NOT be scrollable.
-  const scaledContentStyle: React.CSSProperties = {
-    width: `${width}px`,
-    height: `${height}px`,
-    transform: `scale(${zoom})`,
-    transformOrigin: 'top center',
-    // The container itself doesn't scroll; its parent does.
-    overflow: 'hidden',
-  };
-
   return (
-    // PreviewViewport: This is the ONLY scrollable container.
-    // It has hard scroll limits (`overscroll-contain`).
-    // Padding is added to center the scaled content within the scrollable area.
     <div
-      className="relative w-full h-full overflow-auto overscroll-contain flex justify-center"
-      style={{
-        paddingTop: '2rem',
-        paddingBottom: '2rem',
-      }}
+      className="relative w-full h-full overflow-auto overscroll-contain flex justify-center p-8"
     >
-        {/* PreviewScaledContent: This container handles zooming via `transform`. It is NOT scrollable. */}
         <div 
-          style={scaledContentStyle}
+          className="relative"
+          style={{
+            width: `${width}px`,
+            height: `${height}px`,
+            transform: `scale(${zoom})`,
+            transformOrigin: 'top center',
+          }}
         >
           <div className={cn(
               "relative w-full h-full flex flex-col bg-black box-border border border-white/10",
