@@ -215,7 +215,8 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     }
   };
 
-  const handleZoom = (direction: 'in' | 'out', step = 0.05) => {
+  const handleZoom = (direction: 'in' | 'out') => {
+    const step = 0.05;
     setZoom((prev) => {
       const newZoom = direction === 'in' ? prev + step : prev - step;
       return Math.max(0.01, Math.min(1.0, newZoom));
@@ -232,7 +233,11 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
       if (e.ctrlKey || e.metaKey) {
         e.preventDefault();
         const direction = e.deltaY > 0 ? 'out' : 'in';
-        handleZoom(direction, 0.02);
+        const step = 0.02;
+         setZoom((prev) => {
+            const newZoom = direction === 'in' ? prev + step : prev - step;
+            return Math.max(0.01, Math.min(1.0, newZoom));
+        });
       }
     };
 
@@ -240,6 +245,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     return () => {
       previewPanel.removeEventListener('wheel', handleWheel);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -343,8 +349,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
               </div>
                <div
                 ref={previewPanelRef}
-                className="relative flex-1 flex flex-col items-center justify-center p-4 md:p-8 bg-black/50 overflow-auto"
-                style={{ overscrollBehavior: 'contain' }}
+                className="relative flex-1 flex flex-col items-center justify-center p-4 md:p-8 bg-black/50"
               >
                 <div className="preview-glow-container">
                     <div className="preview-glow-shine" />
@@ -434,5 +439,3 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     </div>
   );
 }
-
-    

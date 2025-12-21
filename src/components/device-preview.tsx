@@ -5,6 +5,24 @@ import React from "react";
 
 export type Device = 'mobile' | 'tablet' | 'desktop';
 
+const deviceConfig = {
+  mobile: {
+    width: 390,
+    height: 760,
+    borderRadius: '28px',
+  },
+  tablet: {
+    width: 768,
+    height: 1024,
+    borderRadius: '18px',
+  },
+  desktop: {
+    width: 1280,
+    height: 800,
+    borderRadius: '14px',
+  },
+};
+
 export function DevicePreview({ 
   children, 
   device = 'mobile',
@@ -15,59 +33,61 @@ export function DevicePreview({
   zoom?: number;
 }) {
 
-  const frameClasses = cn(
-    "relative mx-auto transition-all duration-300 ease-in-out flex flex-col bg-black shadow-2xl",
-    "box-border origin-top",
-    // Base border style for all devices
-    "border border-[rgba(255,255,255,0.08)]",
-    {
-      // Mobile-specific styles
-      "w-[390px] h-[760px] rounded-[28px] p-3.5 border-[8px] border-gray-900": device === 'mobile',
-      // Tablet-specific styles
-      "w-[768px] max-h-[75vh] aspect-[4/3] rounded-[18px] p-2": device === 'tablet',
-      // Desktop-specific styles
-      "w-full max-w-[1200px] max-h-[78vh] aspect-[16/10] rounded-[14px] p-2": device === 'desktop',
-    }
-  );
+  const { width, height, borderRadius } = deviceConfig[device];
 
-  const contentWrapperClasses = cn(
-    "relative w-full h-full flex-1 flex flex-col bg-black overflow-hidden",
-    {
-      "rounded-[20px]": device === 'mobile',
-      "rounded-lg": device === 'tablet',
-      "rounded-md": device === 'desktop'
-    }
-  );
-  
+  const viewportStyle: React.CSSProperties = {
+    width: `${width}px`,
+    height: `${height}px`,
+    borderRadius: borderRadius,
+  };
+
+  const scaledContentStyle: React.CSSProperties = {
+    width: `${width}px`,
+    height: `${height}px`,
+    transform: `scale(${zoom})`,
+    transformOrigin: 'top center',
+    pointerEvents: 'auto',
+  };
+
   return (
+    // Layer 1: The fixed-size viewport that clips content.
     <div 
-      className={frameClasses}
-      style={{ transform: `scale(${zoom})`, transformOrigin: 'top center' }}
+      className="relative mx-auto bg-black shadow-2xl box-border border border-[rgba(255,255,255,0.08)] overflow-hidden"
+      style={viewportStyle}
     >
-       {device === 'mobile' && (
-        <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10">
-          <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-900 rounded-b-xl"></div>
-          <div className="absolute flex justify-between items-center px-6 pt-1 text-xs font-sans w-full top-3 text-white/80">
-              <div>9:41</div>
-              <div className="flex items-center gap-1">
-                  <Signal size={14} />
-                  <Wifi size={14} />
-                  <BatteryFull size={16} />
+      {/* Layer 2: The container that handles all scrolling. */}
+      <div 
+        className="absolute inset-0 overflow-auto touch-pan-x touch-pan-y"
+        style={{ overscrollBehavior: 'contain', scrollbarGutter: 'stable' }}
+      >
+        {/* Layer 3: The content that is scaled by the zoom factor. */}
+        <div style={scaledContentStyle}>
+          <div className="relative w-full h-full flex flex-col bg-black">
+            {device === 'mobile' && (
+              <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-900 rounded-b-xl"></div>
+                <div className="absolute flex justify-between items-center px-6 pt-1 text-xs font-sans w-full top-3 text-white/80">
+                    <div>9:41</div>
+                    <div className="flex items-center gap-1">
+                        <Signal size={14} />
+                        <Wifi size={14} />
+                        <BatteryFull size={16} />
+                    </div>
+                </div>
               </div>
+            )}
+            
+            <div className="w-full h-full flex-1">
+              {children}
+            </div>
+
+            {device === 'mobile' && (
+              <div className="py-3.5 flex justify-center bg-black/80 backdrop-blur-sm border-t border-white/5 relative z-20">
+                  <div className="w-28 h-1 rounded-full bg-gray-700"></div>
+              </div>
+            )}
           </div>
         </div>
-       )}
-
-      <div className={contentWrapperClasses}>
-        <div className="w-full h-full flex-1 overflow-y-scroll">
-            {children}
-        </div>
-        
-        {device === 'mobile' && (
-            <div className="py-3.5 flex justify-center bg-black/80 backdrop-blur-sm border-t border-white/5 relative z-20">
-                <div className="w-28 h-1 rounded-full bg-gray-700"></div>
-            </div>
-        )}
       </div>
     </div>
   );
