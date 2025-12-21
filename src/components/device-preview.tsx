@@ -1,3 +1,4 @@
+
 'use client';
 import { cn } from "@/lib/utils";
 import { Signal, Wifi, BatteryFull } from "lucide-react";
@@ -37,17 +38,23 @@ export function DevicePreview({
   return (
     <div 
       id="preview-viewport"
-      className="absolute inset-0 w-full h-full overflow-auto overscroll-contain p-8 no-scrollbar"
+      className={cn(
+        "absolute inset-0 w-full h-full p-8 no-scrollbar overflow-auto overscroll-contain",
+        (device === 'tablet' || device === 'desktop') && "flex items-center justify-center"
+      )}
     >
       <div
           id="preview-scaled-content"
           style={{
               transform: `scale(${zoom})`,
-              transformOrigin: 'top center',
+              transformOrigin: 'center center',
               width: `${width}px`,
               height: `${height}px`,
           }}
-          className="relative mx-auto my-8"
+          className={cn(
+            "relative mx-auto my-8",
+            (device === 'tablet' || device === 'desktop') && "my-0"
+          )}
       >
           <div className="preview-glow-container">
               <div className="preview-glow-shine" />
