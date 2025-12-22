@@ -204,7 +204,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
       {isMounted && (
         <PanelGroup direction="horizontal" className="flex-1">
           <Panel defaultSize={40} minSize={30} className="flex flex-col h-screen">
-            <header className="flex-shrink-0 h-14 flex items-center justify-between gap-1 p-2 border-b border-border bg-background z-10">
+            <header className="flex-shrink-0 h-14 flex items-center justify-between gap-1 p-2 border-b border-border bg-background z-10 rounded-b-xl">
               <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-foreground hover:text-white px-2">
                 <AppLogo className="h-7 w-7" />
                 <span className="font-headline text-lg font-bold text-white">Craftify</span>
@@ -239,7 +239,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
             </div>
           </Panel>
           <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">
-            <div className="w-1 h-8 rounded-full bg-border group-hover:bg-ring transition-colors" />
+            <div className="w-1 h-8 rounded-full bg-transparent group-hover:bg-ring transition-colors" />
           </PanelResizeHandle>
           <Panel defaultSize={60} minSize={20} className="flex flex-col h-full bg-background">
             <header className="flex-shrink-0 h-14 flex items-center justify-between p-2 border-b border-border">
