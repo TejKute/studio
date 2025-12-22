@@ -33,6 +33,8 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import AppLogo from './app-logo';
 import Image from 'next/image';
+import { CodeView } from '@/components/code-view';
+
 
 interface Message {
   id: string;
@@ -329,7 +331,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                         </Button>
                       </div>
                     )}
-                    <form onSubmit={handleSendMessage} className="relative flex items-center gap-2" onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); }}>
+                    <form onSubmit={handleSendMessage} className="relative flex items-center gap-2">
                        <Button
                           type="button"
                           size="icon"
@@ -350,6 +352,12 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                       <Input
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            handleSendMessage();
+                          }
+                        }}
                         placeholder="Describe a change you want to see..."
                         className="pr-10 h-10 bg-muted border-border text-foreground placeholder:text-muted-foreground focus:ring-ring flex-1"
                         disabled={isGenerating}
@@ -367,11 +375,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                   </div>
                 </>
               ) : (
-                 <div className="flex-1 min-h-0">
-                   <ScrollArea className="h-full no-scrollbar">
-                      <CodeBlock code={generatedCode ?? ''} />
-                  </ScrollArea>
-                </div>
+                <CodeView code={generatedCode ?? ''} />
               )}
             </div>
           </Panel>
@@ -380,5 +384,3 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     </div>
   );
 }
-
-    

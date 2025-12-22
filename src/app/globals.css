@@ -142,3 +142,12 @@
   @apply absolute inset-0 bg-[linear-gradient(90deg,transparent,rgba(255,211,106,0.15),transparent)] opacity-60;
   animation: shine-effect 12s infinite ease-in-out;
 }
+
+/* For Code View File Tree */
+.file-tree-item > div:hover {
+  background-color: hsl(var(--muted));
+}
+.file-tree-item > div.selected {
+  background-color: hsl(var(--accent) / 0.2);
+  color: hsl(var(--accent-foreground));
+}
