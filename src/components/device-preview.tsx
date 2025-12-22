@@ -10,12 +10,12 @@ const deviceConfig = {
   mobile: {
     width: 390,
     height: 844,
-    borderRadius: '28px',
+    borderRadius: '12px',
   },
   tablet: {
     width: 768,
     height: 1024,
-    borderRadius: '18px',
+    borderRadius: '12px',
   },
   desktop: {
     width: 1280,
@@ -38,10 +38,7 @@ export function DevicePreview({
   return (
     <div 
       id="preview-viewport"
-      className={cn(
-        "absolute inset-0 w-full h-full p-8 no-scrollbar overflow-auto overscroll-contain",
-        (device === 'tablet' || device === 'desktop') && "flex items-center justify-center"
-      )}
+      className="absolute inset-0 flex h-full w-full items-center justify-center overflow-auto overscroll-contain p-8 no-scrollbar"
     >
       <div
           id="preview-scaled-content"
@@ -51,10 +48,7 @@ export function DevicePreview({
               width: `${width}px`,
               height: `${height}px`,
           }}
-          className={cn(
-            "relative mx-auto my-8",
-            (device === 'tablet' || device === 'desktop') && "my-0"
-          )}
+          className="relative mx-auto my-auto"
       >
           <div className="preview-glow-container">
               <div className="preview-glow-shine" />
