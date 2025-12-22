@@ -239,10 +239,124 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     }
   };
 
+  const ChatPanel = () => (
+    <>
+      <ScrollArea className="flex-1 p-4 no-scrollbar" ref={scrollAreaRef}>
+        <div className="space-y-4">
+          {messages.map((msg) => (
+            <ChatMessage key={msg.id} message={msg} />
+          ))}
+          {isGenerating && (
+            <div className="flex items-start gap-3">
+              <Avatar className="h-8 w-8 bg-muted border border-border">
+                <AvatarFallback className="bg-transparent">
+                  <Bot size={18} className="text-muted-foreground" />
+                </AvatarFallback>
+              </Avatar>
+              <div className="max-w-[75%] rounded-lg p-3 text-sm bg-muted text-muted-foreground flex items-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                <span>Generating...</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </ScrollArea>
+      <div className="border-t border-border bg-background p-3">
+        {attachmentPreview && (
+          <div className="relative w-20 h-20 mb-2 rounded-md overflow-hidden border border-border">
+            <Image src={attachmentPreview} alt="Attachment preview" layout="fill" objectFit="cover" />
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              className="absolute top-1 right-1 h-6 w-6 rounded-full bg-black/50 hover:bg-black/75 text-white"
+              onClick={removeAttachment}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
+        <form onSubmit={handleSendMessage} className="relative flex items-center gap-2">
+           <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              className="h-8 w-8 text-muted-foreground shrink-0"
+              disabled={isGenerating}
+              onClick={handleAttachmentClick}
+            >
+              <Paperclip className="h-4 w-4" />
+            </Button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              className="hidden"
+              accept="image/*,application/pdf,.txt"
+            />
+          <Input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSendMessage();
+              }
+            }}
+            placeholder="Describe a change you want to see..."
+            className="pr-10 h-10 bg-muted border-border text-foreground placeholder:text-muted-foreground focus:ring-ring flex-1"
+            disabled={isGenerating}
+          />
+          <Button
+            type="submit"
+            size="icon"
+            variant="ghost"
+            className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 hover:bg-accent"
+            disabled={isGenerating || (!input.trim() && !attachment)}
+          >
+            <CornerDownLeft className="h-4 w-4" />
+          </Button>
+        </form>
+      </div>
+    </>
+  );
+
+
+  if (!isMounted) {
+    return (
+        <div className="h-screen w-full flex flex-col items-center justify-center bg-background text-foreground">
+          <AppLogo className="h-12 w-12 animate-pulse" />
+        </div>
+      );
+  }
+
+  if (editorView === 'code') {
+    return (
+      <div className="h-screen w-full flex flex-col bg-background text-foreground">
+         <header className="flex-shrink-0 h-14 flex items-center justify-between gap-1 p-2 border-b border-border bg-background z-10 rounded-b-xl">
+            <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-foreground hover:text-white px-2">
+                <AppLogo className="h-7 w-7" />
+                <span className="font-headline text-lg font-bold text-white">Craftify</span>
+            </Link>
+            <div className="flex-1" />
+            <div className="flex items-center gap-2">
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setEditorView('chat')}>
+                    <MessageSquare className="h-4 w-4" />
+                </Button>
+                <Button size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white">
+                    Publish
+                </Button>
+            </div>
+        </header>
+        <div className="flex-1 flex flex-col min-h-0">
+          <CodeView code={generatedCode ?? ''} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen w-full flex flex-col bg-background text-foreground">
-      {isMounted && (
         <PanelGroup direction="horizontal" className="flex-1">
           <Panel defaultSize={40} minSize={30} className="flex flex-col h-screen">
             <header className="flex-shrink-0 h-14 flex items-center justify-between gap-1 p-2 border-b border-border bg-background z-10 rounded-b-xl">
@@ -285,7 +399,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
           <Panel defaultSize={60} minSize={20} className="flex flex-col h-full bg-background">
           <header className="flex-shrink-0 h-14 flex items-center justify-end p-2 border-b border-border rounded-b-xl">
               <div className="flex items-center gap-2">
-                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setEditorView(editorView === 'code' ? 'chat' : 'code')}>
+                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setEditorView('code')}>
                     <Code2 className="h-4 w-4" />
                 </Button>
                 <Button size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white">
@@ -294,93 +408,12 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
               </div>
             </header>
             <div className="flex-1 flex flex-col min-h-0">
-              {editorView === 'chat' ? (
-                <>
-                  <ScrollArea className="flex-1 p-4 no-scrollbar" ref={scrollAreaRef}>
-                    <div className="space-y-4">
-                      {messages.map((msg) => (
-                        <ChatMessage key={msg.id} message={msg} />
-                      ))}
-                      {isGenerating && (
-                        <div className="flex items-start gap-3">
-                          <Avatar className="h-8 w-8 bg-muted border border-border">
-                            <AvatarFallback className="bg-transparent">
-                              <Bot size={18} className="text-muted-foreground" />
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="max-w-[75%] rounded-lg p-3 text-sm bg-muted text-muted-foreground flex items-center gap-2">
-                            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                            <span>Generating...</span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </ScrollArea>
-                  <div className="border-t border-border bg-background p-3">
-                    {attachmentPreview && (
-                      <div className="relative w-20 h-20 mb-2 rounded-md overflow-hidden border border-border">
-                        <Image src={attachmentPreview} alt="Attachment preview" layout="fill" objectFit="cover" />
-                        <Button
-                          type="button"
-                          size="icon"
-                          variant="ghost"
-                          className="absolute top-1 right-1 h-6 w-6 rounded-full bg-black/50 hover:bg-black/75 text-white"
-                          onClick={removeAttachment}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    )}
-                    <form onSubmit={handleSendMessage} className="relative flex items-center gap-2">
-                       <Button
-                          type="button"
-                          size="icon"
-                          variant="ghost"
-                          className="h-8 w-8 text-muted-foreground shrink-0"
-                          disabled={isGenerating}
-                          onClick={handleAttachmentClick}
-                        >
-                          <Paperclip className="h-4 w-4" />
-                        </Button>
-                        <input
-                          type="file"
-                          ref={fileInputRef}
-                          onChange={handleFileChange}
-                          className="hidden"
-                          accept="image/*,application/pdf,.txt"
-                        />
-                      <Input
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            handleSendMessage();
-                          }
-                        }}
-                        placeholder="Describe a change you want to see..."
-                        className="pr-10 h-10 bg-muted border-border text-foreground placeholder:text-muted-foreground focus:ring-ring flex-1"
-                        disabled={isGenerating}
-                      />
-                      <Button
-                        type="submit"
-                        size="icon"
-                        variant="ghost"
-                        className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 hover:bg-accent"
-                        disabled={isGenerating || (!input.trim() && !attachment)}
-                      >
-                        <CornerDownLeft className="h-4 w-4" />
-                      </Button>
-                    </form>
-                  </div>
-                </>
-              ) : (
-                <CodeView code={generatedCode ?? ''} />
-              )}
+              <ChatPanel />
             </div>
           </Panel>
         </PanelGroup>
-      )}
     </div>
   );
 }
+
+    
