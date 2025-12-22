@@ -128,7 +128,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
   const [input, setInput] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedCode, setGeneratedCode] =
-    useState<string | null>(`// Your Flutter code will appear here`);
+    useState<string | null>('');
   const [isMounted, setIsMounted] = useState(false);
   const [device, setDevice] = useState<Device>('mobile');
   const [zoom, setZoom] = useState(defaultZooms.mobile);
@@ -333,14 +333,14 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
   if (editorView === 'code') {
     return (
       <div className="h-screen w-full flex flex-col bg-background text-foreground">
-         <header className="flex-shrink-0 h-14 flex items-center justify-between gap-1 p-2 border-b border-border bg-background z-10 rounded-b-xl">
+        <header className="flex-shrink-0 h-14 flex items-center justify-between gap-1 p-2 border-b border-border bg-background z-10 rounded-b-xl">
             <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-foreground hover:text-white px-2">
                 <AppLogo className="h-7 w-7" />
                 <span className="font-headline text-lg font-bold text-white">Craftify</span>
             </Link>
             <div className="flex-1" />
             <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setEditorView('chat')}>
+                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setEditorView('chat')}>
                     <MessageSquare className="h-4 w-4" />
                 </Button>
                 <Button size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white">

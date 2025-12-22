@@ -1,8 +1,8 @@
+
 'use client';
 
 import { useState } from 'react';
-import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
-import { Button } from '@/components/ui/button';
+import { Panel, PanelGroup } from 'react-resizable-panels';
 import { Input } from '@/components/ui/input';
 import { FileTree } from '@/components/file-tree';
 import { CodeEditor } from '@/components/code-editor';
@@ -63,9 +63,6 @@ export function CodeView({ code }: { code: string }) {
             />
           </ScrollArea>
         </Panel>
-        <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">
-            <div className="w-1 h-8 rounded-full bg-transparent group-hover:bg-ring transition-colors" />
-        </PanelResizeHandle>
         <Panel defaultSize={80} minSize={30} className="flex flex-col">
            <div className="flex h-12 items-center border-b border-border px-4">
               <span className="text-sm text-muted-foreground">{activeFile}</span>
