@@ -7,6 +7,10 @@ interface CodeEditorProps {
 }
 
 export function CodeEditor({ code }: CodeEditorProps) {
+  if (!code) {
+    return null; // Return nothing if there is no code
+  }
+
   return (
     <ScrollArea className="absolute inset-0 no-scrollbar">
         <CodeBlock code={code} className="h-full w-full rounded-none border-none text-sm" />
