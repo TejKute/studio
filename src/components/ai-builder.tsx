@@ -242,13 +242,11 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
             <div className="w-1 h-8 rounded-full bg-transparent group-hover:bg-ring transition-colors" />
           </PanelResizeHandle>
           <Panel defaultSize={60} minSize={20} className="flex flex-col h-full bg-background">
-          <header className="flex-shrink-0 h-14 flex items-center justify-between p-2 border-b border-border rounded-b-xl">
+          <header className="flex-shrink-0 h-14 flex items-center justify-end p-2 border-b border-border rounded-b-xl">
               <div className="flex items-center gap-2">
                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setEditorView(editorView === 'code' ? 'chat' : 'code')}>
                     <Code2 className="h-4 w-4" />
                 </Button>
-              </div>
-              <div className="flex items-center gap-2">
                 <Button size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white">
                   Publish
                 </Button>
