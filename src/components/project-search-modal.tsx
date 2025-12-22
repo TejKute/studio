@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/command';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import type { Project } from '@/types';
-import { collection } from 'firebase/firestore';
+import { collection, Timestamp } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { formatDistanceToNow } from 'date-fns';
@@ -52,6 +52,15 @@ export function ProjectSearchModal({ isOpen, onOpenChange }: ProjectSearchModalP
     return () => document.removeEventListener("keydown", down);
   }, [isOpen, onOpenChange]);
 
+  const getDisplayDate = (createdAt?: Project['createdAt']) => {
+    if (!createdAt) return null;
+    if (typeof createdAt === 'object' && 'seconds' in createdAt) {
+      const ts = createdAt as Timestamp;
+      return formatDistanceToNow(ts.toDate(), { addSuffix: true });
+    }
+    return formatDistanceToNow(new Date(createdAt), { addSuffix: true });
+  };
+
 
   return (
     <CommandDialog open={isOpen} onOpenChange={onOpenChange}>
@@ -61,7 +70,9 @@ export function ProjectSearchModal({ isOpen, onOpenChange }: ProjectSearchModalP
         {isLoading && <div className="p-4 text-sm text-center text-muted-foreground">Loading projects...</div>}
         {projects && projects.length > 0 && (
           <CommandGroup heading="Recent Projects">
-            {projects.map((project) => (
+            {projects.map((project) => {
+              const displayDate = getDisplayDate(project.createdAt);
+              return (
               <CommandItem key={project.id} value={project.name} onSelect={() => handleSelect(project.id)}>
                 <div className="flex items-center space-x-3">
                   {project.previewImageUrl ? (
@@ -80,15 +91,15 @@ export function ProjectSearchModal({ isOpen, onOpenChange }: ProjectSearchModalP
                   )}
                   <div className='flex flex-col'>
                     <span className="font-medium">{project.name}</span>
-                     {project.createdAt && (
+                     {displayDate && (
                        <span className="text-xs text-muted-foreground">
-                        Edited {formatDistanceToNow(new Date(project.createdAt), { addSuffix: true })}
+                        Edited {displayDate}
                       </span>
                      )}
                   </div>
                 </div>
               </CommandItem>
-            ))}
+            )})}
           </CommandGroup>
         )}
       </CommandList>
