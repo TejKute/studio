@@ -1,6 +1,6 @@
 
 'use client';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, ChangeEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Download,
@@ -14,6 +14,7 @@ import {
   Minus,
   Plus,
   Paperclip,
+  X,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -31,6 +32,7 @@ import { MessageSquare, Code2 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import AppLogo from './app-logo';
+import Image from 'next/image';
 
 interface Message {
   id: string;
@@ -129,8 +131,11 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
   const [device, setDevice] = useState<Device>('mobile');
   const [zoom, setZoom] = useState(defaultZooms.mobile);
   const [editorView, setEditorView] = useState<EditorView>('chat');
+  const [attachment, setAttachment] = useState<File | null>(null);
+  const [attachmentPreview, setAttachmentPreview] = useState<string | null>(null);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -148,12 +153,13 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
         behavior: 'smooth',
       });
     }
-  }, [messages]);
+  }, [messages, attachmentPreview]);
 
   const handleSendMessage = async (e?: React.FormEvent) => {
     e?.preventDefault();
-    if (!input.trim() || isGenerating) return;
+    if ((!input.trim() && !attachment) || isGenerating) return;
 
+    // TODO: Handle message with attachment
     const userMessage: Message = {
       id: Date.now().toString(),
       text: input,
@@ -161,7 +167,11 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     };
     setMessages((prev) => [...prev, userMessage]);
     const currentInput = input;
+    const currentAttachment = attachment;
+
     setInput('');
+    setAttachment(null);
+    setAttachmentPreview(null);
     setIsGenerating(true);
 
     try {
@@ -198,6 +208,35 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
   };
 
   const handleResetZoom = () => setZoom(defaultZooms[device]);
+
+  const handleAttachmentClick = () => {
+    fileInputRef.current?.click();
+  };
+  
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setAttachment(file);
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setAttachmentPreview(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        setAttachmentPreview(null); // Or show a generic file icon
+      }
+    }
+  };
+  
+  const removeAttachment = () => {
+    setAttachment(null);
+    setAttachmentPreview(null);
+    if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+    }
+  };
+
 
   return (
     <div className="h-screen w-full flex flex-col bg-background text-foreground">
@@ -276,16 +315,38 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                     </div>
                   </ScrollArea>
                   <div className="border-t border-border bg-background p-3">
-                    <form onSubmit={handleSendMessage} className="relative flex items-center gap-2">
+                    {attachmentPreview && (
+                      <div className="relative w-20 h-20 mb-2 rounded-md overflow-hidden border border-border">
+                        <Image src={attachmentPreview} alt="Attachment preview" layout="fill" objectFit="cover" />
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="ghost"
+                          className="absolute top-1 right-1 h-6 w-6 rounded-full bg-black/50 hover:bg-black/75 text-white"
+                          onClick={removeAttachment}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    )}
+                    <form onSubmit={handleSendMessage} className="relative flex items-center gap-2" onKeyDown={(e) => { if (e.key === 'Enter') e.preventDefault(); }}>
                        <Button
                           type="button"
                           size="icon"
                           variant="ghost"
                           className="h-8 w-8 text-muted-foreground shrink-0"
                           disabled={isGenerating}
+                          onClick={handleAttachmentClick}
                         >
                           <Paperclip className="h-4 w-4" />
                         </Button>
+                        <input
+                          type="file"
+                          ref={fileInputRef}
+                          onChange={handleFileChange}
+                          className="hidden"
+                          accept="image/*,application/pdf,.txt"
+                        />
                       <Input
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
@@ -298,7 +359,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                         size="icon"
                         variant="ghost"
                         className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 hover:bg-accent"
-                        disabled={isGenerating || !input.trim()}
+                        disabled={isGenerating || (!input.trim() && !attachment)}
                       >
                         <CornerDownLeft className="h-4 w-4" />
                       </Button>
@@ -319,3 +380,5 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     </div>
   );
 }
+
+    
