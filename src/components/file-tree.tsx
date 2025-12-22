@@ -76,7 +76,7 @@ const FileNode: React.FC<FileTreeProps & { node: FileSystemNode }> = ({
         {!node.children && <div className="w-5 flex-shrink-0"></div>}
         
         {getIcon(node.type)}
-        <span className="truncate">{node.name}</span>
+        <span className="">{node.name}</span>
       </div>
       {isOpen && node.type === 'folder' && node.children && (
         <div>

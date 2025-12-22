@@ -40,10 +40,10 @@ export function CodeView({ code }: { code: string }) {
   const fileContent = code;
 
   return (
-    <div className="flex h-full flex-col bg-background">
+    <div className="flex h-full flex-col bg-[#1e1e1e]">
       <PanelGroup direction="horizontal" className="flex-1">
-        <Panel defaultSize={20} minSize={15} className="flex flex-col">
-          <div className="flex h-12 items-center justify-between border-b border-border px-4">
+        <Panel defaultSize={25} minSize={15} className="flex flex-col">
+          <div className="flex h-12 items-center justify-between border-b border-white/10 px-4">
             <div className="flex items-center gap-2">
               <Files className="h-4 w-4 text-muted-foreground" />
               <h2 className="text-sm font-semibold">Files</h2>
@@ -52,7 +52,7 @@ export function CodeView({ code }: { code: string }) {
           <div className="p-2">
             <div className="relative">
               <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input placeholder="Search files..." className="h-8 pl-8" />
+              <Input placeholder="Search files..." className="h-8 pl-8 bg-[#2a2a2a] border-white/10" />
             </div>
           </div>
           <ScrollArea className="flex-1 px-2 no-scrollbar">
@@ -66,8 +66,8 @@ export function CodeView({ code }: { code: string }) {
         <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">
             <div className="w-1 h-8 rounded-full bg-transparent group-hover:bg-ring transition-colors" />
         </PanelResizeHandle>
-        <Panel defaultSize={80} minSize={30} className="flex flex-col">
-           <div className="flex h-12 items-center border-b border-border px-4">
+        <Panel defaultSize={75} minSize={30} className="flex flex-col">
+           <div className="flex h-12 items-center border-b border-white/10 px-4">
               <span className="text-sm text-muted-foreground">{activeFile}</span>
            </div>
            <div className="flex-1 relative">
