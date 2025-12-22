@@ -10,15 +10,24 @@ import type { Project } from '@/types';
 import { useUser, useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useMemo } from 'react';
-import { collection, query, orderBy } from 'firebase/firestore';
+import { collection, query, orderBy, Timestamp } from 'firebase/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 function ProjectCard({ project }: { project: Project }) {
-  const displayDate = project.createdAt
-    ? formatDistanceToNow(new Date(project.createdAt), { addSuffix: true })
-    : 'N/A';
+  const getDisplayDate = (createdAt: Project['createdAt']) => {
+    if (!createdAt) return 'N/A';
+    // Firestore Timestamps can be objects with seconds/nanoseconds, or ISO strings
+    if (typeof createdAt === 'object' && 'seconds' in createdAt) {
+      const ts = createdAt as Timestamp;
+      return formatDistanceToNow(ts.toDate(), { addSuffix: true });
+    }
+    // Fallback for string dates
+    return formatDistanceToNow(new Date(createdAt), { addSuffix: true });
+  };
+  
+  const displayDate = getDisplayDate(project.createdAt);
 
   return (
     <Link href={`/project/${project.id}`} className="block group">

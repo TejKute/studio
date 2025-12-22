@@ -1,3 +1,5 @@
+import type { Timestamp } from 'firebase/firestore';
+
 export type Project = {
   id: string;
   userId?: string;
@@ -5,7 +7,7 @@ export type Project = {
   projectType?: string;
   description: string;
   theme?: string;
-  createdAt: string; // ISO string or Firestore Timestamp
+  createdAt: string | Timestamp; // Can be string or Firestore Timestamp
   updatedAt?: string;
   previewImageUrl?: string;
   imageHint?: string;
