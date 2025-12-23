@@ -88,7 +88,7 @@
     @apply bg-background text-foreground;
      /* For Firefox */
     scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,0.35) transparent;
+    scrollbar-color: hsl(var(--muted)) transparent;
   }
   
   .sr-only {
