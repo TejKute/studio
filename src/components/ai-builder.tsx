@@ -34,6 +34,10 @@ import { Switch } from '@/components/ui/switch';
 import AppLogo from './app-logo';
 import Image from 'next/image';
 import { CodeView } from '@/components/code-view';
+import { useDoc, useFirestore, useMemoFirebase } from '@/firebase';
+import { type Project } from '@/types';
+import { doc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { publishProject } from '@/lib/publish';
 
 
 interface Message {
@@ -118,6 +122,7 @@ const ChatMessage = ({ message }: { message: Message }) => {
 };
 
 export default function AIBuilder({ projectId }: { projectId: string }) {
+  const firestore = useFirestore();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -127,14 +132,38 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
   ]);
   const [input, setInput] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedCode, setGeneratedCode] =
-    useState<string | null>('');
+  const [generatedCode, setGeneratedCode]
+    = useState<string>('');
   const [isMounted, setIsMounted] = useState(false);
   const [device, setDevice] = useState<Device>('mobile');
   const [zoom, setZoom] = useState(defaultZooms.mobile);
   const [editorView, setEditorView] = useState<EditorView>('chat');
   const [attachment, setAttachment] = useState<File | null>(null);
   const [attachmentPreview, setAttachmentPreview] = useState<string | null>(null);
+
+  const projectRef = useMemoFirebase(() => {
+    if (!firestore || !projectId) return null;
+    // This assumes a user is logged in, which should be handled by layout/middleware
+    // A robust solution would get the userId from useUser()
+    const pathSegments = doc(firestore, '.')._key.path.segments;
+    const userId = pathSegments.length > 1 ? pathSegments[1] : 'default-user'; // Fallback
+     if (typeof(window) !== "undefined") {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      if (user.uid) {
+        return doc(firestore, 'users', user.uid, 'projects', projectId);
+      }
+    }
+    return null;
+  }, [firestore, projectId]);
+
+  const { data: project, isLoading: isProjectLoading } = useDoc<Project>(projectRef);
+  
+  useEffect(() => {
+    if (project?.generatedCode) {
+      setGeneratedCode(project.generatedCode);
+    }
+  }, [project]);
+
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -180,6 +209,14 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
       const result = await generateAppFromDescription({
         description: currentInput,
       });
+
+      if (projectRef) {
+        await updateDoc(projectRef, {
+          generatedCode: result.componentCode,
+          updatedAt: serverTimestamp()
+        });
+      }
+
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
         text: `I have generated the Flutter code for a ${currentInput}. You can view it in the Code tab or export it.`,
@@ -224,7 +261,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
         reader.onloadend = () => {
           setAttachmentPreview(reader.result as string);
         };
-        reader.readAsDataURL(file);
+        reader.readDataURL(file);
       } else {
         setAttachmentPreview(null); // Or show a generic file icon
       }
@@ -238,6 +275,23 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
         fileInputRef.current.value = '';
     }
   };
+
+  const handlePublish = () => {
+    if (project) {
+      publishProject(project);
+      toast({
+        title: 'Publish Initiated',
+        description: 'Your project is being prepared for publishing. Check the console for details.',
+      });
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Publish Failed',
+        description: 'Could not find project data to publish.',
+      });
+    }
+  };
+
 
   const ChatPanel = () => (
     <>
@@ -322,7 +376,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
   );
 
 
-  if (!isMounted) {
+  if (!isMounted || isProjectLoading) {
     return (
         <div className="h-screen w-full flex flex-col items-center justify-center bg-background text-foreground">
           <AppLogo className="h-12 w-12 animate-pulse" />
@@ -333,7 +387,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
   if (editorView === 'code') {
     return (
       <div className="h-screen w-full flex flex-col bg-background text-foreground">
-        <header className="flex-shrink-0 h-14 flex items-center justify-between gap-1 p-2 border-b border-border bg-background z-10 rounded-b-xl">
+        <header className="flex-shrink-0 h-14 flex items-center justify-between gap-1 p-2 border-b border-border bg-background z-10">
             <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-foreground hover:text-white px-2">
                 <AppLogo className="h-7 w-7" />
                 <span className="font-headline text-lg font-bold text-white">Craftify</span>
@@ -343,7 +397,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setEditorView('chat')}>
                     <MessageSquare className="h-4 w-4" />
                 </Button>
-                <Button size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white">
+                <Button onClick={handlePublish} size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white">
                     Publish
                 </Button>
             </div>
@@ -358,51 +412,53 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
   return (
     <div className="h-screen w-full flex flex-col bg-background text-foreground">
         <PanelGroup direction="horizontal" className="flex-1">
-          <Panel defaultSize={40} minSize={30} className="flex flex-col h-screen">
-            <header className="flex-shrink-0 h-14 flex items-center justify-between gap-1 p-2 border-b border-border bg-background z-10 rounded-b-xl">
-              <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-foreground hover:text-white px-2">
-                <AppLogo className="h-7 w-7" />
-                <span className="font-headline text-lg font-bold text-white">Craftify</span>
-              </Link>
-              <div className="flex items-center gap-1">
-                <Button variant={device === 'mobile' ? 'secondary' : 'ghost'} size="icon" onClick={() => setDevice('mobile')} className={cn('h-8 w-8', device === 'mobile' ? 'text-accent-foreground' : 'text-muted-foreground')} aria-label="Mobile preview">
-                  <Smartphone className="h-4 w-4" />
-                </Button>
-                <Button variant={device === 'tablet' ? 'secondary' : 'ghost'} size="icon" onClick={() => setDevice('tablet')} className={cn('h-8 w-8', device === 'tablet' ? 'text-accent-foreground' : 'text-muted-foreground')} aria-label="Tablet preview">
-                  <Tablet className="h-4 w-4" />
-                </Button>
-                <Button variant={device === 'desktop' ? 'secondary' : 'ghost'} size="icon" onClick={() => setDevice('desktop')} className={cn('h-8 w-8', device === 'desktop' ? 'text-accent-foreground' : 'text-muted-foreground')} aria-label="Desktop preview">
-                  <Laptop className="h-4 w-4" />
-                </Button>
+          {editorView === 'chat' && (
+            <Panel defaultSize={40} minSize={30} className="flex flex-col h-screen">
+              <header className="flex-shrink-0 h-14 flex items-center justify-between gap-1 p-2 border-b border-border bg-background z-10 rounded-b-xl">
+                <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-foreground hover:text-white px-2">
+                  <AppLogo className="h-7 w-7" />
+                  <span className="font-headline text-lg font-bold text-white">Craftify</span>
+                </Link>
+                <div className="flex items-center gap-1">
+                  <Button variant={device === 'mobile' ? 'secondary' : 'ghost'} size="icon" onClick={() => setDevice('mobile')} className={cn('h-8 w-8', device === 'mobile' ? 'text-accent-foreground' : 'text-muted-foreground')} aria-label="Mobile preview">
+                    <Smartphone className="h-4 w-4" />
+                  </Button>
+                  <Button variant={device === 'tablet' ? 'secondary' : 'ghost'} size="icon" onClick={() => setDevice('tablet')} className={cn('h-8 w-8', device === 'tablet' ? 'text-accent-foreground' : 'text-muted-foreground')} aria-label="Tablet preview">
+                    <Tablet className="h-4 w-4" />
+                  </Button>
+                  <Button variant={device === 'desktop' ? 'secondary' : 'ghost'} size="icon" onClick={() => setDevice('desktop')} className={cn('h-8 w-8', device === 'desktop' ? 'text-accent-foreground' : 'text-muted-foreground')} aria-label="Desktop preview">
+                    <Laptop className="h-4 w-4" />
+                  </Button>
+                </div>
+                 <div className="flex items-center gap-1">
+                  <Button variant="ghost" size="icon" onClick={() => handleZoom('out')} className="h-7 w-7 rounded-full text-muted-foreground">
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" onClick={handleResetZoom} className="text-xs font-medium text-muted-foreground w-12 text-center h-7 rounded-full">
+                    {Math.round(zoom * 100)}%
+                  </Button>
+                  <Button variant="ghost" size="icon" onClick={() => handleZoom('in')} className="h-7 w-7 rounded-full text-muted-foreground">
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+              </header>
+              <div className="flex-1 relative bg-black/50 overflow-hidden no-scrollbar">
+                <DevicePreview device={device} zoom={zoom}>
+                  <Preview isGenerating={isGenerating} generatedCode={generatedCode} />
+                </DevicePreview>
               </div>
-               <div className="flex items-center gap-1">
-                <Button variant="ghost" size="icon" onClick={() => handleZoom('out')} className="h-7 w-7 rounded-full text-muted-foreground">
-                  <Minus className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" onClick={handleResetZoom} className="text-xs font-medium text-muted-foreground w-12 text-center h-7 rounded-full">
-                  {Math.round(zoom * 100)}%
-                </Button>
-                <Button variant="ghost" size="icon" onClick={() => handleZoom('in')} className="h-7 w-7 rounded-full text-muted-foreground">
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-            </header>
-            <div className="flex-1 relative bg-black/50 overflow-hidden no-scrollbar">
-              <DevicePreview device={device} zoom={zoom}>
-                <Preview isGenerating={isGenerating} generatedCode={generatedCode} />
-              </DevicePreview>
-            </div>
-          </Panel>
-          <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">
+            </Panel>
+          )}
+          {editorView === 'chat' && <PanelResizeHandle className="w-2 flex items-center justify-center bg-transparent group">
             <div className="w-1 h-8 rounded-full bg-transparent group-hover:bg-ring transition-colors" />
-          </PanelResizeHandle>
+          </PanelResizeHandle>}
           <Panel defaultSize={60} minSize={20} className="flex flex-col h-full bg-background">
           <header className="flex-shrink-0 h-14 flex items-center justify-end p-2 border-b border-border rounded-b-xl">
               <div className="flex items-center gap-2">
                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setEditorView('code')}>
                     <Code2 className="h-4 w-4" />
                 </Button>
-                <Button size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white">
+                <Button onClick={handlePublish} size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white">
                   Publish
                 </Button>
               </div>
@@ -415,5 +471,3 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     </div>
   );
 }
-
-    

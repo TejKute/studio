@@ -8,7 +8,8 @@ export type Project = {
   description: string;
   theme?: string;
   createdAt: string | Timestamp; // Can be string or Firestore Timestamp
-  updatedAt?: string;
+  updatedAt?: string | Timestamp;
   previewImageUrl?: string;
   imageHint?: string;
+  generatedCode?: string;
 };
