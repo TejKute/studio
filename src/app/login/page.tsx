@@ -6,6 +6,7 @@ import AppLogo from '@/components/app-logo';
 import { useAuth } from '@/firebase';
 import { GoogleAuthProvider, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { Mail } from 'lucide-react';
+import { AppleLogo } from '@/components/icons/AppleLogo';
 
 export default function LoginPage() {
   const auth = useAuth();
@@ -38,12 +39,11 @@ export default function LoginPage() {
     }
   };
 
-  const AppleIcon = () => (
-    <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12.01,16.22c-1.39,0-2.34-0.81-3.66-0.81c-1.31,0-2.48,0.81-3.62,0.81c-1.39,0-2.58-1.04-3.53-2.61 c-1.34-2.22-1.31-5.18,0.34-7.46c0.82-1.13,2.22-1.92,3.8-1.92c1.31,0,2.28,0.78,3.53,0.78c1.22,0,2.41-0.78,3.7-0.78 c1.54,0,2.94,0.84,3.75,2.01c-1.5,0.92-2.42,2.5-2.42,4.21c0,1.86,1.06,3.09,2.56,3.95C16.39,18.9,15,20.4,12.98,20.4z M12.01,2.55 c-1.57,0-3.33,0.95-4.22,2.37c-1.03,1.66-1.42,3.55-0.8,5.43c1.53-0.73,3.33-1.63,4.98-1.63c1.78,0,3.33,0.84,4.92,1.59 c0.67-1.9-0.12-3.88-1.2-5.46C14.65,3.31,13.25,2.55,12.01,2.55z" />
-    </svg>
-  );
-
+  const handleAppleSignIn = () => {
+    // Placeholder for Apple Sign-In logic
+    console.log("Apple Sign-In clicked");
+  };
+  
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
       <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
@@ -56,25 +56,25 @@ export default function LoginPage() {
             <p className="mt-1 text-md text-muted-foreground">Sign in to start building with AI</p>
         </div>
           
-        <div className="space-y-4">
-          <Button size="lg" className="w-full bg-white text-black hover:bg-white/90" onClick={handleGoogleSignIn} disabled={isSigningIn}>
+        <div className="space-y-3">
+          <button className="auth-btn auth-btn--white" onClick={handleGoogleSignIn} disabled={isSigningIn}>
             {isSigningIn ? (
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <svg className="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
             ) : (
-              <svg className="mr-2 h-4 w-4" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.222,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.574l6.19,5.238C42.022,35.244,44,30.036,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path></svg>
+              <svg className="h-5 w-5" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.222,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.574l6.19,5.238C42.022,35.244,44,30.036,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path></svg>
             )}
-            Continue with Google
-          </Button>
+            <span>Continue with Google</span>
+          </button>
 
-           <Button size="lg" className="w-full bg-white text-black hover:bg-white/90" disabled={isSigningIn}>
-              <AppleIcon />
-              Continue with Apple
-           </Button>
+           <button className="auth-btn auth-btn--white" onClick={handleAppleSignIn} disabled={isSigningIn}>
+              <AppleLogo size={20} />
+              <span>Continue with Apple</span>
+           </button>
 
-            <Button size="lg" className="w-full bg-white text-black hover:bg-white/90" disabled={isSigningIn}>
-              <Mail className="mr-2 h-4 w-4" />
-              Continue with Email
-            </Button>
+            <button className="auth-btn auth-btn--white" disabled={isSigningIn}>
+              <Mail className="h-5 w-5" />
+              <span>Continue with Email</span>
+            </button>
         </div>
         
         {authError && (
