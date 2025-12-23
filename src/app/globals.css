@@ -125,16 +125,22 @@
     font-weight: 500;
     cursor: pointer;
     border: 1px solid rgba(0, 0, 0, 0.12);
-  }
-
-  .auth-btn--white {
-    background-color: #ffffff;
+    background: #ffffff;
     color: #000000;
   }
 
-  .auth-btn--white svg {
+  .auth-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .auth-icon svg {
+    width: 18px;
+    height: 18px;
     display: block;
-    fill: #000000;
   }
 }
 
