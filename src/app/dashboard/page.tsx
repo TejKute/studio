@@ -24,7 +24,16 @@ function ProjectCard({ project }: { project: Project }) {
       return formatDistanceToNow(ts.toDate(), { addSuffix: true });
     }
     // Fallback for string dates
-    return formatDistanceToNow(new Date(createdAt), { addSuffix: true });
+    try {
+      const date = new Date(createdAt);
+      if (isNaN(date.getTime())) {
+        return "N/A";
+      }
+      return formatDistanceToNow(date, { addSuffix: true });
+    }
+    catch (e) {
+        return "N/A";
+    }
   };
   
   const displayDate = getDisplayDate(project.createdAt);
@@ -186,8 +195,8 @@ export default function DashboardPage() {
         ) : filteredProjects && filteredProjects.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               <CreateProjectCard />
-              {filteredProjects.map((project) => (
-                <ProjectCard key={project.id} project={project} />
+              {filteredProjects.map((project, index) => (
+                <ProjectCard key={`${project.id}-${index}`} project={project} />
               ))}
             </div>
         ) : searchTerm ? (
