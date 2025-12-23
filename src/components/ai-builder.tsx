@@ -292,6 +292,24 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     }
   };
 
+  const handleDownload = () => {
+    if (!project || !generatedCode) {
+       toast({
+        variant: 'destructive',
+        title: 'Download Failed',
+        description: 'No code has been generated to download.',
+      });
+      return;
+    }
+    toast({
+      title: 'Download Started',
+      description: 'Your project files are being bundled into a ZIP archive.',
+    });
+    // In a real app, this would trigger a server-side process
+    // to zip the files and initiate a download.
+    console.log("Simulating ZIP download for project:", project.id);
+  };
+
 
   const ChatPanel = () => (
     <>
@@ -397,6 +415,9 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setEditorView('chat')}>
                     <MessageSquare className="h-4 w-4" />
                 </Button>
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleDownload}>
+                    <Download className="h-4 w-4" />
+                </Button>
                 <Button onClick={handlePublish} size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white">
                     Publish
                 </Button>
@@ -442,7 +463,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                   </Button>
                 </div>
               </header>
-              <div className="flex-1 relative bg-black/50 overflow-hidden no-scrollbar">
+              <div className="flex-1 relative bg-black/50 overflow-auto no-scrollbar">
                 <DevicePreview device={device} zoom={zoom}>
                   <Preview isGenerating={isGenerating} generatedCode={generatedCode} />
                 </DevicePreview>
@@ -458,6 +479,9 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setEditorView('code')}>
                     <Code2 className="h-4 w-4" />
                 </Button>
+                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleDownload}>
+                    <Download className="h-4 w-4" />
+                </Button>
                 <Button onClick={handlePublish} size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white">
                   Publish
                 </Button>
@@ -471,3 +495,5 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     </div>
   );
 }
+
+    
