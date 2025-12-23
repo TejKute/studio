@@ -12,4 +12,6 @@ export type Project = {
   previewImageUrl?: string;
   imageHint?: string;
   generatedCode?: string;
+  status?: 'draft' | 'publishing' | 'live' | 'failed';
+  liveUrl?: string;
 };

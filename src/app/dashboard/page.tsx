@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { PlusCircle, Search, ArrowDown, ListFilter, Plus, FolderOpen } from 'lucide-react';
+import { PlusCircle, Search, ArrowDown, ListFilter, Plus, FolderOpen, Download, Circle } from 'lucide-react';
 import AppLayout from '@/components/layout/app-layout';
 import { formatDistanceToNow } from 'date-fns';
 import type { Project } from '@/types';
@@ -14,16 +14,18 @@ import { collection, query, orderBy, Timestamp } from 'firebase/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 function ProjectCard({ project }: { project: Project }) {
+  const { toast } = useToast();
   const getDisplayDate = (createdAt: Project['createdAt']) => {
     if (!createdAt) return 'N/A';
-    // Firestore Timestamps can be objects with seconds/nanoseconds, or ISO strings
     if (typeof createdAt === 'object' && 'seconds' in createdAt) {
       const ts = createdAt as Timestamp;
       return formatDistanceToNow(ts.toDate(), { addSuffix: true });
     }
-    // Fallback for string dates
     try {
       const date = new Date(createdAt);
       if (isNaN(date.getTime())) {
@@ -36,7 +38,25 @@ function ProjectCard({ project }: { project: Project }) {
     }
   };
   
-  const displayDate = getDisplayDate(project.createdAt);
+  const displayDate = getDisplayDate(project.updatedAt || project.createdAt);
+
+  const handleDownload = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toast({
+      title: 'Download Started',
+      description: `Preparing ${project.name} for download.`,
+    });
+    // In a real app, this would trigger a download.
+    console.log("Simulating ZIP download for project:", project.id);
+  }
+
+  const StatusBadge = () => {
+    if (project.status === 'live') {
+      return <Badge variant="secondary" className="border-green-500/40 bg-green-500/10 text-green-400 font-normal"><Circle className="mr-1.5 h-2 w-2 fill-current text-current" />Live</Badge>
+    }
+    return <Badge variant="outline">Draft</Badge>
+  }
 
   return (
     <Link href={`/project/${project.id}`} className="block group">
@@ -54,10 +74,16 @@ function ProjectCard({ project }: { project: Project }) {
           </div>
         </CardContent>
         <CardHeader className="flex-grow">
-          <CardTitle className="font-headline text-base tracking-tight">{project.name || 'Untitled Project'}</CardTitle>
+          <div className="flex justify-between items-start">
+             <CardTitle className="font-headline text-base tracking-tight">{project.name || 'Untitled Project'}</CardTitle>
+             <StatusBadge />
+          </div>
         </CardHeader>
-        <CardFooter>
+        <CardFooter className="flex justify-between items-center">
           <p className="text-xs text-muted-foreground">Edited {displayDate}</p>
+          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground" onClick={handleDownload}>
+            <Download className="h-4 w-4" />
+          </Button>
         </CardFooter>
       </Card>
     </Link>
@@ -116,7 +142,7 @@ export default function DashboardPage() {
 
   const projectsQuery = useMemoFirebase(() => {
     if (!firestore || !user?.uid) return null;
-    return query(collection(firestore, 'users', user.uid, 'projects'), orderBy('createdAt', 'desc'));
+    return query(collection(firestore, 'users', user.uid, 'projects'), orderBy('updatedAt', 'desc'));
   }, [firestore, user?.uid]);
 
   const { data: projects, isLoading: areProjectsLoading } = useCollection<Project>(projectsQuery);
@@ -195,8 +221,8 @@ export default function DashboardPage() {
         ) : filteredProjects && filteredProjects.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               <CreateProjectCard />
-              {filteredProjects.map((project, index) => (
-                <ProjectCard key={`${project.id}-${index}`} project={project} />
+              {filteredProjects.map((project) => (
+                <ProjectCard key={project.id} project={project} />
               ))}
             </div>
         ) : searchTerm ? (

@@ -15,6 +15,7 @@ import {
   Plus,
   Paperclip,
   X,
+  ExternalLink,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -26,7 +27,6 @@ import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { generateAppFromDescription } from '@/ai/flows/generate-app-from-description';
 import Link from 'next/link';
 import GeneratedComponentRenderer from '@/components/GeneratedComponentRenderer';
-import { CodeBlock } from '@/components/code-block';
 import { DevicePreview, type Device } from '@/components/device-preview';
 import { MessageSquare, Code2 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
@@ -140,6 +140,8 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
   const [editorView, setEditorView] = useState<EditorView>('chat');
   const [attachment, setAttachment] = useState<File | null>(null);
   const [attachmentPreview, setAttachmentPreview] = useState<string | null>(null);
+  const [isPublishing, setIsPublishing] = useState(false);
+
 
   const projectRef = useMemoFirebase(() => {
     if (!firestore || !projectId) return null;
@@ -276,19 +278,52 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     }
   };
 
-  const handlePublish = () => {
-    if (project) {
-      publishProject(project);
-      toast({
-        title: 'Publish Initiated',
-        description: 'Your project is being prepared for publishing. Check the console for details.',
-      });
-    } else {
+  const handlePublish = async () => {
+    if (!project || !projectRef) {
       toast({
         variant: 'destructive',
         title: 'Publish Failed',
         description: 'Could not find project data to publish.',
       });
+      return;
+    }
+
+    setIsPublishing(true);
+    await updateDoc(projectRef, { status: 'publishing' });
+    toast({
+      title: 'Publish Initiated',
+      description: 'Your project is being prepared for publishing. This may take a moment.',
+    });
+
+    try {
+      // Simulate a network delay for the build process
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      
+      publishProject(project);
+
+      // On success, update the project status to 'live' and set a mock URL
+      const liveUrl = `https://${project.name.toLowerCase().replace(/\s+/g, '-')}-${projectId.slice(0, 6)}.craftify.app`;
+      await updateDoc(projectRef, { 
+        status: 'live',
+        liveUrl: liveUrl,
+        updatedAt: serverTimestamp() 
+      });
+
+      toast({
+        title: 'Project Published!',
+        description: 'Your project is now live.',
+      });
+
+    } catch (error) {
+      console.error('Publishing error:', error);
+      await updateDoc(projectRef, { status: 'failed' });
+      toast({
+        variant: 'destructive',
+        title: 'Publish Failed',
+        description: 'Something went wrong during the publish process.',
+      });
+    } finally {
+      setIsPublishing(false);
     }
   };
 
@@ -393,6 +428,29 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     </>
   );
 
+  const PublishButton = () => {
+    const isLive = project?.status === 'live';
+    const isPublishingInProgress = project?.status === 'publishing' || isPublishing;
+
+    if (isLive && project.liveUrl) {
+      return (
+         <Button asChild size="sm" className="h-8 bg-green-600 hover:bg-green-700 text-white">
+            <Link href={project.liveUrl} target="_blank">
+                <ExternalLink className="mr-2 h-4 w-4" />
+                Live
+            </Link>
+        </Button>
+      );
+    }
+
+    return (
+        <Button onClick={handlePublish} size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white" disabled={isPublishingInProgress}>
+            {isPublishingInProgress ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+            {isPublishingInProgress ? 'Publishing...' : project?.status === 'failed' ? 'Retry Publish' : 'Publish'}
+        </Button>
+    )
+  }
+
 
   if (!isMounted || isProjectLoading) {
     return (
@@ -404,8 +462,8 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
 
   if (editorView === 'code') {
     return (
-      <div className="h-screen w-full flex flex-col bg-background text-foreground">
-        <header className="flex-shrink-0 h-14 flex items-center justify-between gap-1 p-2 border-b border-border bg-background z-10">
+      <div className="h-screen w-full flex flex-col bg-[#1e1e1e] text-foreground">
+        <header className="flex-shrink-0 h-14 flex items-center justify-between gap-1 p-2 border-b border-white/10 bg-[#1e1e1e] z-10">
             <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-foreground hover:text-white px-2">
                 <AppLogo className="h-7 w-7" />
                 <span className="font-headline text-lg font-bold text-white">Craftify</span>
@@ -418,9 +476,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleDownload}>
                     <Download className="h-4 w-4" />
                 </Button>
-                <Button onClick={handlePublish} size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white">
-                    Publish
-                </Button>
+                <PublishButton />
             </div>
         </header>
         <div className="flex-1 flex flex-col min-h-0">
@@ -482,9 +538,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleDownload}>
                     <Download className="h-4 w-4" />
                 </Button>
-                <Button onClick={handlePublish} size="sm" className="h-8 bg-blue-600 hover:bg-blue-700 text-white">
-                  Publish
-                </Button>
+                <PublishButton />
               </div>
             </header>
             <div className="flex-1 flex flex-col min-h-0">
