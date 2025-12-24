@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import AppLogo from '@/components/app-logo';
 import { useAuth } from '@/firebase';
-import { GoogleAuthProvider, signInWithPopup, signInWithRedirect } from 'firebase/auth';
+import { GoogleAuthProvider, AppleAuthProvider, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { Mail } from 'lucide-react';
 import { AppleLogo } from '@/components/icons/AppleLogo';
 
@@ -39,9 +39,32 @@ export default function LoginPage() {
     }
   };
 
-  const handleAppleSignIn = () => {
-    // Placeholder for Apple Sign-In logic
-    console.log("Apple Sign-In clicked");
+  const handleAppleSignIn = async () => {
+    if (!auth) return;
+
+    setIsSigningIn(true);
+    setAuthError(null);
+
+    const provider = new AppleAuthProvider();
+
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error: any) {
+      if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
+        await signInWithRedirect(auth, provider);
+      } else if (error.code === 'auth/operation-not-allowed') {
+        setAuthError('Apple Sign-In is not enabled. Please enable it in the Firebase console.');
+      } else {
+        console.error('Apple Sign-In Error:', error);
+        setAuthError('Apple sign-in failed. Please try again.');
+      }
+      setIsSigningIn(false);
+    }
+  };
+
+  const handleEmailSignIn = () => {
+    // Placeholder for Email Sign-In logic
+    console.log("Email Sign-In clicked");
   };
   
   return (
@@ -75,7 +98,7 @@ export default function LoginPage() {
             <span>Continue with Apple</span>
           </button>
 
-          <button className="auth-btn" disabled={isSigningIn}>
+          <button className="auth-btn" onClick={handleEmailSignIn} disabled={isSigningIn}>
             <span className="auth-icon">
               <Mail size={18} strokeWidth={1.8} />
             </span>
