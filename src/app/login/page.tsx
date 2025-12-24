@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import AppLogo from '@/components/app-logo';
 import { useAuth } from '@/firebase';
-import { GoogleAuthProvider, AppleAuthProvider, signInWithPopup, signInWithRedirect } from 'firebase/auth';
+import { GoogleAuthProvider, OAuthProvider, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { Mail } from 'lucide-react';
 import { AppleLogo } from '@/components/icons/AppleLogo';
 
@@ -45,7 +45,7 @@ export default function LoginPage() {
     setIsSigningIn(true);
     setAuthError(null);
 
-    const provider = new AppleAuthProvider();
+    const provider = new OAuthProvider('apple.com');
 
     try {
       await signInWithPopup(auth, provider);
