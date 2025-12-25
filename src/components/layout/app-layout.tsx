@@ -36,7 +36,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <SidebarHeader className="p-4">
           <div className="flex items-center gap-2">
             <AppLogo className="w-8 h-8" />
-            <h1 className="font-headline text-xl font-bold text-white">Craftify AI</h1>
+            <h1 className="font-headline text-xl font-bold text-white">Craftix AI</h1>
           </div>
         </SidebarHeader>
         <SidebarContent>

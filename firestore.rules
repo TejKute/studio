@@ -1,5 +1,6 @@
+
 /**
- * # Firestore Security Rules for Craftify AI
+ * # Firestore Security Rules for Craftix AI
  *
  * ## Core Philosophy
  * This ruleset enforces a strict user-ownership model. All data is scoped to an individual user,

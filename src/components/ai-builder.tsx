@@ -302,7 +302,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
       publishProject(project);
 
       // On success, update the project status to 'live' and set a mock URL
-      const liveUrl = `https://${project.name.toLowerCase().replace(/\s+/g, '-')}-${projectId.slice(0, 6)}.craftify.app`;
+      const liveUrl = `https://${project.name.toLowerCase().replace(/\s+/g, '-')}-${projectId.slice(0, 6)}.craftix.app`;
       await updateDoc(projectRef, { 
         status: 'live',
         liveUrl: liveUrl,
@@ -466,7 +466,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
         <header className="flex-shrink-0 h-14 flex items-center justify-between gap-1 p-2 border-b border-white/10 bg-[#1e1e1e] z-10">
             <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-foreground hover:text-white px-2">
                 <AppLogo className="h-7 w-7" />
-                <span className="font-headline text-lg font-bold text-white">Craftify</span>
+                <span className="font-headline text-lg font-bold text-white">Craftix</span>
             </Link>
             <div className="flex-1" />
             <div className="flex items-center gap-2">
@@ -494,7 +494,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
               <header className="flex-shrink-0 h-14 flex items-center justify-between gap-1 p-2 border-b border-border bg-background z-10 rounded-b-xl">
                 <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-foreground hover:text-white px-2">
                   <AppLogo className="h-7 w-7" />
-                  <span className="font-headline text-lg font-bold text-white">Craftify</span>
+                  <span className="font-headline text-lg font-bold text-white">Craftix</span>
                 </Link>
                 <div className="flex items-center gap-1">
                   <Button variant={device === 'mobile' ? 'secondary' : 'ghost'} size="icon" onClick={() => setDevice('mobile')} className={cn('h-8 w-8', device === 'mobile' ? 'text-accent-foreground' : 'text-muted-foreground')} aria-label="Mobile preview">

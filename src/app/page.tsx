@@ -72,7 +72,7 @@ export default function WelcomePage() {
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
             <AppLogo className="h-8 w-8" />
-            <span className="font-headline text-xl font-bold text-white">Craftify AI</span>
+            <span className="font-headline text-xl font-bold text-white">Craftix AI</span>
           </div>
           <Button variant="ghost" onClick={handleGetStarted}>
             {user ? 'Go to Dashboard' : 'Sign In'}
@@ -90,7 +90,7 @@ export default function WelcomePage() {
                 Powered by AI.
             </h1>
             <p className="mt-6 max-w-2xl mx-auto text-lg text-muted-foreground">
-                Craftify AI helps you design, generate, preview, and deploy apps using AI — without friction, without complexity.
+                Craftix AI helps you design, generate, preview, and deploy apps using AI — without friction, without complexity.
             </p>
             <div className="mt-8 flex justify-center gap-4">
                 <Button size="lg" onClick={handleGetStarted}>
@@ -105,7 +105,7 @@ export default function WelcomePage() {
                 <FeatureCard 
                     icon={<Bot className="w-6 h-6 text-sky-300" />}
                     title="AI-Powered Builder"
-                    description="Describe your idea in plain English. Craftify builds the app."
+                    description="Describe your idea in plain English. Craftix builds the app."
                     className="bg-gradient-to-br from-sky-950/20 to-background"
                 />
                 <FeatureCard 
@@ -174,7 +174,7 @@ export default function WelcomePage() {
       </main>
 
       <footer className="py-8 text-center text-muted-foreground text-sm">
-        <p>&copy; {new Date().getFullYear()} Craftify AI. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Craftix AI. All rights reserved.</p>
       </footer>
     </div>
   );

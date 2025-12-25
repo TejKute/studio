@@ -1,10 +1,11 @@
+
 {
   "entities": {
     "User": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "User",
       "type": "object",
-      "description": "Represents a user of the Craftify AI platform.",
+      "description": "Represents a user of the Craftix AI platform.",
       "properties": {
         "id": {
           "type": "string",
@@ -52,7 +53,7 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Project",
       "type": "object",
-      "description": "Represents a Flutter project created within Craftify AI.",
+      "description": "Represents a Flutter project created within Craftix AI.",
       "properties": {
         "id": {
           "type": "string",
@@ -139,6 +140,6 @@
         }
       }
     ],
-    "reasoning": "The Firestore data structure is designed to ensure secure access to user data and efficient management of projects within the Craftify AI platform. The primary goal is to enforce Authorization Independence, DBAC (Database Authentication and Control), and support secure list operations (QAPs). User data is stored under `/users/{userId}`, ensuring that each user can only access their own information. Project data is stored within a subcollection of the user document at `/users/{userId}/projects/{projectId}`, inheriting authorization context via path-based ownership, further simplifying security rules and ensuring that only the owning user can access their projects. This structure eliminates the need for `get()` calls in security rules, facilitating atomic operations and easier debugging. This structure is simple and scalable."
+    "reasoning": "The Firestore data structure is designed to ensure secure access to user data and efficient management of projects within the Craftix AI platform. The primary goal is to enforce Authorization Independence, DBAC (Database Authentication and Control), and support secure list operations (QAPs). User data is stored under `/users/{userId}`, ensuring that each user can only access their own information. Project data is stored within a subcollection of the user document at `/users/{userId}/projects/{projectId}`, inheriting authorization context via path-based ownership, further simplifying security rules and ensuring that only the owning user can access their projects. This structure eliminates the need for `get()` calls in security rules, facilitating atomic operations and easier debugging. This structure is simple and scalable."
   }
 }

@@ -136,7 +136,7 @@ export default function PricingPage() {
   return (
     <AppLayout>
       <div className="flex flex-col items-center text-center space-y-4">
-        <h1 className="text-4xl font-headline font-bold tracking-tight">Craftify AI Pricing</h1>
+        <h1 className="text-4xl font-headline font-bold tracking-tight">Craftix AI Pricing</h1>
         <p className="text-lg text-muted-foreground max-w-2xl">
           Choose the right plan for your needs. Start for free and scale up as you grow. All prices in INR.
         </p>

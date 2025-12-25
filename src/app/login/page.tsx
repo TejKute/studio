@@ -61,7 +61,8 @@ export default function LoginPage() {
 
     try {
       await signInWithPopup(auth, provider);
-    } catch (error: any)      if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
+    } catch (error: any) {
+      if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
         try {
             await signInWithRedirect(auth, provider);
         } catch (redirectError: any) {
@@ -100,7 +101,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center text-center mb-8">
             <AppLogo className="h-12 w-12 mb-4 text-primary" />
-            <h1 className="text-3xl font-headline font-bold text-white">Welcome to Craftify AI</h1>
+            <h1 className="text-3xl font-headline font-bold text-white">Welcome to Craftix AI</h1>
             <p className="mt-1 text-md text-muted-foreground">Sign in to start building with AI</p>
         </div>
           
