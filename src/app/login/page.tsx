@@ -7,6 +7,7 @@ import { useAuth, useUser } from '@/firebase';
 import { GoogleAuthProvider, OAuthProvider, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { Mail } from 'lucide-react';
 import { AppleLogo } from '@/components/icons/AppleLogo';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const auth = useAuth();
@@ -78,12 +79,6 @@ export default function LoginPage() {
       setIsSigningIn(null);
     }
   };
-
-  const handleEmailSignIn = () => {
-    // Placeholder for Email Sign-In logic
-    setAuthError("Email sign-in is not yet implemented.");
-    console.log("Email Sign-In clicked");
-  };
   
   if (isUserLoading || user) {
     return (
@@ -124,12 +119,12 @@ export default function LoginPage() {
             <span>Continue with Apple</span>
           </button>
 
-          <button className="auth-btn" onClick={handleEmailSignIn} disabled={!!isSigningIn}>
+          <Link href="/login/email" className="auth-btn" aria-disabled={!!isSigningIn}>
             <span className="auth-icon">
               <Mail size={18} strokeWidth={1.8} />
             </span>
             <span>Continue with Email</span>
-          </button>
+          </Link>
         </div>
         
         {authError && (
