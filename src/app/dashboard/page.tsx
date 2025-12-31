@@ -16,14 +16,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Badge } from '@/components/ui/badge';
 
 function ProjectCard({ project }: { project: Project }) {
-
-  const StatusBadge = () => {
-    if (project.status === 'live') {
-      return <Badge variant="secondary" className="border-green-500/40 bg-green-500/10 text-green-400 font-normal"><Circle className="mr-1.5 h-2 w-2 fill-current text-current" />Live</Badge>
-    }
-    return <Badge variant="outline">Draft</Badge>
-  }
-
   return (
     <Link href={`/project/${project.id}`} className="block group">
        <Card className="flex flex-col h-full overflow-hidden transition-all duration-300 transform-gpu hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 hover:border-primary/20 bg-card/50">
@@ -40,10 +32,7 @@ function ProjectCard({ project }: { project: Project }) {
           </div>
         </CardContent>
         <CardHeader className="flex-grow">
-          <div className="flex justify-between items-start">
-             <CardTitle className="font-headline text-base tracking-tight">{project.name || 'Untitled Project'}</CardTitle>
-             <StatusBadge />
-          </div>
+          <CardTitle className="font-headline text-base tracking-tight">{project.name || 'Untitled Project'}</CardTitle>
         </CardHeader>
       </Card>
     </Link>
