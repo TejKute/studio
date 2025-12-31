@@ -14,12 +14,13 @@ import { useAuth, useFirestore, useUser } from '@/firebase';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { Loader2 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
+import { useToast } from '@/hooks/use-toast';
 
 const projectSchema = z.object({
   projectName: z
     .string()
     .min(3, 'Project name must be at least 3 characters long.')
-    .regex(/^[a-zA-Z0-9\s-]+$/, 'Project name can only contain letters, numbers, spaces, and hyphens.'),
+    .regex(/^[a-zA-Z0-9\\s-]+$/, 'Project name can only contain letters, numbers, spaces, and hyphens.'),
   projectType: z.string({
     required_error: 'Please select a project type.',
   }),
@@ -32,6 +33,7 @@ export default function CreateProjectPage() {
   const firestore = useFirestore();
   const { user } = useUser();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
 
   const form = useForm<ProjectFormValues>({
     resolver: zodResolver(projectSchema),
@@ -51,13 +53,23 @@ export default function CreateProjectPage() {
         description: `A new ${data.projectType} project named ${data.projectName}`,
         userId: user.uid,
         createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        status: 'draft',
       });
       
-      router.push(`/project/${newProjectDoc.id}`);
+      if (newProjectDoc.id) {
+        router.push(`/project/${newProjectDoc.id}`);
+      } else {
+        throw new Error("Failed to get new project ID.");
+      }
 
     } catch (error) {
       console.error('Error creating project:', error);
-      // Here you could show a toast notification
+      toast({
+        variant: "destructive",
+        title: "Oh no! Something went wrong.",
+        description: "Could not create the project. Please try again.",
+      });
       setIsSubmitting(false);
     }
   };
