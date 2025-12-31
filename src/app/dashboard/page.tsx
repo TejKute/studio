@@ -2,54 +2,20 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { PlusCircle, Search, ArrowDown, ListFilter, Plus, FolderOpen, Download, Circle } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { PlusCircle, Search, ArrowDown, ListFilter, Plus, FolderOpen, Circle } from 'lucide-react';
 import AppLayout from '@/components/layout/app-layout';
-import { formatDistanceToNow } from 'date-fns';
 import type { Project } from '@/types';
 import { useUser, useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useMemo } from 'react';
-import { collection, query, orderBy, Timestamp } from 'firebase/firestore';
+import { collection, query, orderBy } from 'firebase/firestore';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
-import { useToast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
 
 function ProjectCard({ project }: { project: Project }) {
-  const { toast } = useToast();
-  const getDisplayDate = (createdAt: Project['createdAt']) => {
-    if (!createdAt) return 'N/A';
-    if (typeof createdAt === 'object' && 'seconds' in createdAt) {
-      const ts = createdAt as Timestamp;
-      return formatDistanceToNow(ts.toDate(), { addSuffix: true });
-    }
-    try {
-      const date = new Date(createdAt);
-      if (isNaN(date.getTime())) {
-        return "N/A";
-      }
-      return formatDistanceToNow(date, { addSuffix: true });
-    }
-    catch (e) {
-        return "N/A";
-    }
-  };
-  
-  const displayDate = getDisplayDate(project.updatedAt || project.createdAt);
-
-  const handleDownload = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toast({
-      title: 'Download Started',
-      description: `Preparing ${project.name} for download.`,
-    });
-    // In a real app, this would trigger a download.
-    console.log("Simulating ZIP download for project:", project.id);
-  }
 
   const StatusBadge = () => {
     if (project.status === 'live') {
@@ -79,12 +45,6 @@ function ProjectCard({ project }: { project: Project }) {
              <StatusBadge />
           </div>
         </CardHeader>
-        <CardFooter className="flex justify-between items-center">
-          <p className="text-xs text-muted-foreground">Edited {displayDate}</p>
-          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground" onClick={handleDownload}>
-            <Download className="h-4 w-4" />
-          </Button>
-        </CardFooter>
       </Card>
     </Link>
   );

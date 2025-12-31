@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { useAuth, useFirestore, useUser } from '@/firebase';
+import { useFirestore, useUser } from '@/firebase';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { Loader2 } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
@@ -20,7 +20,7 @@ const projectSchema = z.object({
   projectName: z
     .string()
     .min(3, 'Project name must be at least 3 characters long.')
-    .regex(/^[a-zA-Z0-9\\s-]+$/, 'Project name can only contain letters, numbers, spaces, and hyphens.'),
+    .regex(/^[a-zA-Z0-9\s-]+$/, 'Project name can only contain letters, numbers, spaces, and hyphens.'),
   projectType: z.string({
     required_error: 'Please select a project type.',
   }),
