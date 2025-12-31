@@ -34,7 +34,7 @@ import { Switch } from '@/components/ui/switch';
 import AppLogo from './app-logo';
 import Image from 'next/image';
 import { CodeView } from '@/components/code-view';
-import { useDoc, useFirestore, useMemoFirebase } from '@/firebase';
+import { useDoc, useFirestore, useMemoFirebase, useUser } from '@/firebase';
 import { type Project } from '@/types';
 import { doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { publishProject } from '@/lib/publish';
@@ -123,6 +123,7 @@ const ChatMessage = ({ message }: { message: Message }) => {
 
 export default function AIBuilder({ projectId }: { projectId: string }) {
   const firestore = useFirestore();
+  const { user } = useUser();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -144,19 +145,9 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
 
 
   const projectRef = useMemoFirebase(() => {
-    if (!firestore || !projectId) return null;
-    // This assumes a user is logged in, which should be handled by layout/middleware
-    // A robust solution would get the userId from useUser()
-    const pathSegments = doc(firestore, '.')._key.path.segments;
-    const userId = pathSegments.length > 1 ? pathSegments[1] : 'default-user'; // Fallback
-     if (typeof(window) !== "undefined") {
-      const user = JSON.parse(localStorage.getItem('user') || '{}');
-      if (user.uid) {
-        return doc(firestore, 'users', user.uid, 'projects', projectId);
-      }
-    }
-    return null;
-  }, [firestore, projectId]);
+    if (!firestore || !user?.uid || !projectId) return null;
+    return doc(firestore, 'users', user.uid, 'projects', projectId);
+  }, [firestore, user?.uid, projectId]);
 
   const { data: project, isLoading: isProjectLoading } = useDoc<Project>(projectRef);
   
@@ -549,5 +540,7 @@ export default function AIBuilder({ projectId }: { projectId: string }) {
     </div>
   );
 }
+
+    
 
     
