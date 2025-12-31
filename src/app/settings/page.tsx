@@ -62,7 +62,7 @@ export default function SettingsPage() {
                 <CardContent className="space-y-6">
                   <div className="flex items-center space-x-4">
                       <Avatar className="h-20 w-20">
-                          <AvatarImage src={user.photoURL ?? ''} data-ai-hint="person portrait" />
+                          <AvatarImage src={user.photoURL ?? ''} alt={user.displayName ?? 'User'} data-ai-hint="person portrait" />
                           <AvatarFallback>{user.displayName?.charAt(0) ?? 'U'}</AvatarFallback>
                       </Avatar>
                       <Button variant="outline">Change Photo</Button>

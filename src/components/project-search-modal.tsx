@@ -8,7 +8,6 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  Command,
 } from '@/components/ui/command';
 import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import type { Project } from '@/types';
@@ -17,7 +16,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { formatDistanceToNow } from 'date-fns';
 import { File } from 'lucide-react';
-import { DialogTitle } from '@radix-ui/react-dialog';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 
 interface ProjectSearchModalProps {
   isOpen: boolean;
@@ -52,13 +51,20 @@ export function ProjectSearchModal({ isOpen, onOpenChange }: ProjectSearchModalP
     return () => document.removeEventListener("keydown", down);
   }, [isOpen, onOpenChange]);
 
-  const getDisplayDate = (createdAt?: Project['createdAt']) => {
-    if (!createdAt) return null;
-    if (typeof createdAt === 'object' && 'seconds' in createdAt) {
-      const ts = createdAt as Timestamp;
-      return formatDistanceToNow(ts.toDate(), { addSuffix: true });
+  const getDisplayDate = (dateValue?: Project['createdAt'] | Project['updatedAt']) => {
+    if (!dateValue) return null;
+    let date: Date;
+    if (typeof dateValue === 'object' && 'seconds' in dateValue) {
+      const ts = dateValue as Timestamp;
+      date = ts.toDate();
+    } else if (typeof dateValue === 'string') {
+      date = new Date(dateValue);
+    } else if (dateValue instanceof Date) {
+      date = dateValue;
+    } else {
+        return null;
     }
-    return formatDistanceToNow(new Date(createdAt), { addSuffix: true });
+    return formatDistanceToNow(date, { addSuffix: true });
   };
 
 
@@ -71,33 +77,44 @@ export function ProjectSearchModal({ isOpen, onOpenChange }: ProjectSearchModalP
         {projects && projects.length > 0 && (
           <CommandGroup heading="Recent Projects">
             {projects.map((project) => {
-              const displayDate = getDisplayDate(project.createdAt);
+              const displayDate = getDisplayDate(project.updatedAt || project.createdAt);
               return (
               <CommandItem key={project.id} value={project.name} onSelect={() => handleSelect(project.id)}>
-                <div className="flex items-center space-x-3">
-                  {project.previewImageUrl ? (
-                     <Image
-                        src={project.previewImageUrl}
-                        alt={project.name}
-                        width={40}
-                        height={30}
-                        className="rounded object-cover"
-                        data-ai-hint={project.imageHint}
-                    />
-                  ) : (
-                    <div className="w-10 h-[30px] flex items-center justify-center bg-muted rounded">
-                        <File className="w-4 h-4 text-muted-foreground" />
+                <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center space-x-3">
+                    {project.previewImageUrl ? (
+                        <Image
+                            src={project.previewImageUrl}
+                            alt={project.name}
+                            width={40}
+                            height={30}
+                            className="rounded object-cover"
+                            data-ai-hint={project.imageHint}
+                        />
+                    ) : (
+                        <div className="w-10 h-[30px] flex items-center justify-center bg-muted rounded">
+                            <File className="w-4 h-4 text-muted-foreground" />
+                        </div>
+                    )}
+                    <div className='flex flex-col'>
+                        <span className="font-medium">{project.name}</span>
+                        {user && (
+                            <div className="flex items-center gap-1.5">
+                                <Avatar className="h-4 w-4">
+                                    <AvatarImage src={user.photoURL ?? ''} alt={user.displayName ?? 'User'} />
+                                    <AvatarFallback className="text-[8px]">{user.displayName?.charAt(0) ?? 'U'}</AvatarFallback>
+                                </Avatar>
+                                <span className="text-xs text-muted-foreground">{user.displayName}</span>
+                            </div>
+                        )}
                     </div>
-                  )}
-                  <div className='flex flex-col'>
-                    <span className="font-medium">{project.name}</span>
+                    </div>
                      {displayDate && (
                        <span className="text-xs text-muted-foreground">
-                        Edited {displayDate}
+                        {displayDate}
                       </span>
                      )}
                   </div>
-                </div>
               </CommandItem>
             )})}
           </CommandGroup>
